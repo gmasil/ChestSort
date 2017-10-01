@@ -1,0 +1,10 @@
+name: ChestSort
+main: de.headshotharp.chestsort.ChestSort
+version: 1.7
+author: HeadShotHarp
+description: >
+             ChestSort Plugin for Minecraft 1.12.2 (Spigot)
+commands:
+  ChestSort:
+    description: Shows information about ChestSort
+    usage: /ChestSort
