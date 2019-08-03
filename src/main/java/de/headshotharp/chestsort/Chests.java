@@ -4,8 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 public class Chests extends Block {
-	Material material;
-	int data;
+	private Material material;
+	private int data;
 
 	public Chests(Location loc, Material material, int data) {
 		super(loc);

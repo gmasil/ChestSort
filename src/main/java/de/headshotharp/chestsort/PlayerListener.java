@@ -1,6 +1,6 @@
 package de.headshotharp.chestsort;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -36,19 +36,10 @@ public class PlayerListener implements Listener {
 						player.sendMessage(ChatColor.GREEN + "You have marked a chest at " + markedloc.getBlockX()
 								+ ", " + markedloc.getBlockY() + ", " + markedloc.getBlockZ() + ".");
 						event.setCancelled(true);
-					} else if ((event.getClickedBlock().getType().equals(Material.FURNACE))
-							|| (event.getClickedBlock().getType().equals(Material.BURNING_FURNACE))) {
-						markedloc = new Location(event.getPlayer().getWorld(),
-								event.getClickedBlock().getLocation().getBlockX(),
-								event.getClickedBlock().getLocation().getBlockY(),
-								event.getClickedBlock().getLocation().getBlockZ());
-						player.sendMessage(ChatColor.GREEN + "You have marked a furnace at " + markedloc.getBlockX()
-								+ ", " + markedloc.getBlockY() + ", " + markedloc.getBlockZ() + ".");
-						event.setCancelled(true);
 					}
 				}
 			}
-			if (event.getClickedBlock().getType().equals(Material.SIGN_POST)) {
+			if (event.getClickedBlock().getType().equals(Material.OAK_SIGN)) {
 				if (player.getInventory().getItemInMainHand().getType().equals(Material.STICK)) {
 					if (player.hasPermission(ChestSort.PERMISSION_NAME_MANAGE)) {
 						for (Signs sign : getSigns()) {
@@ -77,8 +68,9 @@ public class PlayerListener implements Listener {
 
 	public boolean isChestSortSign(Location loc) {
 		for (Signs sign : getSigns()) {
-			if (sign.getLocation().equals(loc))
+			if (sign.getLocation().equals(loc)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -87,7 +79,7 @@ public class PlayerListener implements Listener {
 	public void onSignChange(SignChangeEvent event) {
 		if (event.getPlayer().hasPermission(ChestSort.PERMISSION_NAME_MANAGE)) {
 			if (event.getLine(0).equals("[ChestSort]")) {
-				if (event.getBlock().getType().equals(Material.SIGN_POST)) {
+				if (event.getBlock().getType().equals(Material.OAK_SIGN)) {
 					event.setLine(0, ChatColor.BLUE + "[ChestSort]");
 					event.setLine(1, "rightclick to");
 					event.setLine(2, "insert a block");
@@ -115,16 +107,7 @@ public class PlayerListener implements Listener {
 				}
 			}
 		}
-		if (event.getBlock().getType().equals(Material.FURNACE)) {
-			for (Furnaces furnace : getFurnaces()) {
-				if (furnace.getLocation().equals(event.getBlock().getLocation())) {
-					event.setCancelled(true);
-					event.getPlayer().sendMessage(ChatColor.RED + "This furnace is protected by ChestSort");
-					return;
-				}
-			}
-		}
-		if (event.getBlock().getType().equals(Material.SIGN_POST)) {
+		if (event.getBlock().getType().equals(Material.OAK_SIGN)) {
 			for (Signs sign : getSigns()) {
 				if ((sign.getLocation().getWorld().getName()
 						.equals(event.getBlock().getLocation().getWorld().getName()))
@@ -149,15 +132,11 @@ public class PlayerListener implements Listener {
 		return this.markedloc;
 	}
 
-	public ArrayList<Chests> getChests() {
+	public List<Chests> getChests() {
 		return plugin.getChests();
 	}
 
-	public ArrayList<Furnaces> getFurnaces() {
-		return plugin.getFurnaces();
-	}
-
-	public ArrayList<Signs> getSigns() {
+	public List<Signs> getSigns() {
 		return plugin.getSigns();
 	}
 }

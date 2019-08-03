@@ -10,11 +10,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Furnace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,18 +30,14 @@ public class ChestSort extends JavaPlugin {
 
 	private static final String chestFilename = "plugins" + File.separator + "ChestSort" + File.separator
 			+ "chests.txt";
-	private static final String furnacesFilename = "plugins" + File.separator + "ChestSort" + File.separator
-			+ "furnaces.txt";
-	private static final String roomsFilename = "plugins" + File.separator + "ChestSort" + File.separator + "rooms.txt";
 	private static final String signsFilename = "plugins" + File.separator + "ChestSort" + File.separator + "signs.txt";
 	private static final String pluginDirectory = "plugins" + File.separator + "ChestSort";
 	private PluginDescriptionFile pdf;
 	private PlayerListener playerListener;
-	private ArrayList<Chests> chests = new ArrayList<Chests>();
-	private ArrayList<Furnaces> furnaces = new ArrayList<Furnaces>();
-	private ArrayList<Signs> signs = new ArrayList<Signs>();
-	private ArrayList<Room> rooms = new ArrayList<Room>();
+	private List<Chests> chests = new ArrayList<>();
+	private List<Signs> signs = new ArrayList<>();
 
+	@Override
 	public void onEnable() {
 		this.pdf = getDescription();
 		this.playerListener = new PlayerListener(this);
@@ -50,11 +47,13 @@ public class ChestSort extends JavaPlugin {
 		System.out.println(this.pdf.getName() + " Plugin v" + this.pdf.getVersion() + " enabled");
 	}
 
+	@Override
 	public void onDisable() {
 		saveChests();
 		System.out.println(this.pdf.getName() + " Plugin v" + this.pdf.getVersion() + " disabled");
 	}
 
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("ChestSort")) {
 			if ((sender instanceof Player)) {
@@ -114,24 +113,6 @@ public class ChestSort extends JavaPlugin {
 						} else {
 							player.sendMessage("You must be in range of a ChestSort-Sign!");
 						}
-					} else if (args[0].equalsIgnoreCase("rooms")) {
-						player.sendMessage("rooms: " + rooms.size());
-						for (Room room : this.rooms) {
-							player.sendMessage(room.getName());
-						}
-					} else if (args[0].equalsIgnoreCase("search")) {
-						Chests chest = search(player.getInventory().getItemInMainHand());
-						if (chest == null) {
-							player.sendMessage("Not found.");
-						} else {
-							for (Room room : this.rooms) {
-								if (room.isIn(chest.getLocation())) {
-									player.sendMessage("Chest found in room: " + room.getName());
-									return true;
-								}
-							}
-							player.sendMessage("Chest outside all known rooms: " + chest.getLocation().toString());
-						}
 					} else {
 						showHelp(player);
 					}
@@ -154,31 +135,7 @@ public class ChestSort extends JavaPlugin {
 		return true;
 	}
 
-	public Chests search(ItemStack stack) {
-		for (Chests chest : this.chests) {
-			if ((chest.getMaterial() == stack.getType()) && (chest.getData() == stack.getDurability()))
-				return chest;
-		}
-		return null;
-	}
-
-	public Chests searchContains(ItemStack stack) {
-		for (Chests chest : this.chests) {
-			if ((chest.getMaterial() == stack.getType()) && (chest.getData() == stack.getDurability())) {
-				Chest ch = (Chest) chest.getLocation().getBlock().getState();
-				for (int x = 0; x < ch.getInventory().getSize(); x++) {
-					if (ch.getInventory().getContents()[x] != null) {
-						if (ch.getInventory().getContents()[x].getType() == stack.getType()
-								&& ch.getInventory().getContents()[x].getDurability() == stack.getDurability())
-							return chest;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	public void checkChests(Player player) {
+	private void checkChests(Player player) {
 		player.sendMessage("Blocks which are no chests anymore:");
 		int c = 0;
 		for (Chests chest : this.chests) {
@@ -191,7 +148,7 @@ public class ChestSort extends JavaPlugin {
 		player.sendMessage("Damaged chests: " + c);
 	}
 
-	public void deleteChest(Player player) {
+	private void deleteChest(Player player) {
 		if (this.playerListener.getMarkedLocation() != null) {
 			boolean found = false;
 			if (this.playerListener.getMarkedLocation().getBlock().getType().equals(Material.CHEST)) {
@@ -206,21 +163,6 @@ public class ChestSort extends JavaPlugin {
 				if (foundChest != null) {
 					this.chests.remove(foundChest);
 					player.sendMessage(ChatColor.GREEN + "The marked chest has been deleted!");
-				}
-			} else if ((this.playerListener.getMarkedLocation().getBlock().getType().equals(Material.FURNACE))
-					|| (this.playerListener.getMarkedLocation().getBlock().getType()
-							.equals(Material.BURNING_FURNACE))) {
-				Furnaces foundFurnace = null;
-				for (Furnaces furnace : this.furnaces) {
-					if (this.playerListener.getMarkedLocation().equals(furnace.getLocation())) {
-						foundFurnace = furnace;
-						found = true;
-						break;
-					}
-				}
-				if (foundFurnace != null) {
-					this.furnaces.remove(foundFurnace);
-					player.sendMessage(ChatColor.GREEN + "The marked furnace has been deleted!");
 				}
 			} else {
 				Signs foundSign = null;
@@ -240,12 +182,8 @@ public class ChestSort extends JavaPlugin {
 			if (!found) {
 				if (this.playerListener.getMarkedLocation().getBlock().getType().equals(Material.CHEST)) {
 					player.sendMessage(ChatColor.RED + "The marked chest is not registered!");
-				} else if ((this.playerListener.getMarkedLocation().getBlock().getType().equals(Material.FURNACE))
-						|| (this.playerListener.getMarkedLocation().getBlock().getType()
-								.equals(Material.BURNING_FURNACE))) {
-					player.sendMessage(ChatColor.RED + "The marked furnace is not registered!");
 				} else {
-					player.sendMessage(ChatColor.RED + "The marked block is no chest or furnace anymore!");
+					player.sendMessage(ChatColor.RED + "The marked block is no chest anymore!");
 				}
 			}
 		} else {
@@ -253,16 +191,15 @@ public class ChestSort extends JavaPlugin {
 		}
 	}
 
-	public void resetPlugin() {
-		this.chests = new ArrayList<Chests>();
-		this.furnaces = new ArrayList<Furnaces>();
+	private void resetPlugin() {
+		this.chests = new ArrayList<>();
 		for (Signs sign : this.signs) {
 			sign.getLocation().getBlock().breakNaturally();
 		}
-		this.signs = new ArrayList<Signs>();
+		this.signs = new ArrayList<>();
 	}
 
-	public void createChest(Player player, String material, String data) {
+	private void createChest(Player player, String material, String data) {
 		Location l = this.playerListener.getMarkedLocation();
 		Material m = Material.getMaterial(material.toUpperCase());
 		int d = Integer.parseInt(data);
@@ -286,26 +223,13 @@ public class ChestSort extends JavaPlugin {
 							ChatColor.RED + "Are you kidding me? Do you really want to create a chest of type "
 									+ ChatColor.BLUE + "AIR" + ChatColor.RED + " ??");
 				}
-			} else if ((l.getBlock().getType().equals(Material.FURNACE))
-					|| (l.getBlock().getType().equals(Material.BURNING_FURNACE))) {
-				boolean isRegistered = false;
-				for (Furnaces furnace : this.furnaces) {
-					if (this.playerListener.getMarkedLocation().equals(furnace.getLocation())) {
-						player.sendMessage(ChatColor.GRAY + "This furnace is already registered!");
-						isRegistered = true;
-					}
-				}
-				if (!isRegistered) {
-					this.furnaces.add(new Furnaces(this.playerListener.getMarkedLocation()));
-					player.sendMessage(ChatColor.GREEN + "This furnace has been created successfully!");
-				}
 			} else {
-				player.sendMessage(ChatColor.RED + "The block at marked location is no chest or furnace anymore!");
+				player.sendMessage(ChatColor.RED + "The block at marked location is no chest anymore!");
 			}
 		}
 	}
 
-	public void showHelp(Player player) {
+	private void showHelp(Player player) {
 		if (player != null) {
 			player.sendMessage("");
 			player.sendMessage(ChatColor.GRAY + "-- ChestSort v" + this.pdf.getVersion() + " help --");
@@ -336,7 +260,7 @@ public class ChestSort extends JavaPlugin {
 		}
 	}
 
-	public void info(Player player) {
+	private void info(Player player) {
 		if (this.playerListener.getMarkedLocation() != null) {
 			if (this.playerListener.getMarkedLocation().getBlock().getType().equals(Material.CHEST)) {
 				for (Chests chest : this.chests) {
@@ -347,17 +271,7 @@ public class ChestSort extends JavaPlugin {
 					}
 				}
 				player.sendMessage(ChatColor.GRAY + "The marked chest is not registered!");
-			} else if ((this.playerListener.getMarkedLocation().getBlock().getType().equals(Material.FURNACE))
-					|| (this.playerListener.getMarkedLocation().getBlock().getType()
-							.equals(Material.BURNING_FURNACE))) {
-				for (Furnaces furnace : this.furnaces) {
-					if (this.playerListener.getMarkedLocation().equals(furnace.getLocation())) {
-						player.sendMessage(ChatColor.GREEN + "The marked furnace is registered!");
-						return;
-					}
-				}
-				player.sendMessage(ChatColor.GRAY + "The marked furnace is not registered!");
-			} else if (this.playerListener.getMarkedLocation().getBlock().getType().equals(Material.SIGN_POST)) {
+			} else if (this.playerListener.getMarkedLocation().getBlock().getType().equals(Material.OAK_SIGN)) {
 				for (Signs sign : this.signs) {
 					if (this.playerListener.getMarkedLocation().equals(sign.getLocation())) {
 						player.sendMessage(ChatColor.GREEN + "The marked sign is registered!");
@@ -373,7 +287,7 @@ public class ChestSort extends JavaPlugin {
 		}
 	}
 
-	public void list(Player player) {
+	private void list(Player player) {
 		int i = 0;
 		for (Chests chest : this.chests) {
 			i++;
@@ -382,16 +296,6 @@ public class ChestSort extends JavaPlugin {
 		}
 		if (i == 0) {
 			player.sendMessage(ChatColor.GRAY + "There are no chests registered!");
-		}
-		switch (this.furnaces.size()) {
-		case 0:
-			player.sendMessage(ChatColor.GRAY + "There are no furnaces registered!");
-			break;
-		case 1:
-			player.sendMessage(ChatColor.GRAY + "There is one furnace registered!");
-			break;
-		default:
-			player.sendMessage(ChatColor.GRAY + "There are " + this.furnaces.size() + " furnaces registered!");
 		}
 		switch (this.signs.size()) {
 		case 0:
@@ -405,7 +309,7 @@ public class ChestSort extends JavaPlugin {
 		}
 	}
 
-	public void setAmountInHand(Player player, int amount) {
+	private void setAmountInHand(Player player, int amount) {
 		if (amount == 0) {
 			player.getInventory().setItemInMainHand(null);
 		} else {
@@ -418,37 +322,6 @@ public class ChestSort extends JavaPlugin {
 	public void fillChest(Player player) {
 		int anzCorrectChests = 0;
 		boolean placed = false;
-		if (player.getInventory().getItemInMainHand().getType().equals(Material.COAL)) {
-			for (Furnaces furnace : this.furnaces) {
-				Furnace fu = (Furnace) furnace.getLocation().getBlock().getState();
-				if (fu.getInventory().getContents()[1] == null) {
-					if (fu.getInventory().getContents()[0] == null) {
-						ItemStack holder = new ItemStack(Material.APPLE, 13);
-						fu.getInventory().addItem(new ItemStack[] { holder });
-						fu.getInventory().addItem(new ItemStack[] { player.getInventory().getItemInMainHand() });
-						fu.getInventory().remove(holder);
-						setAmountInHand(player, 0);
-					} else {
-						fu.getInventory().addItem(new ItemStack[] { player.getInventory().getItemInMainHand() });
-						setAmountInHand(player, 0);
-					}
-				} else if (fu.getInventory().getContents()[1].getType().equals(Material.COAL)) {
-					if (fu.getInventory().getContents()[1].getAmount() < fu.getInventory().getContents()[1]
-							.getMaxStackSize()) {
-						int toStack = fu.getInventory().getContents()[1].getMaxStackSize()
-								- fu.getInventory().getContents()[1].getAmount();
-						if (toStack < player.getInventory().getItemInMainHand().getAmount()) {
-							fu.getInventory().addItem(new ItemStack[] { new ItemStack(Material.COAL, toStack) });
-							setAmountInHand(player, player.getInventory().getItemInMainHand().getAmount() - toStack);
-						} else {
-							fu.getInventory().addItem(new ItemStack[] { player.getInventory().getItemInMainHand() });
-							setAmountInHand(player, 0);
-						}
-					}
-				}
-				fu.update();
-			}
-		}
 		if (!player.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
 			for (Chests chest : this.chests) {
 				if ((chest.getMaterial() == player.getInventory().getItemInMainHand().getType())
@@ -513,46 +386,9 @@ public class ChestSort extends JavaPlugin {
 		}
 	}
 
-	public ItemStack insertInBox(ItemStack stack) {
+	private ItemStack insertInBox(ItemStack stack) {
 		if (stack.getType() == Material.AIR) {
 			return stack;
-		}
-		if (stack.getAmount() == 0) {
-			return stack;
-		}
-		if (stack.getType() == Material.COAL) {
-			for (Furnaces furnace : this.furnaces) {
-				Furnace fu = (Furnace) furnace.getLocation().getBlock().getState();
-				if (fu.getInventory().getContents()[1] == null) {
-					if (fu.getInventory().getContents()[0] == null) {
-						ItemStack holder = new ItemStack(Material.APPLE, 13);
-						fu.getInventory().addItem(new ItemStack[] { holder });
-						fu.getInventory().addItem(new ItemStack[] { stack });
-						fu.getInventory().remove(holder);
-						stack.setAmount(0);
-						return stack;
-					}
-					fu.getInventory().addItem(new ItemStack[] { stack });
-					stack.setAmount(0);
-					return stack;
-				}
-				if (fu.getInventory().getContents()[1].getType().equals(Material.COAL)) {
-					if (fu.getInventory().getContents()[1].getAmount() < fu.getInventory().getContents()[1]
-							.getMaxStackSize()) {
-						int toStack = fu.getInventory().getContents()[1].getMaxStackSize()
-								- fu.getInventory().getContents()[1].getAmount();
-						if (toStack < stack.getAmount()) {
-							fu.getInventory().addItem(new ItemStack[] { new ItemStack(Material.COAL, toStack) });
-							stack.setAmount(stack.getAmount() - toStack);
-						} else {
-							fu.getInventory().addItem(new ItemStack[] { stack });
-							stack.setAmount(0);
-							return stack;
-						}
-					}
-				}
-				fu.update();
-			}
 		}
 		if (stack.getAmount() == 0) {
 			return stack;
@@ -607,7 +443,7 @@ public class ChestSort extends JavaPlugin {
 		return stack;
 	}
 
-	public void allInventory(Player player) {
+	private void allInventory(Player player) {
 		for (int i = 0; i < player.getInventory().getContents().length; i++) {
 			if (player.getInventory().getContents()[i] != null) {
 				ItemStack left = insertInBox(new ItemStack(player.getInventory().getContents()[i]));
@@ -619,28 +455,25 @@ public class ChestSort extends JavaPlugin {
 		}
 	}
 
-	public boolean isSignInRange(Player player) {
+	private boolean isSignInRange(Player player) {
 		for (Signs sign : signs) {
 			if ((sign.getLocation().getWorld() != player.getLocation().getWorld())
-					|| (sign.getLocation().distance(player.getLocation()) <= 5.0D))
+					|| (sign.getLocation().distance(player.getLocation()) <= 5.0D)) {
 				return true;
+			}
 		}
 		return false;
 	}
 
-	public ArrayList<Chests> getChests() {
+	public List<Chests> getChests() {
 		return this.chests;
 	}
 
-	public ArrayList<Furnaces> getFurnaces() {
-		return this.furnaces;
-	}
-
-	public ArrayList<Signs> getSigns() {
+	public List<Signs> getSigns() {
 		return this.signs;
 	}
 
-	public void loadChests() {
+	private void loadChests() {
 		try {
 			new File(pluginDirectory).mkdir();
 			if (new File(chestFilename).exists()) {
@@ -664,23 +497,6 @@ public class ChestSort extends JavaPlugin {
 				in.close();
 				br.close();
 			}
-			if (new File(furnacesFilename).exists()) {
-				FileInputStream fstream = new FileInputStream(furnacesFilename);
-				DataInputStream in = new DataInputStream(fstream);
-				BufferedReader br = new BufferedReader(new InputStreamReader(in));
-
-				this.furnaces = new ArrayList<Furnaces>();
-				String strLine;
-				while ((strLine = br.readLine()) != null) {
-					if (!strLine.equalsIgnoreCase("null")) {
-						String[] str = strLine.split(":");
-						this.furnaces.add(new Furnaces(new Location(getServer().getWorld(str[0]),
-								Integer.parseInt(str[1]), Integer.parseInt(str[2]), Integer.parseInt(str[3]))));
-					}
-				}
-				in.close();
-				br.close();
-			}
 			if (new File(signsFilename).exists()) {
 				FileInputStream fstream = new FileInputStream(signsFilename);
 				DataInputStream in = new DataInputStream(fstream);
@@ -698,32 +514,12 @@ public class ChestSort extends JavaPlugin {
 				in.close();
 				br.close();
 			}
-			if (new File(roomsFilename).exists()) {
-				FileInputStream fstream = new FileInputStream(roomsFilename);
-				DataInputStream in = new DataInputStream(fstream);
-				BufferedReader br = new BufferedReader(new InputStreamReader(in));
-				this.rooms = new ArrayList<Room>();
-				String strLine;
-				while ((strLine = br.readLine()) != null) {
-					if (!strLine.equalsIgnoreCase("null")) {
-						String[] str = strLine.split(":");
-						Location locA = new Location(getServer().getWorld(str[0]), Integer.parseInt(str[1]),
-								Integer.parseInt(str[2]), Integer.parseInt(str[3]));
-						Location locB = new Location(getServer().getWorld(str[4]), Integer.parseInt(str[5]),
-								Integer.parseInt(str[6]), Integer.parseInt(str[7]));
-						this.rooms.add(new Room(str[8], locA, locB));
-						System.out.println("loading room: " + str[8]);
-					}
-				}
-				in.close();
-				br.close();
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void saveChests() {
+	private void saveChests() {
 		try {
 			new File(pluginDirectory).mkdir();
 			// chests
@@ -742,21 +538,6 @@ public class ChestSort extends JavaPlugin {
 			String writeStr = "null";
 			noutput.write(writeStr);
 			noutput.close();
-			// furnaces
-			f = new File(furnacesFilename);
-			if (f.exists()) {
-				f.delete();
-			}
-			f.createNewFile();
-			noutput = new BufferedWriter(new FileWriter(f));
-			for (Furnaces furnace : this.furnaces) {
-				writeStr = furnace.getLocation().getWorld().getName() + ":" + furnace.getLocation().getBlockX() + ":"
-						+ furnace.getLocation().getBlockY() + ":" + furnace.getLocation().getBlockZ() + "\n";
-				noutput.write(writeStr);
-			}
-			writeStr = "null";
-			noutput.write(writeStr);
-			noutput.close();
 			// signs
 			f = new File(signsFilename);
 			if (f.exists()) {
@@ -772,31 +553,12 @@ public class ChestSort extends JavaPlugin {
 			writeStr = "null";
 			noutput.write(writeStr);
 			noutput.close();
-			// rooms
-			f = new File(roomsFilename);
-			if (f.exists()) {
-				f.delete();
-			}
-			f.createNewFile();
-			noutput = new BufferedWriter(new FileWriter(f));
-			for (Room room : this.rooms) {
-				writeStr = room.getLocA().getWorld().getName() + ":" + room.getLocA().getBlockX() + ":"
-						+ room.getLocA().getBlockY() + ":" + room.getLocA().getBlockZ() + ":";
-				writeStr += room.getLocB().getWorld().getName() + ":" + room.getLocB().getBlockX() + ":"
-						+ room.getLocB().getBlockY() + ":" + room.getLocB().getBlockZ() + ":"
-						+ room.getName().replace(":", "") + "\n";
-				noutput.write(writeStr);
-				System.out.println("savibng room: " + room.getName());
-			}
-			writeStr = "null";
-			noutput.write(writeStr);
-			noutput.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void reloadPlugin() {
+	private void reloadPlugin() {
 		saveChests();
 		loadChests();
 		System.out.println("ChestSort has been reloaded!");
