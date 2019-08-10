@@ -13,6 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class PlayerListener implements Listener {
 	private ChestSort plugin;
@@ -25,6 +26,14 @@ public class PlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			System.out.println("###############");
+			System.out.println(event.getClickedBlock().getType().toString());
+
+			ItemStack itemInMainHand = event.getPlayer().getInventory().getItemInMainHand();
+			if (itemInMainHand != null) {
+				System.out.println(itemInMainHand.getType().toString());
+			}
+
 			Player player = event.getPlayer();
 			if (player.hasPermission(ChestSort.PERMISSION_NAME_MANAGE)) {
 				if (player.getInventory().getItemInMainHand().getType().equals(Material.STICK)) {
