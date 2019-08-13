@@ -1,4 +1,4 @@
-package de.headshotharp.chestsort2;
+package de.headshotharp.chestsort2.config;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class ConfigService {
 		Config config = new Config();
 		config.getDatabase().setDriver("org.h2.Driver");
 		config.getDatabase().setDialect("org.hibernate.dialect.H2Dialect");
-		config.getDatabase().setUrl("jdbc:h2:mem:");
+		config.getDatabase().setUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
 		config.getDatabase().setUsername("sa");
 		config.getDatabase().setPassword("");
 		return config;

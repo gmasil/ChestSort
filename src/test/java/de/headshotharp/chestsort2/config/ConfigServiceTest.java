@@ -1,4 +1,4 @@
-package de.headshotharp.chestsort2;
+package de.headshotharp.chestsort2.config;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

@@ -1,4 +1,4 @@
-package de.headshotharp.chestsort2.hibernate;
+package de.headshotharp.chestsort2.hibernate.testutils;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

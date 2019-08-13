@@ -1,4 +1,4 @@
-package de.headshotharp.chestsort2;
+package de.headshotharp.chestsort2.config;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -32,7 +32,7 @@ public class ConfigTest extends GherkinTest {
 		and("the YAML config is deserialized back to a Config object", () -> {
 			deserializedConfig.set(mapper.readValue(serializedConfig.get(), Config.class));
 		});
-		then("the original config and the deserialized  config are identical", () -> {
+		then("the original config and the deserialized config are identical", () -> {
 			assertThat(config.get(), is(equalTo(deserializedConfig.get())));
 		});
 	}

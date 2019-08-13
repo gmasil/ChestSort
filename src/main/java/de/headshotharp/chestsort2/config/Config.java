@@ -1,13 +1,13 @@
-package de.headshotharp.chestsort2;
+package de.headshotharp.chestsort2.config;
 
 public class Config {
-	private Database database = new Database();
+	private DatabaseConfig database = new DatabaseConfig();
 
-	public Database getDatabase() {
+	public DatabaseConfig getDatabase() {
 		return database;
 	}
 
-	public void setDatabase(Database database) {
+	public void setDatabase(DatabaseConfig database) {
 		this.database = database;
 	}
 
@@ -41,7 +41,7 @@ public class Config {
 		return true;
 	}
 
-	public static class Database {
+	public static class DatabaseConfig {
 		private String driver;
 		private String dialect;
 		private String url;
@@ -111,7 +111,7 @@ public class Config {
 			if (getClass() != obj.getClass()) {
 				return false;
 			}
-			Database other = (Database) obj;
+			DatabaseConfig other = (DatabaseConfig) obj;
 			if (dialect == null) {
 				if (other.dialect != null) {
 					return false;
