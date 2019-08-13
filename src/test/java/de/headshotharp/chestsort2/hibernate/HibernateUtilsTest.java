@@ -10,17 +10,18 @@ import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Reference;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
+import de.headshotharp.chestsort2.Registry;
 
 @Story("Session factory is tested for intended behaviour")
 public class HibernateUtilsTest extends GherkinTest {
 	@Scenario("A SessionFactory is created without database config")
 	public void testSessionFactoryCreationWithoutDatabaseConfig(Reference<IllegalStateException> thrownException) {
 		given("no database config exists", () -> {
-			HibernateUtils.setDatabaseConfig(null);
+			Registry.getHibernateUtils().setDatabaseConfig(null);
 		});
 		when("the session factory is created", () -> {
 			try {
-				HibernateUtils.createSessionFactory();
+				Registry.getHibernateUtils().createSessionFactory();
 			} catch (IllegalStateException e) {
 				thrownException.set(e);
 			}

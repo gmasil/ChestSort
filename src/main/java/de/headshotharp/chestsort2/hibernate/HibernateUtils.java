@@ -13,24 +13,21 @@ import de.headshotharp.chestsort2.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort2.hibernate.dao.SignDAO;
 
 public class HibernateUtils {
-	private static SessionFactory sessionFactory;
-	private static DatabaseConfig databaseConfig;
+	private SessionFactory sessionFactory;
+	private DatabaseConfig databaseConfig;
 
-	private HibernateUtils() {
-	}
-
-	public static void setDatabaseConfig(DatabaseConfig config) {
+	public void setDatabaseConfig(DatabaseConfig config) {
 		databaseConfig = config;
 	}
 
-	public static SessionFactory getSessionFactory() {
+	public SessionFactory getSessionFactory() {
 		if (sessionFactory == null) {
 			createSessionFactory();
 		}
 		return sessionFactory;
 	}
 
-	protected static void createSessionFactory() {
+	protected void createSessionFactory() {
 		if (databaseConfig == null) {
 			throw new IllegalStateException("HibernateUtils has no database config");
 		}

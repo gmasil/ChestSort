@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import de.headshotharp.chestsort2.Registry;
 import de.headshotharp.chestsort2.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort2.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort2.hibernate.dao.generic.DAO;
@@ -74,7 +75,7 @@ public class DataProvider {
 	/* UTILS */
 
 	private static <T> T inTransaction(InTransactionExecutor<T> ite) {
-		Session session = HibernateUtils.getSessionFactory().openSession();
+		Session session = Registry.getHibernateUtils().getSessionFactory().openSession();
 		Transaction transaction = session.beginTransaction();
 		T ret = ite.executeInTransaction(session);
 		transaction.commit();

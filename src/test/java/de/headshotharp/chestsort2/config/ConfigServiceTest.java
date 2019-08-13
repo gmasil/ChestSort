@@ -10,23 +10,24 @@ import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Reference;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
+import de.headshotharp.chestsort2.Registry;
 
 @Story("The ConfigService is able to save and load config files correctly")
 public class ConfigServiceTest extends GherkinTest {
 	@Scenario("The default configuration can be saved and successfully reloaded")
 	public void testDefaultConfigCreation(Reference<Config> config) {
 		given("no config file exists", () -> {
-			ConfigService.setConfigFile(new File("target/plugins/ChestSort", "config.yaml"));
-			ConfigService.getConfigFile().delete();
+			Registry.getConfigService().setConfigFile(new File("target/plugins/ChestSort", "config.yaml"));
+			Registry.getConfigService().getConfigFile().delete();
 		});
 		when("the default config is saved", () -> {
-			ConfigService.saveDefaultConfig();
+			Registry.getConfigService().saveDefaultConfig();
 		});
 		and("the saved config is loaded again", () -> {
-			config.set(ConfigService.readConfig());
+			config.set(Registry.getConfigService().readConfig());
 		});
 		then("the loaded config is identical to the default config", () -> {
-			assertThat(config.get(), is(equalTo(ConfigService.getDefaultConfig())));
+			assertThat(config.get(), is(equalTo(Registry.getConfigService().getDefaultConfig())));
 		});
 	}
 }
