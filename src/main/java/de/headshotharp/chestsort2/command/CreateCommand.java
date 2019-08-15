@@ -3,6 +3,7 @@ package de.headshotharp.chestsort2.command;
 import static de.headshotharp.chestsort2.StaticConfig.COLOR_ERROR;
 import static de.headshotharp.chestsort2.StaticConfig.COLOR_ERROR_HIGHLIGHT;
 import static de.headshotharp.chestsort2.StaticConfig.COLOR_GOOD;
+import static de.headshotharp.chestsort2.StaticConfig.PERMISSION_MANAGE;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -74,6 +75,10 @@ public class CreateCommand implements ChestsortCommand {
 		if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
 			if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE_CENTRAL)) {
 				player.sendMessage(COLOR_ERROR + "You dont have permissions to manage the central chests");
+				if (player.hasPermission(PERMISSION_MANAGE)) {
+					player.sendMessage(COLOR_ERROR
+							+ "If you want to create a chest for your personal warehouse please use the command /chestsort create user");
+				}
 				return null;
 			}
 		} else {

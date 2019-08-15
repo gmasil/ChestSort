@@ -72,4 +72,8 @@ public class ChestSortUtils {
 	public static void sendPlayerSignBreakErrorMessage(BlockBreakEvent event) {
 		event.getPlayer().sendMessage(ChatColor.RED + "This sign is protected by ChestSort");
 	}
+
+	public static void sendPlayerBlockBelowSignBreakErrorMessage(BlockBreakEvent event) {
+		event.getPlayer().sendMessage(ChatColor.RED + "This sign above this block is protected by ChestSort");
+	}
 }
