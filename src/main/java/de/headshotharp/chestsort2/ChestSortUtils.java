@@ -1,5 +1,9 @@
 package de.headshotharp.chestsort2;
 
+import static de.headshotharp.chestsort2.StaticConfig.MATERIAL_MARKER;
+import static de.headshotharp.chestsort2.StaticConfig.MATERIAL_SIGN_CENTRAL;
+import static de.headshotharp.chestsort2.StaticConfig.MATERIAL_SIGN_USER;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +29,7 @@ public class ChestSortUtils {
 	}
 
 	public static boolean isStickInHand(PlayerInteractEvent event) {
-		return event.getPlayer().getInventory().getItemInMainHand().getType() == Material.STICK;
+		return event.getPlayer().getInventory().getItemInMainHand().getType() == MATERIAL_MARKER;
 	}
 
 	public static boolean isChestClicked(PlayerInteractEvent event) {
@@ -37,8 +41,7 @@ public class ChestSortUtils {
 	}
 
 	public static boolean isSignBreaked(BlockBreakEvent event) {
-		return event.getBlock().getType() == ChestSort.MATERIAL_SIGN_CENTRAL
-				|| event.getBlock().getType() == ChestSort.MATERIAL_SIGN_USER;
+		return event.getBlock().getType() == MATERIAL_SIGN_CENTRAL || event.getBlock().getType() == MATERIAL_SIGN_USER;
 	}
 
 	public static Location locationFromEvent(PlayerInteractEvent event) {

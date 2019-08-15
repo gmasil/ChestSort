@@ -16,6 +16,7 @@ public class CommandRegistry implements CommandExecutor, TabCompleter {
 
 	public void registerDefaultCommands() {
 		commands.add(new CreateCommand());
+		commands.add(new InfoCommand());
 	}
 
 	public List<ChestsortCommand> getCommands() {

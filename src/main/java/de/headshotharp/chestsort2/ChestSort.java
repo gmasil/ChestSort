@@ -2,16 +2,9 @@ package de.headshotharp.chestsort2;
 
 import java.io.IOException;
 
-import org.bukkit.Material;
 import org.bukkit.event.Listener;
 
 public class ChestSort extends SpigotPlugin implements Listener {
-	public static final String PERMISSION_NAME_MANAGE = "chestsort.manage";
-	public static final String PERMISSION_NAME_RESET = "chestsort.reset";
-
-	public static final Material MATERIAL_SIGN_CENTRAL = Material.OAK_SIGN;
-	public static final Material MATERIAL_SIGN_USER = Material.BIRCH_SIGN;
-
 	@Override
 	public void onEnable() {
 		try {

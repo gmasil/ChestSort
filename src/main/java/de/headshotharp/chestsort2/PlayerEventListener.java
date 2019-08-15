@@ -5,6 +5,8 @@ import static de.headshotharp.chestsort2.ChestSortUtils.isChestMarkEvent;
 import static de.headshotharp.chestsort2.ChestSortUtils.isSignBreaked;
 import static de.headshotharp.chestsort2.ChestSortUtils.locationFromEvent;
 import static de.headshotharp.chestsort2.ChestSortUtils.sendPlayerChestBreakErrorMessage;
+import static de.headshotharp.chestsort2.StaticConfig.PERMISSION_MANAGE;
+import static de.headshotharp.chestsort2.StaticConfig.PERMISSION_MANAGE_CENTRAL;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +32,8 @@ public class PlayerEventListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (isChestMarkEvent(event)) {
+		if ((event.getPlayer().hasPermission(PERMISSION_MANAGE)
+				|| event.getPlayer().hasPermission(PERMISSION_MANAGE_CENTRAL)) && isChestMarkEvent(event)) {
 			markedLocations.put(event.getPlayer().getName(), locationFromEvent(event));
 		}
 	}

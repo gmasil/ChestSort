@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.headshotharp.chestsort2.Registry;
+import de.headshotharp.chestsort2.StaticConfig;
 import de.headshotharp.chestsort2.command.generic.ChestsortCommand;
 import de.headshotharp.chestsort2.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort2.hibernate.dao.generic.Location;
@@ -69,6 +70,17 @@ public class CreateCommand implements ChestsortCommand {
 			player.sendMessage(COLOR_ERROR
 					+ "You have to mark a chest first. Right click a chest with a stick in your main hand.");
 			return null;
+		}
+		if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
+			if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE_CENTRAL)) {
+				player.sendMessage(COLOR_ERROR + "You dont have permissions to manage the central chests");
+				return null;
+			}
+		} else {
+			if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE)) {
+				player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
+				return null;
+			}
 		}
 		return new ChestDAO(markedChest, optionalMaterial.get().toString(), username);
 	}

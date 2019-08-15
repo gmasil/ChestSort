@@ -2,6 +2,8 @@ package de.headshotharp.chestsort2.command;
 
 import static de.headshotharp.chestsort2.StaticConfig.COLOR_ERROR;
 import static de.headshotharp.chestsort2.StaticConfig.COLOR_NORMAL;
+import static de.headshotharp.chestsort2.StaticConfig.PERMISSION_MANAGE;
+import static de.headshotharp.chestsort2.StaticConfig.PERMISSION_MANAGE_CENTRAL;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +20,10 @@ public class InfoCommand implements ChestsortCommand {
 	@Override
 	public void execute(CommandSender sender, String command, String... args) {
 		Player player = (Player) sender;
+		if (!player.hasPermission(PERMISSION_MANAGE) && !player.hasPermission(PERMISSION_MANAGE_CENTRAL)) {
+			player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
+			return;
+		}
 		Location markedChest = Registry.getPlayerEventListener().getMarkedLocation(player.getName());
 		if (markedChest == null) {
 			player.sendMessage(COLOR_ERROR
