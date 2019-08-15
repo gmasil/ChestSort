@@ -41,8 +41,11 @@ public class PlayerEventListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if ((event.getPlayer().hasPermission(PERMISSION_MANAGE)
 				|| event.getPlayer().hasPermission(PERMISSION_MANAGE_CENTRAL)) && isChestMarkEvent(event)) {
-			markedLocations.put(event.getPlayer().getName(), locationFromEvent(event));
+			Location location = locationFromEvent(event);
+			markedLocations.put(event.getPlayer().getName(), location);
+			event.getPlayer().sendMessage(COLOR_GOOD + "Marked chest at " + location.toHumanString());
 		}
+
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

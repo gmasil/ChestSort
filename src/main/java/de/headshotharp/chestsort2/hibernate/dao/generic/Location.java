@@ -92,6 +92,10 @@ public class Location implements Serializable {
 		return (z == other.z);
 	}
 
+	public String toHumanString() {
+		return "(" + world + ", " + x + ", " + y + ", " + z + ")";
+	}
+
 	@Override
 	public String toString() {
 		return "Location [world=" + world + ", x=" + x + ", y=" + y + ", z=" + z + "]";
