@@ -1,6 +1,6 @@
 package de.headshotharp.chestsort2;
 
-import de.headshotharp.chestsort2.command.generic.CommandRegistry;
+import de.headshotharp.chestsort2.command.CommandRegistry;
 import de.headshotharp.chestsort2.config.ConfigService;
 import de.headshotharp.chestsort2.hibernate.HibernateUtils;
 

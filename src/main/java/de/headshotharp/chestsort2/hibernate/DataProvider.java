@@ -1,6 +1,14 @@
 package de.headshotharp.chestsort2.hibernate;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -12,22 +20,62 @@ import de.headshotharp.chestsort2.hibernate.dao.generic.DAO;
 import de.headshotharp.chestsort2.hibernate.dao.generic.Location;
 
 public class DataProvider {
-	// delete
-	private static final String DELETE_FROM = "DELETE FROM %s ";
-	private static final String DELETE_FROM_CHESTS = String.format(DELETE_FROM, ChestDAO.class.getName());
-	private static final String DELETE_FROM_SIGNS = String.format(DELETE_FROM, SignDAO.class.getName());
-	// select
-	private static final String SELECT_FROM = "FROM %s t ";
-	private static final String SELECT_FROM_CHESTS = String.format(SELECT_FROM, ChestDAO.class.getName());
-	private static final String SELECT_FROM_SIGNS = String.format(SELECT_FROM, SignDAO.class.getName());
-
 	private DataProvider() {
 	}
 
 	/* CHEST */
 
 	public static List<ChestDAO> findAllChests() {
-		return queryForList(SELECT_FROM_CHESTS, ChestDAO.class);
+		return inTransaction(session -> {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
+			criteria.from(ChestDAO.class);
+			return session.createQuery(criteria).getResultList();
+		});
+	}
+
+	public static List<ChestDAO> findChest(ChestDAO chest) {
+		return inTransaction(session -> {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
+			Root<ChestDAO> chestRef = criteria.from(ChestDAO.class);
+			Join<Object, Object> locationRef = chestRef.join("location");
+			// set predicates
+			List<Predicate> predicates = new LinkedList<>();
+			predicates.add(builder.equal(locationRef.get("world"), chest.getLocation().getWorld()));
+			predicates.add(builder.equal(locationRef.get("x"), chest.getLocation().getX()));
+			predicates.add(builder.equal(locationRef.get("y"), chest.getLocation().getY()));
+			predicates.add(builder.equal(locationRef.get("z"), chest.getLocation().getZ()));
+			predicates.add(builder.equal(chestRef.get("material"), chest.getMaterial()));
+			predicates.add(builder.equal(chestRef.get("central"), chest.isCentral()));
+			// predicate depending on null values
+			if (chest.getUsername() == null) {
+				predicates.add(builder.isNull(chestRef.get("username")));
+			} else {
+				predicates.add(builder.equal(chestRef.get("username"), chest.getUsername()));
+			}
+			// add predicates
+			criteria.where(builder.and(predicates.toArray(new Predicate[0])));
+			return session.createQuery(criteria).getResultList();
+		});
+	}
+
+	public static List<ChestDAO> findAllChestsAt(Location location) {
+		return inTransaction(session -> {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
+			Root<ChestDAO> chestRef = criteria.from(ChestDAO.class);
+			Join<Object, Object> locationRef = chestRef.join("location");
+			// set predicates
+			List<Predicate> predicates = new LinkedList<>();
+			predicates.add(builder.equal(locationRef.get("world"), location.getWorld()));
+			predicates.add(builder.equal(locationRef.get("x"), location.getX()));
+			predicates.add(builder.equal(locationRef.get("y"), location.getY()));
+			predicates.add(builder.equal(locationRef.get("z"), location.getZ()));
+			// add predicates
+			criteria.where(builder.and(predicates.toArray(new Predicate[0])));
+			return session.createQuery(criteria).getResultList();
+		});
 	}
 
 	public static void persistChest(ChestDAO chest) {
@@ -38,25 +86,84 @@ public class DataProvider {
 		delete(chest);
 	}
 
-	public static void clearAllChests() {
-		update(DELETE_FROM_CHESTS);
+	public static int clearAllChests() {
+		return inTransaction(session -> {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaDelete<ChestDAO> criteria = builder.createCriteriaDelete(ChestDAO.class);
+			criteria.from(ChestDAO.class);
+			return session.createQuery(criteria).executeUpdate();
+		});
 	}
 
 	/* SIGN */
 
 	public static List<SignDAO> findAllSigns() {
-		return queryForList(SELECT_FROM_SIGNS, SignDAO.class);
+		return inTransaction(session -> {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
+			criteria.from(SignDAO.class);
+			return session.createQuery(criteria).getResultList();
+		});
+	}
+
+	public static List<SignDAO> findSign(SignDAO sign) {
+		return inTransaction(session -> {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
+			Root<SignDAO> signRef = criteria.from(SignDAO.class);
+			Join<Object, Object> locationRef = signRef.join("location");
+			// set predicates
+			List<Predicate> predicates = new LinkedList<>();
+			predicates.add(builder.equal(locationRef.get("world"), sign.getLocation().getWorld()));
+			predicates.add(builder.equal(locationRef.get("x"), sign.getLocation().getX()));
+			predicates.add(builder.equal(locationRef.get("y"), sign.getLocation().getY()));
+			predicates.add(builder.equal(locationRef.get("z"), sign.getLocation().getZ()));
+			predicates.add(builder.equal(signRef.get("central"), sign.isCentral()));
+			// predicate depending on null values
+			if (sign.getUsername() == null) {
+				predicates.add(builder.isNull(signRef.get("username")));
+			} else {
+				predicates.add(builder.equal(signRef.get("username"), sign.getUsername()));
+			}
+			// add predicates
+			criteria.where(builder.and(predicates.toArray(new Predicate[0])));
+			return session.createQuery(criteria).getResultList();
+		});
+	}
+
+	public static List<SignDAO> findAllSignsAt(Location location) {
+		return inTransaction(session -> {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
+			Root<SignDAO> signRef = criteria.from(SignDAO.class);
+			Join<Object, Object> locationRef = signRef.join("location");
+			// set predicates
+			List<Predicate> predicates = new LinkedList<>();
+			predicates.add(builder.equal(locationRef.get("world"), location.getWorld()));
+			predicates.add(builder.equal(locationRef.get("x"), location.getX()));
+			predicates.add(builder.equal(locationRef.get("y"), location.getY()));
+			predicates.add(builder.equal(locationRef.get("z"), location.getZ()));
+			// add predicates
+			criteria.where(builder.and(predicates.toArray(new Predicate[0])));
+			return session.createQuery(criteria).getResultList();
+		});
 	}
 
 	public static List<SignDAO> findAllSignsAround(Location location, int radius) {
 		return inTransaction(session -> {
-			String query = SELECT_FROM_SIGNS
-					+ "WHERE t.location.world = :world AND t.location.x >= :lowerx AND t.location.x <= :higherx AND t.location.y >= :lowery AND t.location.y <= :highery AND t.location.z >= :lowerz AND t.location.z <= :higherz";
-			return session.createQuery(query, SignDAO.class).setParameter("world", location.getWorld())
-					.setParameter("lowerx", location.getX() - radius).setParameter("higherx", location.getX() + radius)
-					.setParameter("lowery", location.getY() - radius).setParameter("highery", location.getY() + radius)
-					.setParameter("lowerz", location.getZ() - radius).setParameter("higherz", location.getZ() + radius)
-					.getResultList();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
+			Root<SignDAO> signRef = criteria.from(SignDAO.class);
+			Join<Object, Object> locationRef = signRef.join("location");
+			// set predicates
+			List<Predicate> predicates = new LinkedList<>();
+			predicates.add(builder.equal(locationRef.get("world"), location.getWorld()));
+			predicates.add(builder.between(locationRef.get("x"), location.getX() - radius, location.getX() + radius));
+			predicates.add(builder.between(locationRef.get("y"), location.getY() - radius, location.getY() + radius));
+			predicates.add(builder.between(locationRef.get("z"), location.getZ() - radius, location.getZ() + radius));
+			// add predicates
+			criteria.where(builder.and(predicates.toArray(new Predicate[0])));
+			return session.createQuery(criteria).getResultList();
 		});
 	}
 
@@ -68,8 +175,13 @@ public class DataProvider {
 		delete(sign);
 	}
 
-	public static void clearAllSigns() {
-		update(DELETE_FROM_SIGNS);
+	public static int clearAllSigns() {
+		return inTransaction(session -> {
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaDelete<SignDAO> criteria = builder.createCriteriaDelete(SignDAO.class);
+			criteria.from(SignDAO.class);
+			return session.createQuery(criteria).executeUpdate();
+		});
 	}
 
 	/* UTILS */
@@ -81,14 +193,6 @@ public class DataProvider {
 		transaction.commit();
 		session.close();
 		return ret;
-	}
-
-	private static <T> List<T> queryForList(String query, Class<T> clazz) {
-		return inTransaction(session -> session.createQuery(query, clazz).getResultList());
-	}
-
-	private static void update(String query) {
-		inTransaction(session -> session.createQuery(query).executeUpdate());
 	}
 
 	public static void persist(DAO o) {

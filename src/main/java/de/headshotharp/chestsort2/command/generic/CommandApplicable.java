@@ -4,5 +4,5 @@ import org.bukkit.command.CommandSender;
 
 @FunctionalInterface
 public interface CommandApplicable {
-	public boolean isApplicable(CommandSender sender, String command, String[] args);
+	public boolean isApplicable(CommandSender sender, String command, String... args);
 }

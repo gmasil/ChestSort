@@ -13,6 +13,8 @@ public class ChestDAO extends DAO {
 	@Embedded
 	private Location location;
 	private String material;
+	private boolean central = true;
+	private String username = null;
 
 	public ChestDAO() {
 	}
@@ -22,9 +24,20 @@ public class ChestDAO extends DAO {
 		this.material = material;
 	}
 
+	public ChestDAO(Location location, String material, String username) {
+		this(location, material);
+		if (username != null) {
+			this.username = username;
+			this.central = false;
+		}
+	}
+
 	public ChestDAO(String world, int x, int y, int z, String material) {
-		this.location = new Location(world, x, y, z);
-		this.material = material;
+		this(new Location(world, x, y, z), material);
+	}
+
+	public ChestDAO(String world, int x, int y, int z, String material, String username) {
+		this(new Location(world, x, y, z), material, username);
 	}
 
 	public Location getLocation() {
@@ -43,12 +56,30 @@ public class ChestDAO extends DAO {
 		this.material = material;
 	}
 
+	public boolean isCentral() {
+		return central;
+	}
+
+	public void setCentral(boolean central) {
+		this.central = central;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
+		result = prime * result + (central ? 1231 : 1237);
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		result = prime * result + ((material == null) ? 0 : material.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -57,13 +88,16 @@ public class ChestDAO extends DAO {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
+		if (!super.equals(obj)) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
 		ChestDAO other = (ChestDAO) obj;
+		if (central != other.central) {
+			return false;
+		}
 		if (location == null) {
 			if (other.location != null) {
 				return false;
@@ -78,6 +112,19 @@ public class ChestDAO extends DAO {
 		} else if (!material.equals(other.material)) {
 			return false;
 		}
+		if (username == null) {
+			if (other.username != null) {
+				return false;
+			}
+		} else if (!username.equals(other.username)) {
+			return false;
+		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ChestDAO [location=" + location + ", material=" + material + ", central=" + central + ", username="
+				+ username + "]";
 	}
 }

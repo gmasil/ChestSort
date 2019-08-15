@@ -91,4 +91,9 @@ public class Location implements Serializable {
 		}
 		return (z == other.z);
 	}
+
+	@Override
+	public String toString() {
+		return "Location [world=" + world + ", x=" + x + ", y=" + y + ", z=" + z + "]";
+	}
 }

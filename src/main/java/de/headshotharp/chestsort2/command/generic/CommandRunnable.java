@@ -4,5 +4,5 @@ import org.bukkit.command.CommandSender;
 
 @FunctionalInterface
 public interface CommandRunnable {
-	public void execute(CommandSender sender, String command, String[] args);
+	public void execute(CommandSender sender, String command, String... args);
 }

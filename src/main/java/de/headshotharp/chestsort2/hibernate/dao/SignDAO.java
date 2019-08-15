@@ -24,8 +24,10 @@ public class SignDAO extends DAO {
 
 	public SignDAO(Location location, String username) {
 		this.location = location;
-		this.central = false;
-		this.username = username;
+		if (username != null) {
+			this.username = username;
+			this.central = false;
+		}
 	}
 
 	public SignDAO(String world, int x, int y, int z) {
@@ -100,5 +102,10 @@ public class SignDAO extends DAO {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "SignDAO [location=" + location + ", central=" + central + ", username=" + username + "]";
 	}
 }
