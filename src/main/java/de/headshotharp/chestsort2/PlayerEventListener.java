@@ -43,14 +43,14 @@ public class PlayerEventListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (isChestBreaked(event)) {
-			List<ChestDAO> chests = Registry.getDataprovider().findAllChestsAt(locationFromEvent(event));
+			List<ChestDAO> chests = Registry.getDataProvider().findAllChestsAt(locationFromEvent(event));
 			if (!chests.isEmpty()) {
 				event.setCancelled(true);
 				sendPlayerChestBreakErrorMessage(event, chests);
 			}
 		}
 		if (isSignBreaked(event)) {
-			List<SignDAO> signs = Registry.getDataprovider().findAllSignsAt(locationFromEvent(event));
+			List<SignDAO> signs = Registry.getDataProvider().findAllSignsAt(locationFromEvent(event));
 			if (!signs.isEmpty()) {
 				event.setCancelled(true);
 				ChestSortUtils.sendPlayerSignBreakErrorMessage(event);

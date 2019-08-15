@@ -8,7 +8,7 @@ import de.headshotharp.chestsort2.hibernate.HibernateUtils;
 public class Registry {
 	private static CommandRegistry commandRegistry = new CommandRegistry();
 	private static HibernateUtils hibernateUtils = new HibernateUtils();
-	private static DataProvider dataprovider = new DataProvider();
+	private static DataProvider dataProvider = new DataProvider();
 	private static ConfigService configService = new ConfigService();
 	private static PlayerEventListener playerEventListener = new PlayerEventListener();
 
@@ -31,12 +31,12 @@ public class Registry {
 		Registry.hibernateUtils = hibernateUtils;
 	}
 
-	public static DataProvider getDataprovider() {
-		return dataprovider;
+	public static DataProvider getDataProvider() {
+		return dataProvider;
 	}
 
-	protected static void setDataprovider(DataProvider dataprovider) {
-		Registry.dataprovider = dataprovider;
+	protected static void setDataProvider(DataProvider dataProvider) {
+		Registry.dataProvider = dataProvider;
 	}
 
 	public static ConfigService getConfigService() {

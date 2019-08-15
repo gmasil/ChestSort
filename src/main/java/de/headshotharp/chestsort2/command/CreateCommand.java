@@ -1,12 +1,15 @@
 package de.headshotharp.chestsort2.command;
 
+import static de.headshotharp.chestsort2.StaticConfig.COLOR_ERROR;
+import static de.headshotharp.chestsort2.StaticConfig.COLOR_ERROR_HIGHLIGHT;
+import static de.headshotharp.chestsort2.StaticConfig.COLOR_GOOD;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,17 +28,18 @@ public class CreateCommand implements ChestsortCommand {
 		Player player = (Player) sender;
 		ChestDAO chest = chestByParameter(player, args);
 		if (chest != null) {
-			if (Registry.getDataprovider().findChest(chest).isEmpty()) {
-				Registry.getDataprovider().persistChest(chest);
-				if (Registry.getDataprovider().findChest(chest).isEmpty()) {
-					player.sendMessage(ChatColor.DARK_RED
-							+ "The chest could not be persisted in the database, this should never occur");
+			if (Registry.getDataProvider().findChest(chest).isEmpty()) {
+				Registry.getDataProvider().persistChest(chest);
+				if (Registry.getDataProvider().findChest(chest).isEmpty()) {
+					player.sendMessage(
+							COLOR_ERROR + "The chest could not be persisted in the database, this should never occur");
 				} else {
 					player.sendMessage(
-							ChatColor.GREEN + "Chest of type " + chest.getMaterial() + " was created successfully");
+							COLOR_GOOD + "Chest of type " + chest.getMaterial() + " was created successfully");
 				}
 			} else {
-				player.sendMessage(ChatColor.DARK_RED + "Chest is already registered with type " + chest.getMaterial());
+				player.sendMessage(COLOR_ERROR + "Chest is already registered with type " + COLOR_ERROR_HIGHLIGHT
+						+ chest.getMaterial());
 			}
 		}
 	}
@@ -56,21 +60,21 @@ public class CreateCommand implements ChestsortCommand {
 		Optional<Material> optionalMaterial = Arrays.asList(Material.values()).stream()
 				.filter(mat -> mat.toString().equalsIgnoreCase(args[1])).findFirst();
 		if (!optionalMaterial.isPresent()) {
-			player.sendMessage(ChatColor.DARK_RED + "The material " + args[1] + " does not exist");
+			player.sendMessage(COLOR_ERROR + "The material " + args[1] + " does not exist");
 			sendusage(player);
 			return null;
 		}
 		Location markedChest = Registry.getPlayerEventListener().getMarkedLocation(player.getName());
 		if (markedChest == null) {
-			player.sendMessage(
-					ChatColor.DARK_RED + "Right click a chest with a stick in your main hand first to mark a chest.");
+			player.sendMessage(COLOR_ERROR
+					+ "You have to mark a chest first. Right click a chest with a stick in your main hand.");
 			return null;
 		}
 		return new ChestDAO(markedChest, optionalMaterial.get().toString(), username);
 	}
 
 	private void sendusage(Player player) {
-		player.sendMessage(ChatColor.DARK_RED + usage());
+		player.sendMessage(COLOR_ERROR + usage());
 	}
 
 	@Override

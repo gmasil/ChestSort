@@ -72,6 +72,13 @@ public class ChestDAO extends DAO {
 		this.username = username;
 	}
 
+	public String getTextBlockString() {
+		if (isCentral()) {
+			return "central chest of type " + getMaterial();
+		}
+		return "user chest of type " + getMaterial() + " (" + username + ")";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
