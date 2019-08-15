@@ -96,7 +96,7 @@ public class CreateCommand implements ChestsortCommand {
 
 	@Override
 	public boolean isApplicable(CommandSender sender, String command, String... args) {
-		return command.equalsIgnoreCase("create");
+		return command.equalsIgnoreCase(getName());
 	}
 
 	@Override
@@ -104,11 +104,11 @@ public class CreateCommand implements ChestsortCommand {
 		if (args.length == 0) {
 			return Arrays.asList(WH_CENTRAL, WH_USER);
 		} else if (args.length == 1) {
-			return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0]))
+			return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
 					.collect(Collectors.toList());
 		} else if (args.length == 2) {
 			return Arrays.asList(Material.values()).stream().map(Material::toString)
-					.filter(mat -> mat.startsWith(args[1])).collect(Collectors.toList());
+					.filter(mat -> mat.startsWith(args[1].toUpperCase())).collect(Collectors.toList());
 		}
 		return new LinkedList<>();
 	}
@@ -121,5 +121,10 @@ public class CreateCommand implements ChestsortCommand {
 	@Override
 	public String usage() {
 		return "Usage: /chestsort create <central/user> <material>";
+	}
+
+	@Override
+	public String getName() {
+		return "create";
 	}
 }

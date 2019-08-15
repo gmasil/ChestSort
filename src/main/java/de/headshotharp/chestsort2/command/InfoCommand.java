@@ -45,7 +45,7 @@ public class InfoCommand implements ChestsortCommand {
 
 	@Override
 	public boolean isApplicable(CommandSender sender, String command, String... args) {
-		return command.equalsIgnoreCase("info");
+		return command.equalsIgnoreCase(getName());
 	}
 
 	@Override
@@ -63,4 +63,8 @@ public class InfoCommand implements ChestsortCommand {
 		return "Usage: /chestsort info";
 	}
 
+	@Override
+	public String getName() {
+		return "info";
+	}
 }

@@ -4,4 +4,6 @@ public interface ChestsortCommand extends CommandRunnable, CommandApplicable, Co
 	public boolean isForPlayerOnly();
 
 	public String usage();
+
+	public String getName();
 }

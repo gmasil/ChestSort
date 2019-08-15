@@ -2,6 +2,7 @@ package de.headshotharp.chestsort2.command;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,7 +46,10 @@ public class CommandRegistry implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command bukkitCommand, String alias,
 			String[] originalArgs) {
-		if (originalArgs.length > 0) {
+		if (originalArgs.length == 1) {
+			return commands.stream().map(cmd -> cmd.getName().toLowerCase())
+					.filter(cmd -> cmd.startsWith(originalArgs[0].toLowerCase())).collect(Collectors.toList());
+		} else {
 			String cmd = originalArgs[0];
 			String[] args = moveArgs(originalArgs);
 			for (ChestsortCommand command : commands) {

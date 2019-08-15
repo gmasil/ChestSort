@@ -34,10 +34,11 @@ public class CreateCommandTest extends GherkinTest {
 		assertThat(getTabComplete(), contains("central", "user"));
 		assertThat(getTabComplete("c"), contains("central"));
 		assertThat(getTabComplete("cent"), contains("central"));
+		assertThat(getTabComplete("cENT"), contains("central"));
 		assertThat(getTabComplete("central"), contains("central"));
 		assertThat(getTabComplete("centralsd"), hasSize(0));
 		assertThat(getTabComplete("central", "").get(0), is(equalTo(Material.ACACIA_BOAT.toString())));
-		assertThat(getTabComplete("central", "SAN"),
+		assertThat(getTabComplete("central", "san"),
 				contains("SAND", "SANDSTONE", "SANDSTONE_SLAB", "SANDSTONE_STAIRS", "SANDSTONE_WALL"));
 		assertThat(getTabComplete("central", "SANDST").get(0), is(equalTo(Material.SANDSTONE.toString())));
 		assertThat(getTabComplete("central", "COB", "something"), hasSize(0));
