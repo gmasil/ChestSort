@@ -17,7 +17,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import de.headshotharp.chestsort2.hibernate.DataProvider;
 import de.headshotharp.chestsort2.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort2.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort2.hibernate.dao.generic.Location;
@@ -44,14 +43,14 @@ public class PlayerEventListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (isChestBreaked(event)) {
-			List<ChestDAO> chests = DataProvider.findAllChestsAt(locationFromEvent(event));
+			List<ChestDAO> chests = Registry.getDataprovider().findAllChestsAt(locationFromEvent(event));
 			if (!chests.isEmpty()) {
 				event.setCancelled(true);
 				sendPlayerChestBreakErrorMessage(event, chests);
 			}
 		}
 		if (isSignBreaked(event)) {
-			List<SignDAO> signs = DataProvider.findAllSignsAt(locationFromEvent(event));
+			List<SignDAO> signs = Registry.getDataprovider().findAllSignsAt(locationFromEvent(event));
 			if (!signs.isEmpty()) {
 				event.setCancelled(true);
 				ChestSortUtils.sendPlayerSignBreakErrorMessage(event);

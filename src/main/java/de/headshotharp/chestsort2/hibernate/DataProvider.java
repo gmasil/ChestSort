@@ -20,12 +20,9 @@ import de.headshotharp.chestsort2.hibernate.dao.generic.DAO;
 import de.headshotharp.chestsort2.hibernate.dao.generic.Location;
 
 public class DataProvider {
-	private DataProvider() {
-	}
-
 	/* CHEST */
 
-	public static List<ChestDAO> findAllChests() {
+	public List<ChestDAO> findAllChests() {
 		return inTransaction(session -> {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
@@ -34,7 +31,7 @@ public class DataProvider {
 		});
 	}
 
-	public static List<ChestDAO> findChest(ChestDAO chest) {
+	public List<ChestDAO> findChest(ChestDAO chest) {
 		return inTransaction(session -> {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
@@ -60,7 +57,7 @@ public class DataProvider {
 		});
 	}
 
-	public static List<ChestDAO> findAllChestsAt(Location location) {
+	public List<ChestDAO> findAllChestsAt(Location location) {
 		return inTransaction(session -> {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
@@ -78,15 +75,15 @@ public class DataProvider {
 		});
 	}
 
-	public static void persistChest(ChestDAO chest) {
+	public void persistChest(ChestDAO chest) {
 		persist(chest);
 	}
 
-	public static void deleteChest(ChestDAO chest) {
+	public void deleteChest(ChestDAO chest) {
 		delete(chest);
 	}
 
-	public static int clearAllChests() {
+	public int clearAllChests() {
 		return inTransaction(session -> {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaDelete<ChestDAO> criteria = builder.createCriteriaDelete(ChestDAO.class);
@@ -97,7 +94,7 @@ public class DataProvider {
 
 	/* SIGN */
 
-	public static List<SignDAO> findAllSigns() {
+	public List<SignDAO> findAllSigns() {
 		return inTransaction(session -> {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
@@ -106,7 +103,7 @@ public class DataProvider {
 		});
 	}
 
-	public static List<SignDAO> findSign(SignDAO sign) {
+	public List<SignDAO> findSign(SignDAO sign) {
 		return inTransaction(session -> {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
@@ -131,7 +128,7 @@ public class DataProvider {
 		});
 	}
 
-	public static List<SignDAO> findAllSignsAt(Location location) {
+	public List<SignDAO> findAllSignsAt(Location location) {
 		return inTransaction(session -> {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
@@ -149,7 +146,7 @@ public class DataProvider {
 		});
 	}
 
-	public static List<SignDAO> findAllSignsAround(Location location, int radius) {
+	public List<SignDAO> findAllSignsAround(Location location, int radius) {
 		return inTransaction(session -> {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
@@ -167,15 +164,15 @@ public class DataProvider {
 		});
 	}
 
-	public static void persistSign(SignDAO sign) {
+	public void persistSign(SignDAO sign) {
 		persist(sign);
 	}
 
-	public static void deleteSign(SignDAO sign) {
+	public void deleteSign(SignDAO sign) {
 		delete(sign);
 	}
 
-	public static int clearAllSigns() {
+	public int clearAllSigns() {
 		return inTransaction(session -> {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaDelete<SignDAO> criteria = builder.createCriteriaDelete(SignDAO.class);
@@ -186,7 +183,7 @@ public class DataProvider {
 
 	/* UTILS */
 
-	private static <T> T inTransaction(InTransactionExecutor<T> ite) {
+	private <T> T inTransaction(InTransactionExecutor<T> ite) {
 		Session session = Registry.getHibernateUtils().getSessionFactory().openSession();
 		Transaction transaction = session.beginTransaction();
 		T ret = ite.executeInTransaction(session);
@@ -195,14 +192,14 @@ public class DataProvider {
 		return ret;
 	}
 
-	public static void persist(DAO o) {
+	public void persist(DAO o) {
 		inTransaction(session -> {
 			session.persist(o);
 			return null;
 		});
 	}
 
-	public static void delete(DAO o) {
+	public void delete(DAO o) {
 		inTransaction(session -> {
 			session.delete(o);
 			return null;

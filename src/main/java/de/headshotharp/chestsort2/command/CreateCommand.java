@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 import de.headshotharp.chestsort2.Registry;
 import de.headshotharp.chestsort2.command.generic.ChestsortCommand;
-import de.headshotharp.chestsort2.hibernate.DataProvider;
 import de.headshotharp.chestsort2.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort2.hibernate.dao.generic.Location;
 
@@ -26,9 +25,9 @@ public class CreateCommand implements ChestsortCommand {
 		Player player = (Player) sender;
 		ChestDAO chest = chestByParameter(player, args);
 		if (chest != null) {
-			if (DataProvider.findChest(chest).isEmpty()) {
-				DataProvider.persistChest(chest);
-				if (DataProvider.findChest(chest).isEmpty()) {
+			if (Registry.getDataprovider().findChest(chest).isEmpty()) {
+				Registry.getDataprovider().persistChest(chest);
+				if (Registry.getDataprovider().findChest(chest).isEmpty()) {
 					player.sendMessage(ChatColor.DARK_RED
 							+ "The chest could not be persisted in the database, this should never occur");
 				} else {
