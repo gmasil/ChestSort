@@ -1,11 +1,12 @@
 name: ChestSort
-main: de.headshotharp.chestsort.ChestSort
+main: de.headshotharp.chestsort2.ChestSort
 version: 1.14.4-1.0
 api-version: 1.14
 author: HeadShotHarp
-description: >
-             ChestSort Plugin for Spigot 1.14.4
+description: ChestSort Plugin for Spigot 1.14.4
 commands:
-  ChestSort:
-    description: Shows information about ChestSort
-    usage: /ChestSort
+  chestsort:
+    description: Controls ChestSort
+    usage: |
+           Usage: /<command> create <material>
+           Usage: /<command> info

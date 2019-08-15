@@ -49,7 +49,9 @@ public class ConfigService {
 	}
 
 	public void saveDefaultConfig() throws IOException {
-		saveConfig(getDefaultConfig());
+		if (!configFile.exists()) {
+			saveConfig(getDefaultConfig());
+		}
 	}
 
 	protected File getConfigFile() {

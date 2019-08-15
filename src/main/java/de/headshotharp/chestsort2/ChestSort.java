@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 public class ChestSort extends SpigotPlugin implements Listener {
 	@Override
 	public void onEnable() {
+		saveDefaultConfig();
 		try {
 			Registry.getConfigService().readConfig();
 		} catch (IOException e) {
