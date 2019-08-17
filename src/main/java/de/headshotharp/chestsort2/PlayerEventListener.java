@@ -44,6 +44,7 @@ public class PlayerEventListener implements Listener {
 			Location location = locationFromEvent(event);
 			markedLocations.put(event.getPlayer().getName(), location);
 			event.getPlayer().sendMessage(COLOR_GOOD + "Marked chest at " + location.toHumanString());
+			event.setCancelled(true);
 		}
 
 	}
