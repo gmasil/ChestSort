@@ -16,6 +16,7 @@ public class ChestSort extends SpigotPlugin implements Listener {
 		}
 		try {
 			Registry.getHibernateUtils().setDatabaseConfig(Registry.getConfigService().getConfig().getDatabase());
+			Registry.getHibernateUtils().getSessionFactory();
 		} catch (Exception e) {
 			error("Error while connecting to database", e);
 			return;
