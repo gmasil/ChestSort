@@ -8,5 +8,6 @@ commands:
   chestsort:
     description: Controls ChestSort
     usage: |
-           Usage: /<command> create <material>
-           Usage: /<command> info
+           /<command> create <central/user> <material>
+           /<command> delete [confirm]
+           /<command> info

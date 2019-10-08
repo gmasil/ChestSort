@@ -3,7 +3,7 @@ package de.headshotharp.chestsort2.hibernate.testutils;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-import de.headshotharp.chestsort2.Registry;
+import de.headshotharp.chestsort.Registry;
 
 public class H2HibernateConfigurationExtension implements BeforeEachCallback {
 	@Override
