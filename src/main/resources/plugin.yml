@@ -1,5 +1,5 @@
 name: ChestSort
-main: de.headshotharp.chestsort2.ChestSort
+main: de.headshotharp.chestsort.ChestSort
 version: 1.14.4-1.0
 api-version: 1.14
 author: HeadShotHarp

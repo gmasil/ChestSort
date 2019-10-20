@@ -1,4 +1,4 @@
-package de.headshotharp.chestsort2.hibernate.testutils;
+package de.headshotharp.chestsort.hibernate.testutils;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;

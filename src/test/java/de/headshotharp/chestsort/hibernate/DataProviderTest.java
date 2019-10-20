@@ -18,7 +18,7 @@ import de.headshotharp.chestsort.Registry;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
-import de.headshotharp.chestsort2.hibernate.testutils.ConfigureH2Hibernate;
+import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;
 
 @ConfigureH2Hibernate
 @Story("The DataProvider can perform all necessary operations on the database")
