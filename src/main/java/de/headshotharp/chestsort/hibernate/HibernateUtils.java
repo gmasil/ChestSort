@@ -4,8 +4,8 @@ import java.util.Properties;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
 import de.headshotharp.chestsort.config.Config.DatabaseConfig;
@@ -35,21 +35,25 @@ public class HibernateUtils {
 		Configuration configuration = new Configuration();
 		Properties properties = new Properties();
 		// config mapper
-		properties.put(Environment.DRIVER, databaseConfig.getDriver());
-		properties.put(Environment.URL, databaseConfig.getUrl());
-		properties.put(Environment.USER, databaseConfig.getUsername());
-		properties.put(Environment.PASS, databaseConfig.getPassword());
-		properties.put(Environment.DIALECT, databaseConfig.getDialect());
-		properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-		properties.put(Environment.HBM2DDL_AUTO, "update");
+		properties.put(AvailableSettings.DRIVER, databaseConfig.getDriver());
+		properties.put(AvailableSettings.URL, databaseConfig.getUrl());
+		properties.put(AvailableSettings.USER, databaseConfig.getUsername());
+		properties.put(AvailableSettings.PASS, databaseConfig.getPassword());
+		properties.put(AvailableSettings.DIALECT, databaseConfig.getDialect());
+		properties.put(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+		properties.put(AvailableSettings.HBM2DDL_AUTO, "update");
+		properties.put(AvailableSettings.CONNECTION_PROVIDER, "org.hibernate.connection.C3P0ConnectionProvider");
+		properties.put(AvailableSettings.C3P0_MIN_SIZE, "5");
+		properties.put(AvailableSettings.C3P0_MAX_SIZE, "20");
+		properties.put(AvailableSettings.C3P0_ACQUIRE_INCREMENT, "5");
+		properties.put(AvailableSettings.C3P0_TIMEOUT, "600");
 		// boilerplate
 		configuration.setProperties(properties);
 		// configure entity classes
 		configuration.addAnnotatedClass(ChestDAO.class);
 		configuration.addAnnotatedClass(SignDAO.class);
 		// setup session factory
-		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-				.applySettings(configuration.getProperties()).build();
+		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
 		sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 	}
 }
