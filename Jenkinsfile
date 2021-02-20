@@ -15,11 +15,6 @@ pipeline {
         sh 'mvn clean package --fail-at-end'
       }
     }
-    stage('deploy') {
-      steps {
-        sh 'mvn deploy -DskipTests'
-      }
-    }
     stage('analyze') {
       environment {
         SONAR_TOKEN = credentials('SONAR_TOKEN')
@@ -32,6 +27,7 @@ pipeline {
   post {
     always {
       junit '**/surefire-reports/**/*.xml'
+      archiveArtifacts artifacts: 'target/ChestSort.jar', fingerprint: true
     }
   }
 }
