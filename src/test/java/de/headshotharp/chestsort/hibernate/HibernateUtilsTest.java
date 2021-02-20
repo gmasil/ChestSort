@@ -14,21 +14,21 @@ import de.headshotharp.chestsort.Registry;
 
 @Story("Session factory is tested for intended behaviour")
 public class HibernateUtilsTest extends GherkinTest {
-	@Scenario("A SessionFactory is created without database config")
-	public void testSessionFactoryCreationWithoutDatabaseConfig(Reference<IllegalStateException> thrownException) {
-		given("no database config exists", () -> {
-			Registry.getHibernateUtils().setDatabaseConfig(null);
-		});
-		when("the session factory is created", () -> {
-			try {
-				Registry.getHibernateUtils().createSessionFactory();
-			} catch (IllegalStateException e) {
-				thrownException.set(e);
-			}
-		});
-		then("an IllegalStateException with message 'HibernateUtils has no database config' is thrown", () -> {
-			assertThat(thrownException.get(), is(not(nullValue())));
-			assertThat(thrownException.get().getMessage(), is(equalTo("HibernateUtils has no database config")));
-		});
-	}
+    @Scenario("A SessionFactory is created without database config")
+    public void testSessionFactoryCreationWithoutDatabaseConfig(Reference<IllegalStateException> thrownException) {
+        given("no database config exists", () -> {
+            Registry.getHibernateUtils().setDatabaseConfig(null);
+        });
+        when("the session factory is created", () -> {
+            try {
+                Registry.getHibernateUtils().createSessionFactory();
+            } catch (IllegalStateException e) {
+                thrownException.set(e);
+            }
+        });
+        then("an IllegalStateException with message 'HibernateUtils has no database config' is thrown", () -> {
+            assertThat(thrownException.get(), is(not(nullValue())));
+            assertThat(thrownException.get().getMessage(), is(equalTo("HibernateUtils has no database config")));
+        });
+    }
 }

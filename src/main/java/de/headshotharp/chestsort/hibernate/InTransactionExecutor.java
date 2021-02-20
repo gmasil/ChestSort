@@ -4,5 +4,5 @@ import org.hibernate.Session;
 
 @FunctionalInterface
 public interface InTransactionExecutor<T> {
-	public T executeInTransaction(Session session);
+    public T executeInTransaction(Session session);
 }

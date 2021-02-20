@@ -16,81 +16,81 @@ import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 
 public class InventoryUtils {
-	private InventoryUtils() {
-	}
+    private InventoryUtils() {
+    }
 
-	public static ItemStack insertIntoChests(ItemStack itemStack, boolean central, String username) {
-		String material = itemStack.getType().toString();
-		DataProvider dp = Registry.getDataProvider();
-		List<ChestDAO> chests;
-		if (central) {
-			chests = dp.findAllCentralChestsByMaterial(material);
-		} else {
-			chests = dp.findAllChestsByMaterialAndUser(material, username);
-		}
-		for (ChestDAO chest : chests) {
-			Block chestBlock = getBlockAt(chest.getLocation());
-			if (chestBlock.getType() == Material.CHEST) {
-				Chest bukkitChest = (Chest) chestBlock.getState();
-				itemStack = bukkitChest.getInventory().addItem(itemStack).get(0);
-				if (itemStack == null) {
-					// everything was stored
-					break;
-				}
-			}
-		}
-		return itemStack;
-	}
+    public static ItemStack insertIntoChests(ItemStack itemStack, boolean central, String username) {
+        String material = itemStack.getType().toString();
+        DataProvider dp = Registry.getDataProvider();
+        List<ChestDAO> chests;
+        if (central) {
+            chests = dp.findAllCentralChestsByMaterial(material);
+        } else {
+            chests = dp.findAllChestsByMaterialAndUser(material, username);
+        }
+        for (ChestDAO chest : chests) {
+            Block chestBlock = getBlockAt(chest.getLocation());
+            if (chestBlock.getType() == Material.CHEST) {
+                Chest bukkitChest = (Chest) chestBlock.getState();
+                itemStack = bukkitChest.getInventory().addItem(itemStack).get(0);
+                if (itemStack == null) {
+                    // everything was stored
+                    break;
+                }
+            }
+        }
+        return itemStack;
+    }
 
-	public static void insertAllInventory(Player player, boolean central) {
-		ItemStack[] contents = player.getInventory().getContents();
-		for (int i = 0; i < contents.length; i++) {
-			if (contents[i] != null) {
-				contents[i] = insertIntoChests(contents[i], central, player.getName());
-				if (contents[i] != null && contents[i].getAmount() == 0) {
-					contents[i] = null;
-				}
-			}
-		}
-		player.getInventory().setContents(contents);
-	}
+    public static void insertAllInventory(Player player, boolean central) {
+        ItemStack[] contents = player.getInventory().getContents();
+        for (int i = 0; i < contents.length; i++) {
+            if (contents[i] != null) {
+                contents[i] = insertIntoChests(contents[i], central, player.getName());
+                if (contents[i] != null && contents[i].getAmount() == 0) {
+                    contents[i] = null;
+                }
+            }
+        }
+        player.getInventory().setContents(contents);
+    }
 
-	public static void insertItemInHand(Player player, boolean central) {
-		if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
-			return;
-		}
-		String material = player.getInventory().getItemInMainHand().getType().toString();
-		DataProvider dp = Registry.getDataProvider();
-		List<ChestDAO> chests;
-		if (central) {
-			chests = dp.findAllCentralChestsByMaterial(material);
-		} else {
-			chests = dp.findAllChestsByMaterialAndUser(material, player.getName());
-		}
-		if (chests.isEmpty()) {
-			player.sendMessage(COLOR_NORMAL + "There are no chests of type " + material);
-			return;
-		}
-		ItemStack itemStack = player.getInventory().getItemInMainHand();
-		for (ChestDAO chest : chests) {
-			Block chestBlock = getBlockAt(chest.getLocation());
-			if (chestBlock.getType() != Material.CHEST) {
-				player.sendMessage(COLOR_ERROR + "The registered chest at " + chest.getLocation().toHumanString()
-						+ " is no chest anymore");
-			} else {
-				Chest bukkitChest = (Chest) chestBlock.getState();
-				itemStack = bukkitChest.getInventory().addItem(itemStack).get(0);
-				if (itemStack == null) {
-					// everything was stored
-					break;
-				}
-			}
-		}
-		if (itemStack == null) {
-			player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-		} else {
-			player.getInventory().setItemInMainHand(itemStack);
-			player.sendMessage(COLOR_ERROR + "There is not enough space in the chests");
-		}
-	}
+    public static void insertItemInHand(Player player, boolean central) {
+        if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+            return;
+        }
+        String material = player.getInventory().getItemInMainHand().getType().toString();
+        DataProvider dp = Registry.getDataProvider();
+        List<ChestDAO> chests;
+        if (central) {
+            chests = dp.findAllCentralChestsByMaterial(material);
+        } else {
+            chests = dp.findAllChestsByMaterialAndUser(material, player.getName());
+        }
+        if (chests.isEmpty()) {
+            player.sendMessage(COLOR_NORMAL + "There are no chests of type " + material);
+            return;
+        }
+        ItemStack itemStack = player.getInventory().getItemInMainHand();
+        for (ChestDAO chest : chests) {
+            Block chestBlock = getBlockAt(chest.getLocation());
+            if (chestBlock.getType() != Material.CHEST) {
+                player.sendMessage(COLOR_ERROR + "The registered chest at " + chest.getLocation().toHumanString()
+                        + " is no chest anymore");
+            } else {
+                Chest bukkitChest = (Chest) chestBlock.getState();
+                itemStack = bukkitChest.getInventory().addItem(itemStack).get(0);
+                if (itemStack == null) {
+                    // everything was stored
+                    break;
+                }
+            }
+        }
+        if (itemStack == null) {
+            player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+        } else {
+            player.getInventory().setItemInMainHand(itemStack);
+            player.sendMessage(COLOR_ERROR + "There is not enough space in the chests");
+        }
+    }
 }

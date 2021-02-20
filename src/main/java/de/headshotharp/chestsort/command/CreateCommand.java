@@ -22,109 +22,109 @@ import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class CreateCommand implements ChestsortCommand {
-	public static final String WH_CENTRAL = "central";
-	public static final String WH_USER = "user";
+    public static final String WH_CENTRAL = "central";
+    public static final String WH_USER = "user";
 
-	@Override
-	public void execute(CommandSender sender, String command, String... args) {
-		Player player = (Player) sender;
-		ChestDAO chest = chestByParameter(player, args);
-		if (chest != null) {
-			if (Registry.getDataProvider().findChest(chest).isEmpty()) {
-				Registry.getDataProvider().persistChest(chest);
-				if (Registry.getDataProvider().findChest(chest).isEmpty()) {
-					player.sendMessage(
-							COLOR_ERROR + "The chest could not be persisted in the database, this should never occur");
-				} else {
-					player.sendMessage(
-							COLOR_GOOD + "Chest of type " + chest.getMaterial() + " was created successfully");
-				}
-			} else {
-				player.sendMessage(COLOR_ERROR + "Chest is already registered with type " + COLOR_ERROR_HIGHLIGHT
-						+ chest.getMaterial());
-			}
-		}
-	}
+    @Override
+    public void execute(CommandSender sender, String command, String... args) {
+        Player player = (Player) sender;
+        ChestDAO chest = chestByParameter(player, args);
+        if (chest != null) {
+            if (Registry.getDataProvider().findChest(chest).isEmpty()) {
+                Registry.getDataProvider().persistChest(chest);
+                if (Registry.getDataProvider().findChest(chest).isEmpty()) {
+                    player.sendMessage(
+                            COLOR_ERROR + "The chest could not be persisted in the database, this should never occur");
+                } else {
+                    player.sendMessage(
+                            COLOR_GOOD + "Chest of type " + chest.getMaterial() + " was created successfully");
+                }
+            } else {
+                player.sendMessage(COLOR_ERROR + "Chest is already registered with type " + COLOR_ERROR_HIGHLIGHT
+                        + chest.getMaterial());
+            }
+        }
+    }
 
-	public ChestDAO chestByParameter(Player player, String... args) {
-		if (args.length != 2) {
-			sendusage(player);
-			return null;
-		}
-		if (!Arrays.asList(WH_CENTRAL, WH_USER).contains(args[0].toLowerCase())) {
-			sendusage(player);
-			return null;
-		}
-		String username = null;
-		if (args[0].equalsIgnoreCase(WH_USER)) {
-			username = player.getName();
-		}
-		Optional<Material> optionalMaterial = Arrays.asList(Material.values()).stream()
-				.filter(mat -> mat.toString().equalsIgnoreCase(args[1])).findFirst();
-		if (!optionalMaterial.isPresent()) {
-			player.sendMessage(COLOR_ERROR + "The material " + args[1] + " does not exist");
-			sendusage(player);
-			return null;
-		}
-		Location markedChest = Registry.getPlayerEventListener().getMarkedLocation(player.getName());
-		if (markedChest == null) {
-			player.sendMessage(
-					COLOR_ERROR + "You have to mark a chest first. Right click a chest with a stick in your main hand");
-			return null;
-		}
-		if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
-			if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE_CENTRAL)) {
-				player.sendMessage(COLOR_ERROR + "You dont have permissions to manage the central chests");
-				if (player.hasPermission(PERMISSION_MANAGE)) {
-					player.sendMessage(COLOR_ERROR
-							+ "If you want to create a chest for your personal warehouse please use the command /chestsort create user");
-				}
-				return null;
-			}
-		} else {
-			if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE)) {
-				player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
-				return null;
-			}
-		}
-		return new ChestDAO(markedChest, optionalMaterial.get().toString(), username);
-	}
+    public ChestDAO chestByParameter(Player player, String... args) {
+        if (args.length != 2) {
+            sendusage(player);
+            return null;
+        }
+        if (!Arrays.asList(WH_CENTRAL, WH_USER).contains(args[0].toLowerCase())) {
+            sendusage(player);
+            return null;
+        }
+        String username = null;
+        if (args[0].equalsIgnoreCase(WH_USER)) {
+            username = player.getName();
+        }
+        Optional<Material> optionalMaterial = Arrays.asList(Material.values()).stream()
+                .filter(mat -> mat.toString().equalsIgnoreCase(args[1])).findFirst();
+        if (!optionalMaterial.isPresent()) {
+            player.sendMessage(COLOR_ERROR + "The material " + args[1] + " does not exist");
+            sendusage(player);
+            return null;
+        }
+        Location markedChest = Registry.getPlayerEventListener().getMarkedLocation(player.getName());
+        if (markedChest == null) {
+            player.sendMessage(
+                    COLOR_ERROR + "You have to mark a chest first. Right click a chest with a stick in your main hand");
+            return null;
+        }
+        if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
+            if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE_CENTRAL)) {
+                player.sendMessage(COLOR_ERROR + "You dont have permissions to manage the central chests");
+                if (player.hasPermission(PERMISSION_MANAGE)) {
+                    player.sendMessage(COLOR_ERROR
+                            + "If you want to create a chest for your personal warehouse please use the command /chestsort create user");
+                }
+                return null;
+            }
+        } else {
+            if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE)) {
+                player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
+                return null;
+            }
+        }
+        return new ChestDAO(markedChest, optionalMaterial.get().toString(), username);
+    }
 
-	private void sendusage(Player player) {
-		player.sendMessage(COLOR_ERROR + usage());
-	}
+    private void sendusage(Player player) {
+        player.sendMessage(COLOR_ERROR + usage());
+    }
 
-	@Override
-	public boolean isApplicable(CommandSender sender, String command, String... args) {
-		return command.equalsIgnoreCase(getName());
-	}
+    @Override
+    public boolean isApplicable(CommandSender sender, String command, String... args) {
+        return command.equalsIgnoreCase(getName());
+    }
 
-	@Override
-	public List<String> onTabComplete(CommandSender sender, String command, String... args) {
-		if (args.length == 0) {
-			return Arrays.asList(WH_CENTRAL, WH_USER);
-		} else if (args.length == 1) {
-			return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
-					.collect(Collectors.toList());
-		} else if (args.length == 2) {
-			return Arrays.asList(Material.values()).stream().map(Material::toString).sorted()
-					.filter(mat -> mat.startsWith(args[1].toUpperCase())).collect(Collectors.toList());
-		}
-		return new LinkedList<>();
-	}
+    @Override
+    public List<String> onTabComplete(CommandSender sender, String command, String... args) {
+        if (args.length == 0) {
+            return Arrays.asList(WH_CENTRAL, WH_USER);
+        } else if (args.length == 1) {
+            return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        } else if (args.length == 2) {
+            return Arrays.asList(Material.values()).stream().map(Material::toString).sorted()
+                    .filter(mat -> mat.startsWith(args[1].toUpperCase())).collect(Collectors.toList());
+        }
+        return new LinkedList<>();
+    }
 
-	@Override
-	public boolean isForPlayerOnly() {
-		return true;
-	}
+    @Override
+    public boolean isForPlayerOnly() {
+        return true;
+    }
 
-	@Override
-	public String usage() {
-		return "Usage: /chestsort create <central/user> <material>";
-	}
+    @Override
+    public String usage() {
+        return "Usage: /chestsort create <central/user> <material>";
+    }
 
-	@Override
-	public String getName() {
-		return "create";
-	}
+    @Override
+    public String getName() {
+        return "create";
+    }
 }
