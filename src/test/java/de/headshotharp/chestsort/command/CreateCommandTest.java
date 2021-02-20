@@ -16,14 +16,13 @@ import org.mockito.Mockito;
 import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
-import de.headshotharp.chestsort.command.CreateCommand;
 
 @Story("The create command implementation is tested")
-public class CreateCommandTest extends GherkinTest {
+class CreateCommandTest extends GherkinTest {
 	private CreateCommand createCommand = new CreateCommand();
 
 	@Scenario("the command is only applicable to for text 'create' case insensitive")
-	public void testIsApplicable() {
+	void testIsApplicable() {
 		Player player = Mockito.mock(Player.class);
 		assertThat(createCommand.isApplicable(player, "item"), is(equalTo(false)));
 		assertThat(createCommand.isApplicable(player, "create"), is(equalTo(true)));
@@ -31,7 +30,7 @@ public class CreateCommandTest extends GherkinTest {
 	}
 
 	@Test
-	public void testOnTabComplete() {
+	void testOnTabComplete() {
 		assertThat(getTabComplete(), contains("central", "user"));
 		assertThat(getTabComplete("c"), contains("central"));
 		assertThat(getTabComplete("cent"), contains("central"));
@@ -42,6 +41,7 @@ public class CreateCommandTest extends GherkinTest {
 		assertThat(getTabComplete("central", "san"),
 				contains("SAND", "SANDSTONE", "SANDSTONE_SLAB", "SANDSTONE_STAIRS", "SANDSTONE_WALL"));
 		assertThat(getTabComplete("central", "SANDST").get(0), is(equalTo(Material.SANDSTONE.toString())));
+		assertThat(getTabComplete("central", "COB", ""), hasSize(0));
 		assertThat(getTabComplete("central", "COB", "something"), hasSize(0));
 	}
 

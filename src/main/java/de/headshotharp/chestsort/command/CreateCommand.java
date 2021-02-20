@@ -107,7 +107,7 @@ public class CreateCommand implements ChestsortCommand {
 			return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
 					.collect(Collectors.toList());
 		} else if (args.length == 2) {
-			return Arrays.asList(Material.values()).stream().map(Material::toString)
+			return Arrays.asList(Material.values()).stream().map(Material::toString).sorted()
 					.filter(mat -> mat.startsWith(args[1].toUpperCase())).collect(Collectors.toList());
 		}
 		return new LinkedList<>();
