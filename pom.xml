@@ -62,6 +62,9 @@
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
         <jacoco-plugin.version>0.8.6</jacoco-plugin.version>
         <license-plugin.version>3.0</license-plugin.version>
+        <!-- sonar -->
+        <sonar.coverage.exclusions>**/dao/**/*.java</sonar.coverage.exclusions>
+        <sonar.cpd.exclusions>**/*DAO.java,**/*Command.java</sonar.cpd.exclusions>
     </properties>
 
     <dependencies>
