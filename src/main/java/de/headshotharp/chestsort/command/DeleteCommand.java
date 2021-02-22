@@ -44,22 +44,54 @@ import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class DeleteCommand implements ChestsortCommand {
+    public static final String WH_CENTRAL = "central";
+    public static final String WH_USER = "user";
+
     @Override
     public void execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
-        if (!player.hasPermission(PERMISSION_MANAGE) && !player.hasPermission(PERMISSION_MANAGE_CENTRAL)) {
-            player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
+        if (args.length < 1 || args.length > 2) {
+            sendusage(player);
             return;
         }
+        if (!Arrays.asList(WH_CENTRAL, WH_USER).contains(args[0].toLowerCase())) {
+            sendusage(player);
+            return;
+        }
+        if (args[0].equalsIgnoreCase(WH_USER)) {
+            // check if user has normal manage permissions
+            if (!player.hasPermission(PERMISSION_MANAGE)) {
+                player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
+                return;
+            }
+        } else {
+            // check if user has central manage permissions
+            if (!player.hasPermission(PERMISSION_MANAGE_CENTRAL)) {
+                player.sendMessage(COLOR_ERROR + "You dont have permissions to manage central chests");
+                return;
+            }
+        }
+        // here the user is allowed to perform the command
         Location markedBlock = Registry.getPlayerEventListener().getMarkedLocation(player.getName());
         if (markedBlock == null) {
             player.sendMessage(COLOR_ERROR
                     + "You have to mark a chest or sign first. Right click a chest or sign with a stick in your main hand");
             return;
         }
+        // get all chests/signs
         DataProvider dp = Registry.getDataProvider();
         List<SignDAO> signs = dp.findAllSignsAt(markedBlock);
         List<ChestDAO> chests = dp.findAllChestsAt(markedBlock);
+        // filter for user/central depending on command
+        if (args[0].equalsIgnoreCase(WH_USER)) {
+            signs = signs.stream().filter(sign -> !sign.isCentral())
+                    .filter(sign -> sign.getUsername().equals(player.getName())).collect(Collectors.toList());
+            chests = chests.stream().filter(chest -> !chest.isCentral())
+                    .filter(chest -> chest.getUsername().equals(player.getName())).collect(Collectors.toList());
+        } else {
+            signs = signs.stream().filter(SignDAO::isCentral).collect(Collectors.toList());
+            chests = chests.stream().filter(ChestDAO::isCentral).collect(Collectors.toList());
+        }
         if (isDeletionConfirmed(args)) {
             if (signs.isEmpty() && chests.isEmpty()) {
                 player.sendMessage(COLOR_NORMAL + "There are no more chests or signs at your marked location");
@@ -78,7 +110,10 @@ public class DeleteCommand implements ChestsortCommand {
                         block.breakNaturally();
                     }
                 } else {
-                    player.sendMessage(COLOR_ERROR + "Error while deleting from database, this should never occur");
+                    player.sendMessage(
+                            COLOR_ERROR + "There are still registered signs/chests at your marked location.");
+                    player.sendMessage(COLOR_ERROR
+                            + "This might happen when you delete a user chest, but the same chest is also registered as a central chest.");
                 }
             }
         } else {
@@ -90,7 +125,7 @@ public class DeleteCommand implements ChestsortCommand {
                 chests.forEach(
                         chest -> player.sendMessage(COLOR_NORMAL + "Would delete " + chest.getTextBlockString()));
                 player.sendMessage(COLOR_NORMAL + "This was a dryrun only. Confirm command with " + COLOR_GOOD
-                        + "/chestsort delete confirm");
+                        + "/chestsort delete " + args[0].toLowerCase() + " confirm");
             }
         }
     }
@@ -103,8 +138,11 @@ public class DeleteCommand implements ChestsortCommand {
     @Override
     public List<String> onTabComplete(CommandSender sender, String command, String... args) {
         if (args.length == 0) {
-            return Arrays.asList("confirm");
+            return Arrays.asList(WH_CENTRAL, WH_USER);
         } else if (args.length == 1) {
+            return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        } else if (args.length == 2) {
             return Arrays.asList("confirm").stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }
@@ -118,12 +156,16 @@ public class DeleteCommand implements ChestsortCommand {
 
     @Override
     public String usage() {
-        return "Usage: /chestsort delete [confirm]";
+        return "Usage: /chestsort delete <central/user> [confirm]";
     }
 
     @Override
     public String getName() {
         return "delete";
+    }
+
+    private void sendusage(Player player) {
+        player.sendMessage(COLOR_ERROR + usage());
     }
 
     private boolean verifyDeletionSuccess(DataProvider dp, Location markedChest) {
@@ -133,6 +175,6 @@ public class DeleteCommand implements ChestsortCommand {
     }
 
     private boolean isDeletionConfirmed(String... args) {
-        return args.length > 0 && args[0].equalsIgnoreCase("confirm");
+        return args.length > 1 && args[1].equalsIgnoreCase("confirm");
     }
 }
