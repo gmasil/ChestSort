@@ -39,6 +39,7 @@ public class CommandRegistry implements CommandExecutor, TabCompleter {
         commands.add(new InfoCommand());
         commands.add(new DeleteCommand());
         commands.add(new AllCommand());
+        commands.add(new ResetCommand());
     }
 
     public List<ChestsortCommand> getCommands() {

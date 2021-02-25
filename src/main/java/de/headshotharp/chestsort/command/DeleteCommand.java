@@ -142,10 +142,8 @@ public class DeleteCommand implements ChestsortCommand {
         } else if (args.length == 1) {
             return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
-        } else if (args.length == 2) {
-            return Arrays.asList("confirm").stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
-                    .collect(Collectors.toList());
         }
+        // no autocomplete for confirm
         return new LinkedList<>();
     }
 

@@ -78,6 +78,12 @@ Deleting a central chest:
 /chestsort delete central
 ```
 
+This will only do a dry-run of the deletion and tell you what would be deleted. If you you want to confirm the command just repeat the same command with an `confirm` at the end like:
+
+```bash
+/chestsort delete central confirm
+```
+
 ### Insert Materials
 
 To insert materials into a warehouse you have to be close to a ChestSort sign. If you want to insert into the central warehouse you must use a central sign, for your personal warehouse you need a personal sign.
@@ -94,6 +100,20 @@ The same applies to your personal warehouse. Stand close to one of your personal
 
 ```bash
 /chestsort all user
+```
+
+### Reset Warehouse
+
+If you want to start all over with your warehouse you don't have to delete all chests and signs manually. You can use the `/chestsort reset` command to do so. As all of the other commands you have to choose either the central warehouse or your personal one. The next parameter will decide if only chests/signs or both will be deleted.
+
+```bash
+/chestsort reset <central/user> <all/signs/chests>
+```
+
+Like the delete command you will see a how many chests and signs will be deleted. If you are happy with the results you can confirm the command, for example like this:
+
+```bash
+/chestsort reset central chests confirm
 ```
 
 ## Configuration
@@ -154,11 +174,14 @@ database:
 
 ### Permissions
 
-There are currently two permissions to give to your players:
+Currently there are three permissions to give to your players:
 
 - `chestsort.manage`
 - `chestsort.manage.central`
+- `chestsort.reset`
 
 Grant the permission `chestsort.manage` to all the players which should be allowed to create a personal (user) warehouse. This can savely be given to all players.
 
 The permission `chestsort.manage.central` allows users to create and delete chests and signs for the central warehouse. Give this permissions to your trusted players and admins. All users can insert into the central warehouse, there is no separate permission for it yet.
+
+The `chestsort.reset` permission will allow players to delete all central chests and or signs with a single command in case you want to start over or extensively rework your central warehouse. This permission should only be granted to your admins, if at all. This permission affects the central warehouse only. All players are allowed to reset their own (user) warehouse.

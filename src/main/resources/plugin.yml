@@ -29,5 +29,6 @@ commands:
     description: Controls ChestSort
     usage: |
            /<command> create <central/user> <material>
-           /<command> delete [confirm]
+           /<command> delete <central/user> [confirm]
+           /<command> reset <central/user> [confirm]
            /<command> info

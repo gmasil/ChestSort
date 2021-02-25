@@ -95,18 +95,11 @@ public class DataProvider {
     }
 
     public List<ChestDAO> findAllCentralChestsByMaterial(String material) {
-        return inTransaction(session -> {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
-            Root<ChestDAO> chestRef = criteria.from(ChestDAO.class);
-            // set predicates
-            List<Predicate> predicates = new LinkedList<>();
-            predicates.add(builder.equal(chestRef.get("material"), material));
-            predicates.add(builder.equal(chestRef.get("central"), true));
-            // add predicates
-            criteria.where(builder.and(predicates.toArray(new Predicate[0])));
-            return session.createQuery(criteria).getResultList();
-        });
+        return findAllChestsByMaterialAndUser(material, null);
+    }
+
+    public List<ChestDAO> findAllCentralChests() {
+        return findAllChestsByMaterialAndUser(null, null);
     }
 
     public List<ChestDAO> findAllChestsByMaterialAndUser(String material, String username) {
@@ -116,13 +109,21 @@ public class DataProvider {
             Root<ChestDAO> chestRef = criteria.from(ChestDAO.class);
             // set predicates
             List<Predicate> predicates = new LinkedList<>();
-            predicates.add(builder.equal(chestRef.get("material"), material));
-            predicates.add(builder.equal(chestRef.get("central"), false));
-            predicates.add(builder.equal(chestRef.get("username"), username));
+            if (material != null) {
+                predicates.add(builder.equal(chestRef.get("material"), material));
+            }
+            predicates.add(builder.equal(chestRef.get("central"), username == null));
+            if (username != null) {
+                predicates.add(builder.equal(chestRef.get("username"), username));
+            }
             // add predicates
             criteria.where(builder.and(predicates.toArray(new Predicate[0])));
             return session.createQuery(criteria).getResultList();
         });
+    }
+
+    public List<ChestDAO> findAllChestsByUser(String username) {
+        return findAllChestsByMaterialAndUser(null, username);
     }
 
     public void persistChest(ChestDAO chest) {
@@ -190,6 +191,27 @@ public class DataProvider {
             predicates.add(builder.equal(locationRef.get("x"), location.getX()));
             predicates.add(builder.equal(locationRef.get("y"), location.getY()));
             predicates.add(builder.equal(locationRef.get("z"), location.getZ()));
+            // add predicates
+            criteria.where(builder.and(predicates.toArray(new Predicate[0])));
+            return session.createQuery(criteria).getResultList();
+        });
+    }
+
+    public List<SignDAO> findAllCentralSigns() {
+        return findAllSignsByUser(null);
+    }
+
+    public List<SignDAO> findAllSignsByUser(String username) {
+        return inTransaction(session -> {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
+            Root<SignDAO> signRef = criteria.from(SignDAO.class);
+            // set predicates
+            List<Predicate> predicates = new LinkedList<>();
+            predicates.add(builder.equal(signRef.get("central"), username == null));
+            if (username != null) {
+                predicates.add(builder.equal(signRef.get("username"), username));
+            }
             // add predicates
             criteria.where(builder.and(predicates.toArray(new Predicate[0])));
             return session.createQuery(criteria).getResultList();
