@@ -1,5 +1,21 @@
 # ChestSort Documentation
 
+- [Features](#features)
+- [Usage](#usage)
+  - [Creating Signs](#creating-signs)
+  - [Deleting Signs](#deleting-signs)
+  - [Marking Chest](#marking-chest)
+  - [Create/Register Chests](#create-register-chests)
+  - [Unregister/Delete Chests](#unregister-delete-chests)
+  - [Insert Materials](#insert-materials)
+- [Configuration](#configuration)
+  - [Database](#database)
+    - [MySQL 5.7](#mysql-57)
+    - [MySQL 8](#mysql-8)
+    - [PostgreSQL](#postgresql)
+    - [Save to File](#save-to-file)
+  - [Permissions](#permissions)
+
 ## Features
 
 With ChestSort you can assign a single or multiple materials to chests in Minecraft and the automatically insert items from your inventory. You can create special ChestSort signs with wich you can insert the items(s) in you hand into your warehouse by rightlicking it. Additionally you can use a command to insert all matching items from your inventory into your warehouse, but you have to be near a ChestSort sign.
