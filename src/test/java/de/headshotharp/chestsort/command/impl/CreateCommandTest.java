@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ChestSort. If not, see <https://www.gnu.org/licenses/>.
  */
-package de.headshotharp.chestsort.command;
+package de.headshotharp.chestsort.command.impl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -35,6 +35,7 @@ import org.mockito.Mockito;
 import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
+import de.headshotharp.chestsort.command.impl.CreateCommand;
 
 @Story("The create command implementation is tested")
 class CreateCommandTest extends GherkinTest {

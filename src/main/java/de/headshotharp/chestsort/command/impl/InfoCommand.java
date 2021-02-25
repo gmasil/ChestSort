@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ChestSort. If not, see <https://www.gnu.org/licenses/>.
  */
-package de.headshotharp.chestsort.command;
+package de.headshotharp.chestsort.command.impl;
 
 import static de.headshotharp.chestsort.ChestSortUtils.getBlockAt;
 import static de.headshotharp.chestsort.ChestSortUtils.isChest;

@@ -25,11 +25,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpigotPlugin extends JavaPlugin {
     public void error(String msg) {
-        getLogger().log(Level.INFO, msg);
+        getLogger().log(Level.SEVERE, msg);
     }
 
     public void warn(String msg) {
-        getLogger().log(Level.INFO, msg);
+        getLogger().log(Level.WARNING, msg);
     }
 
     public void info(String msg) {
@@ -37,11 +37,11 @@ public class SpigotPlugin extends JavaPlugin {
     }
 
     public void error(String msg, Throwable t) {
-        getLogger().log(Level.INFO, msg, t);
+        getLogger().log(Level.SEVERE, msg, t);
     }
 
     public void warn(String msg, Throwable t) {
-        getLogger().log(Level.INFO, msg, t);
+        getLogger().log(Level.WARNING, msg, t);
     }
 
     public void info(String msg, Throwable t) {

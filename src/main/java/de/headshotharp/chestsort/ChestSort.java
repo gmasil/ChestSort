@@ -30,22 +30,23 @@ public class ChestSort extends SpigotPlugin implements Listener {
         try {
             Registry.getConfigService().readConfig();
         } catch (IOException e) {
-            error("Error while loading config", e);
+            error("Error while loading config, stopping", e);
             return;
         }
         Registry.setSpigotPlugin(this);
         try {
             Registry.getHibernateUtils().setDatabaseConfig(Registry.getConfigService().getConfig().getDatabase());
             Registry.getHibernateUtils().getSessionFactory();
+            info("Connected to database");
         } catch (Exception e) {
-            error("Error while connecting to database", e);
+            error("Error while connecting to database, stopping", e);
             return;
         }
         try {
+            Registry.getCommandRegistry().scanCommands();
             getCommand("chestsort").setExecutor(Registry.getCommandRegistry());
             getCommand("chestsort").setTabCompleter(Registry.getCommandRegistry());
             getServer().getPluginManager().registerEvents(Registry.getPlayerEventListener(), this);
-            Registry.getCommandRegistry().registerDefaultCommands();
         } catch (Exception e) {
             error("Error while registering commands", e);
         }

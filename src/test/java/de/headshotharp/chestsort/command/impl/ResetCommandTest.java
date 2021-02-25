@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ChestSort. If not, see <https://www.gnu.org/licenses/>.
  */
-package de.headshotharp.chestsort.command;
+package de.headshotharp.chestsort.command.impl;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,6 +37,7 @@ import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
 import de.headshotharp.chestsort.Registry;
 import de.headshotharp.chestsort.StaticConfig;
+import de.headshotharp.chestsort.command.impl.ResetCommand;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;

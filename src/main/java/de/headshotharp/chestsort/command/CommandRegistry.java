@@ -21,6 +21,7 @@ package de.headshotharp.chestsort.command;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bukkit.command.Command;
@@ -28,18 +29,23 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.reflections.Reflections;
 
+import de.headshotharp.chestsort.Log;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
 
 public class CommandRegistry implements CommandExecutor, TabCompleter {
     private List<ChestsortCommand> commands = new LinkedList<>();
 
-    public void registerDefaultCommands() {
-        commands.add(new CreateCommand());
-        commands.add(new InfoCommand());
-        commands.add(new DeleteCommand());
-        commands.add(new AllCommand());
-        commands.add(new ResetCommand());
+    public void scanCommands() throws InstantiationException, IllegalAccessException {
+        Reflections reflections = new Reflections("de.headshotharp.chestsort.command.impl");
+        Set<Class<? extends ChestsortCommand>> commandClasses = reflections.getSubTypesOf(ChestsortCommand.class);
+        for (Class<? extends ChestsortCommand> clazz : commandClasses) {
+            ChestsortCommand command = clazz.newInstance();
+            commands.add(command);
+        }
+        String allCommands = String.join(", ", commands.stream().map(c -> c.getName()).collect(Collectors.toList()));
+        Log.info(String.format("Registered %d commands: %s", commands.size(), allCommands));
     }
 
     public List<ChestsortCommand> getCommands() {
