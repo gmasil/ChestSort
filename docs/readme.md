@@ -8,6 +8,7 @@
   - [Create/Register Chests](#create-register-chests)
   - [Unregister/Delete Chests](#unregister-delete-chests)
   - [Insert Materials](#insert-materials)
+  - [Reset Warehouse](#reset-warehouse)
 - [Configuration](#configuration)
   - [Database](#database)
     - [MySQL 5.7](#mysql-57)
