@@ -2,7 +2,7 @@
 ChestSort is a bukkit/spigot plugin to help your minecraft players to sort and access their warehouses.
 
 # Download
-You can download the latest build here: [ChestSort.jar](https://jenkins.gmasil.de/job/gmasil/job/ChestSort/job/master/lastSuccessfulBuild/artifact/target/ChestSort.jar)
+You can download the latest build for **Minecraft 1.16.5** here: [ChestSort.jar](https://jenkins.gmasil.de/job/gmasil/job/ChestSort/job/master/lastSuccessfulBuild/artifact/target/ChestSort.jar)
 
 # Documentation
 A full documentation can be found [here](docs/readme.md).
