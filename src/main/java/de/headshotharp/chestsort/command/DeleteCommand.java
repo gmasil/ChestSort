@@ -131,11 +131,6 @@ public class DeleteCommand implements ChestsortCommand {
     }
 
     @Override
-    public boolean isApplicable(CommandSender sender, String command, String... args) {
-        return command.equalsIgnoreCase(getName());
-    }
-
-    @Override
     public List<String> onTabComplete(CommandSender sender, String command, String... args) {
         if (args.length == 0) {
             return Arrays.asList(WH_CENTRAL, WH_USER);
@@ -145,11 +140,6 @@ public class DeleteCommand implements ChestsortCommand {
         }
         // no autocomplete for confirm
         return new LinkedList<>();
-    }
-
-    @Override
-    public boolean isForPlayerOnly() {
-        return true;
     }
 
     @Override

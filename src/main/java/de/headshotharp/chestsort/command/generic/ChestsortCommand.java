@@ -19,10 +19,19 @@
  */
 package de.headshotharp.chestsort.command.generic;
 
+import org.bukkit.command.CommandSender;
+
 public interface ChestsortCommand extends CommandRunnable, CommandApplicable, CommandTabCompletable {
-    public boolean isForPlayerOnly();
+    public default boolean isForPlayerOnly() {
+        return true;
+    }
 
     public String usage();
 
     public String getName();
+
+    @Override
+    public default boolean isApplicable(CommandSender sender, String command, String... args) {
+        return command.equalsIgnoreCase(getName());
+    }
 }

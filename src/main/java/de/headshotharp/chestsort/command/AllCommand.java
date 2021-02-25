@@ -53,11 +53,6 @@ public class AllCommand implements ChestsortCommand {
     }
 
     @Override
-    public boolean isApplicable(CommandSender sender, String command, String... args) {
-        return command.equalsIgnoreCase(getName());
-    }
-
-    @Override
     public List<String> onTabComplete(CommandSender sender, String command, String... args) {
         if (args.length == 0) {
             return Arrays.asList("central", "user");
@@ -66,11 +61,6 @@ public class AllCommand implements ChestsortCommand {
                     .collect(Collectors.toList());
         }
         return new LinkedList<>();
-    }
-
-    @Override
-    public boolean isForPlayerOnly() {
-        return true;
     }
 
     @Override

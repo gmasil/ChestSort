@@ -92,11 +92,6 @@ public class ResetCommand implements ChestsortCommand {
     }
 
     @Override
-    public boolean isApplicable(CommandSender sender, String command, String... args) {
-        return command.equalsIgnoreCase(getName());
-    }
-
-    @Override
     public List<String> onTabComplete(CommandSender sender, String command, String... args) {
         if (args.length == 0) {
             return Arrays.asList("central", "user");
@@ -109,11 +104,6 @@ public class ResetCommand implements ChestsortCommand {
         }
         // no autocomplete for confirm
         return new LinkedList<>();
-    }
-
-    @Override
-    public boolean isForPlayerOnly() {
-        return true;
     }
 
     @Override

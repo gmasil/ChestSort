@@ -81,18 +81,8 @@ public class InfoCommand implements ChestsortCommand {
     }
 
     @Override
-    public boolean isApplicable(CommandSender sender, String command, String... args) {
-        return command.equalsIgnoreCase(getName());
-    }
-
-    @Override
     public List<String> onTabComplete(CommandSender sender, String command, String... args) {
         return new LinkedList<>();
-    }
-
-    @Override
-    public boolean isForPlayerOnly() {
-        return true;
     }
 
     @Override

@@ -114,11 +114,6 @@ public class CreateCommand implements ChestsortCommand {
     }
 
     @Override
-    public boolean isApplicable(CommandSender sender, String command, String... args) {
-        return command.equalsIgnoreCase(getName());
-    }
-
-    @Override
     public List<String> onTabComplete(CommandSender sender, String command, String... args) {
         if (args.length == 0) {
             return Arrays.asList(WH_CENTRAL, WH_USER);
@@ -130,11 +125,6 @@ public class CreateCommand implements ChestsortCommand {
                     .filter(mat -> mat.startsWith(args[1].toUpperCase())).collect(Collectors.toList());
         }
         return new LinkedList<>();
-    }
-
-    @Override
-    public boolean isForPlayerOnly() {
-        return true;
     }
 
     @Override
