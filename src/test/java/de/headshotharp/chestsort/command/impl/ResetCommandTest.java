@@ -20,7 +20,10 @@
 package de.headshotharp.chestsort.command.impl;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -30,6 +33,7 @@ import static org.mockito.Mockito.mock;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import de.gmasil.gherkin.extension.GherkinTest;
@@ -37,7 +41,6 @@ import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
 import de.headshotharp.chestsort.Registry;
 import de.headshotharp.chestsort.StaticConfig;
-import de.headshotharp.chestsort.command.impl.ResetCommand;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;
@@ -117,6 +120,76 @@ public class ResetCommandTest extends GherkinTest {
         });
     }
 
+    @Scenario("Resetting central chests will not delete user chests")
+    void testCentralResetWillKeepUser() {
+        given("a central chest exist", () -> {
+            DataProvider dp = Registry.getDataProvider();
+            dp.persistChest(new ChestDAO("world", 0, 1, 2, "GOLD"));
+        });
+        and("two user chests for Peter exist", () -> {
+            DataProvider dp = Registry.getDataProvider();
+            dp.persistChest(new ChestDAO("world", 0, 0, 0, "STONE", "Peter"));
+            dp.persistChest(new ChestDAO("world", 0, 0, 1, "COBBLESTONE", "Peter"));
+        });
+        when("Peter executes command /chestsort reset central all confirm", () -> {
+            Player player = mock(Player.class);
+            Mockito.when(player.getName()).thenReturn("Peter");
+            Mockito.when(player.hasPermission(eq(StaticConfig.PERMISSION_MANAGE))).thenReturn(true);
+            Mockito.when(player.hasPermission(eq(StaticConfig.PERMISSION_RESET))).thenReturn(true);
+            doAnswer(invocation -> {
+                String arg = "" + invocation.getArgument(0);
+                assertThat(arg, containsString("Deleted 0 signs and 1 chests"));
+                return null;
+            }).when(player).sendMessage(anyString());
+            resetCommand.execute(player, "reset", "central", "all", "confirm");
+        });
+        then("there are no more central chests", () -> {
+            DataProvider dp = Registry.getDataProvider();
+            List<ChestDAO> chests = dp.findAllCentralChests();
+            assertThat(chests, hasSize(0));
+        });
+        and("there are still two user chests", () -> {
+            DataProvider dp = Registry.getDataProvider();
+            List<ChestDAO> chests = dp.findAllChestsByUser("Peter");
+            assertThat(chests, hasSize(2));
+        });
+    }
+
+    @Scenario("Resetting user chests without permission is canceled")
+    void testResetUserWithoutPermissions() {
+        given("a central chest exist", () -> {
+            DataProvider dp = Registry.getDataProvider();
+            dp.persistChest(new ChestDAO("world", 0, 1, 2, "GOLD"));
+        });
+        and("two user chests for Peter exist", () -> {
+            DataProvider dp = Registry.getDataProvider();
+            dp.persistChest(new ChestDAO("world", 0, 0, 0, "STONE", "Peter"));
+            dp.persistChest(new ChestDAO("world", 0, 0, 1, "COBBLESTONE", "Peter"));
+        });
+        when("Peter executes command /chestsort reset user all confirm", () -> {
+            Player player = mock(Player.class);
+            Mockito.when(player.getName()).thenReturn("Peter");
+            Mockito.when(player.hasPermission(eq(StaticConfig.PERMISSION_MANAGE))).thenReturn(false);
+            Mockito.when(player.hasPermission(eq(StaticConfig.PERMISSION_RESET))).thenReturn(false);
+            doAnswer(invocation -> {
+                String arg = "" + invocation.getArgument(0);
+                assertThat(arg, containsString("You don't have permissions to manage ChestSort"));
+                return null;
+            }).when(player).sendMessage(anyString());
+            resetCommand.execute(player, "reset", "user", "all", "confirm");
+        });
+        then("there is still a central chest", () -> {
+            DataProvider dp = Registry.getDataProvider();
+            List<ChestDAO> chests = dp.findAllCentralChests();
+            assertThat(chests, hasSize(1));
+        });
+        then("there are still two user chests", () -> {
+            DataProvider dp = Registry.getDataProvider();
+            List<ChestDAO> chests = dp.findAllChestsByUser("Peter");
+            assertThat(chests, hasSize(2));
+        });
+    }
+
     @Scenario("Resetting central chests will not work without permissions")
     void testResettingWithoutPermissions() {
         given("a central chest exist", () -> {
@@ -150,5 +223,50 @@ public class ResetCommandTest extends GherkinTest {
             List<ChestDAO> chests = dp.findAllCentralChests();
             assertThat(chests, hasSize(1));
         });
+    }
+
+    @Test
+    void testNotEnoughArguments() {
+        Player player = mock(Player.class);
+        Mockito.when(player.getName()).thenReturn("Peter");
+        doAnswer(invocation -> {
+            String arg = "" + invocation.getArgument(0);
+            assertThat(arg, containsString(resetCommand.usage()));
+            return null;
+        }).when(player).sendMessage(anyString());
+        resetCommand.execute(player, "reset");
+        resetCommand.execute(player, "reset", "central", "");
+        resetCommand.execute(player, "reset", "user", "");
+        resetCommand.execute(player, "reset", "unknown", "");
+        resetCommand.execute(player, "reset", "unknown", "all");
+        resetCommand.execute(player, "reset", "unknown", "chests");
+        resetCommand.execute(player, "reset", "unknown", "signs");
+        resetCommand.execute(player, "reset", "unknown", "unknown");
+    }
+
+    @Test
+    void testOnTabComplete() {
+        assertThat(getTabComplete(), contains("central", "user"));
+        assertThat(getTabComplete("c"), contains("central"));
+        assertThat(getTabComplete("cent"), contains("central"));
+        assertThat(getTabComplete("cENT"), contains("central"));
+        assertThat(getTabComplete("central"), contains("central"));
+        assertThat(getTabComplete("centralsd"), hasSize(0));
+        assertThat(getTabComplete("central", ""), contains("all", "chests", "signs"));
+        assertThat(getTabComplete("central", "a"), contains("all"));
+        assertThat(getTabComplete("central", "chests"), contains("chests"));
+        assertThat(getTabComplete("central", "chests", ""), hasSize(0));
+        assertThat(getTabComplete("central", "chests", "conf"), hasSize(0));
+        assertThat(getTabComplete("central", "chests", "confirm"), hasSize(0));
+    }
+
+    @Test
+    void testUsage() {
+        assertThat(resetCommand.usage(),
+                is(equalTo("Usage: /chestsort reset <central/user> <all/chests/signs> [confirm]")));
+    }
+
+    private List<String> getTabComplete(String... args) {
+        return resetCommand.onTabComplete(null, "reset", args);
     }
 }

@@ -128,6 +128,29 @@ public class DataProviderTest extends GherkinTest {
         });
     }
 
+    @Scenario("A central chest can be found by its material")
+    public void testFindAllCentralChestsByMaterial(Reference<List<ChestDAO>> chests) {
+        given("a central chest exists with material STONE", () -> {
+            assertThat(Registry.getDataProvider().findAllChests(), hasSize(0));
+            ChestDAO chest = new ChestDAO("world", 0, 0, 0, Material.STONE.toString());
+            Registry.getDataProvider().persistChest(chest);
+            assertThat(Registry.getDataProvider().findAllChests(), hasSize(1));
+        });
+        and("another central chest exists with material DIRT", () -> {
+            ChestDAO chest = new ChestDAO("world", 1, 2, 3, Material.DIRT.toString());
+            Registry.getDataProvider().persistChest(chest);
+            assertThat(Registry.getDataProvider().findAllChests(), hasSize(2));
+        });
+        when("central chests with material STONE are searched", () -> {
+            chests.set(Registry.getDataProvider().findAllCentralChestsByMaterial("STONE"));
+        });
+        then("a single chest is found", () -> {
+            assertThat(chests.get(), hasSize(1));
+            assertThat(chests.get().get(0).getLocation(), is(equalTo(new Location("world", 0, 0, 0))));
+            assertThat(chests.get().get(0).getMaterial(), is(equalTo("STONE")));
+        });
+    }
+
     @Scenario("A chest is not found in the wrong location")
     public void testDontFindChestAtWrongLocation(Reference<List<ChestDAO>> chests) {
         given("a single chest exists at (world, 6, 9, 4)", () -> {
@@ -270,15 +293,77 @@ public class DataProviderTest extends GherkinTest {
         });
     }
 
+    @Scenario("Only signs for the correct user are found")
+    public void testFindAllSignsByUser(Reference<List<SignDAO>> signs) {
+        given("a central sign exist at (world, 1, 2, 3)", () -> {
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(0));
+            Registry.getDataProvider().persistSign(new SignDAO("world", 1, 2, 3));
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(1));
+        });
+        and("a user sign for user 'Panda' exist at (world, 10,20,30)", () -> {
+            Registry.getDataProvider().persistSign(new SignDAO("world", 10, 20, 30, "Panda"));
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(2));
+        });
+        and("a user sign for user 'Peter' exist at (world, 100,200,300)", () -> {
+            Registry.getDataProvider().persistSign(new SignDAO("world", 100, 200, 300, "Peter"));
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(3));
+        });
+        and("a user sign for user 'Peter' exist at (world, 110, 220, 330)", () -> {
+            Registry.getDataProvider().persistSign(new SignDAO("world", 110, 220, 330, "Peter"));
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(4));
+        });
+        when("user signs for user 'Peter' are searched ", () -> {
+            signs.set(Registry.getDataProvider().findAllSignsByUser("Peter"));
+        });
+        then("two signs are found", () -> {
+            assertThat(signs.get(), hasSize(2));
+            assertThat(signs.get().get(0).getLocation(), is(equalTo(new Location("world", 100, 200, 300))));
+            assertThat(signs.get().get(0).getUsername(), is("Peter"));
+            assertThat(signs.get().get(0).isCentral(), is(false));
+            assertThat(signs.get().get(1).getLocation(), is(equalTo(new Location("world", 110, 220, 330))));
+            assertThat(signs.get().get(1).getUsername(), is("Peter"));
+            assertThat(signs.get().get(1).isCentral(), is(false));
+        });
+    }
+
+    @Scenario("Only central signs are found if requested")
+    public void testFindAllCentralSigns(Reference<List<SignDAO>> signs) {
+        given("a central sign exist at (world, 1, 2, 3)", () -> {
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(0));
+            Registry.getDataProvider().persistSign(new SignDAO("world", 1, 2, 3));
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(1));
+        });
+        and("a user sign for user 'Panda' exist at (world, 10,20,30)", () -> {
+            Registry.getDataProvider().persistSign(new SignDAO("world", 10, 20, 30, "Panda"));
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(2));
+        });
+        and("a user sign for user 'Peter' exist at (world, 100,200,300)", () -> {
+            Registry.getDataProvider().persistSign(new SignDAO("world", 100, 200, 300, "Peter"));
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(3));
+        });
+        and("a user sign for user 'Peter' exist at (world, 110, 220, 330)", () -> {
+            Registry.getDataProvider().persistSign(new SignDAO("world", 110, 220, 330, "Peter"));
+            assertThat(Registry.getDataProvider().findAllSigns(), hasSize(4));
+        });
+        when("central signs are searched ", () -> {
+            signs.set(Registry.getDataProvider().findAllCentralSigns());
+        });
+        then("a single signs are found", () -> {
+            assertThat(signs.get(), hasSize(1));
+            assertThat(signs.get().get(0).getLocation(), is(equalTo(new Location("world", 1, 2, 3))));
+            assertThat(signs.get().get(0).isCentral(), is(true));
+        });
+    }
+
     @Scenario("Only signs in a given area are found")
     public void testFindAllSignsAround(Reference<List<SignDAO>> signs) {
-        given("there is a cobblestone sign at (world, 0, 0, 0)", () -> {
+        given("there is a sign at (world, 0, 0, 0)", () -> {
             Registry.getDataProvider().persistSign(new SignDAO("world", 0, 0, 0));
         });
-        and("a cobblestone sign at (world, 0, 2, 4)", () -> {
+        and("a sign at (world, 0, 2, 4)", () -> {
             Registry.getDataProvider().persistSign(new SignDAO("world", 0, 2, 4));
         });
-        and("a sandstone sign at (world, 0, 7, 14)", () -> {
+        and("a sign at (world, 0, 7, 14)", () -> {
             Registry.getDataProvider().persistSign(new SignDAO("world", 0, 7, 14));
         });
         when("all signs in a radius of 5 around (world, 0, 0, 0) are searched", () -> {
