@@ -34,24 +34,35 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.headshotharp.chestsort.Registry;
+import de.headshotharp.chestsort.PlayerEventListener;
+import de.headshotharp.chestsort.SpigotPlugin;
 import de.headshotharp.chestsort.StaticConfig;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
+import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
-public class CreateCommand implements ChestsortCommand {
+public class CreateCommand extends ChestsortCommand {
     public static final String WH_CENTRAL = "central";
     public static final String WH_USER = "user";
+
+    private DataProvider dp;
+    private PlayerEventListener listener;
+
+    public CreateCommand(SpigotPlugin plugin, DataProvider dp, PlayerEventListener listener) {
+        super(plugin);
+        this.dp = dp;
+        this.listener = listener;
+    }
 
     @Override
     public void execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
         ChestDAO chest = chestByParameter(player, args);
         if (chest != null) {
-            if (Registry.getDataProvider().findChest(chest).isEmpty()) {
-                Registry.getDataProvider().persistChest(chest);
-                if (Registry.getDataProvider().findChest(chest).isEmpty()) {
+            if (dp.findChest(chest).isEmpty()) {
+                dp.persistChest(chest);
+                if (dp.findChest(chest).isEmpty()) {
                     player.sendMessage(
                             COLOR_ERROR + "The chest could not be persisted in the database, this should never occur");
                 } else {
@@ -85,7 +96,7 @@ public class CreateCommand implements ChestsortCommand {
             sendusage(player);
             return null;
         }
-        Location markedChest = Registry.getPlayerEventListener().getMarkedLocation(player.getName());
+        Location markedChest = listener.getMarkedLocation(player.getName());
         if (markedChest == null) {
             player.sendMessage(
                     COLOR_ERROR + "You have to mark a chest first. Right click a chest with a stick in your main hand");

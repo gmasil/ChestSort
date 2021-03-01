@@ -26,6 +26,7 @@ import static de.headshotharp.chestsort.StaticConfig.COLOR_NORMAL;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -38,9 +39,9 @@ public class InventoryUtils {
     private InventoryUtils() {
     }
 
-    public static ItemStack insertIntoChests(ItemStack itemStack, boolean central, String username) {
+    public static ItemStack insertIntoChests(DataProvider dp, Server server, ItemStack itemStack, boolean central,
+            String username) {
         String material = itemStack.getType().toString();
-        DataProvider dp = Registry.getDataProvider();
         List<ChestDAO> chests;
         if (central) {
             chests = dp.findAllCentralChestsByMaterial(material);
@@ -48,7 +49,7 @@ public class InventoryUtils {
             chests = dp.findAllChestsByMaterialAndUser(material, username);
         }
         for (ChestDAO chest : chests) {
-            Block chestBlock = getBlockAt(chest.getLocation());
+            Block chestBlock = getBlockAt(server, chest.getLocation());
             if (chestBlock.getType() == Material.CHEST) {
                 Chest bukkitChest = (Chest) chestBlock.getState();
                 itemStack = bukkitChest.getInventory().addItem(itemStack).get(0);
@@ -61,11 +62,11 @@ public class InventoryUtils {
         return itemStack;
     }
 
-    public static void insertAllInventory(Player player, boolean central) {
+    public static void insertAllInventory(DataProvider dp, Server server, Player player, boolean central) {
         ItemStack[] contents = player.getInventory().getContents();
         for (int i = 0; i < contents.length; i++) {
             if (contents[i] != null) {
-                contents[i] = insertIntoChests(contents[i], central, player.getName());
+                contents[i] = insertIntoChests(dp, server, contents[i], central, player.getName());
                 if (contents[i] != null && contents[i].getAmount() == 0) {
                     contents[i] = null;
                 }
@@ -74,12 +75,11 @@ public class InventoryUtils {
         player.getInventory().setContents(contents);
     }
 
-    public static void insertItemInHand(Player player, boolean central) {
+    public static void insertItemInHand(DataProvider dp, Server server, Player player, boolean central) {
         if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
             return;
         }
         String material = player.getInventory().getItemInMainHand().getType().toString();
-        DataProvider dp = Registry.getDataProvider();
         List<ChestDAO> chests;
         if (central) {
             chests = dp.findAllCentralChestsByMaterial(material);
@@ -92,7 +92,7 @@ public class InventoryUtils {
         }
         ItemStack itemStack = player.getInventory().getItemInMainHand();
         for (ChestDAO chest : chests) {
-            Block chestBlock = getBlockAt(chest.getLocation());
+            Block chestBlock = getBlockAt(server, chest.getLocation());
             if (chestBlock.getType() != Material.CHEST) {
                 player.sendMessage(COLOR_ERROR + "The registered chest at " + chest.getLocation().toHumanString()
                         + " is no chest anymore");

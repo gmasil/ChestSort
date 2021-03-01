@@ -55,6 +55,13 @@ import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class PlayerEventListener implements Listener {
     private Map<String, Location> markedLocations = new HashMap<>();
+    private DataProvider dp;
+    private SpigotPlugin plugin;
+
+    public PlayerEventListener(DataProvider dp, SpigotPlugin plugin) {
+        this.dp = dp;
+        this.plugin = plugin;
+    }
 
     public Location getMarkedLocation(String player) {
         return markedLocations.get(player);
@@ -77,9 +84,9 @@ public class PlayerEventListener implements Listener {
             }
         }
         if (isRightClickBlock(event) && isSignClicked(event)) {
-            List<SignDAO> signs = Registry.getDataProvider().findAllSignsAt(locationFromEvent(event));
+            List<SignDAO> signs = dp.findAllSignsAt(locationFromEvent(event));
             if (signs.size() == 1) {
-                InventoryUtils.insertItemInHand(event.getPlayer(), signs.get(0).isCentral());
+                InventoryUtils.insertItemInHand(dp, plugin.getServer(), event.getPlayer(), signs.get(0).isCentral());
             } else if (signs.size() > 1) {
                 event.getPlayer().sendMessage(COLOR_ERROR
                         + "Multiple registered signs found at this location. Please delete and recreate the sign");
@@ -91,7 +98,6 @@ public class PlayerEventListener implements Listener {
     public void onSignChange(SignChangeEvent event) {
         SignDAO sign = createSign(event);
         if (sign != null) {
-            DataProvider dp = Registry.getDataProvider();
             // delete all possible previous signs at the location
             dp.findAllSignsAt(sign.getLocation()).forEach(dp::deleteSign);
             // save sign
@@ -147,7 +153,7 @@ public class PlayerEventListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
         if (isChestBreaked(event)) {
-            List<ChestDAO> chests = Registry.getDataProvider().findAllChestsAt(locationFromEvent(event));
+            List<ChestDAO> chests = dp.findAllChestsAt(locationFromEvent(event));
             if (!chests.isEmpty()) {
                 event.setCancelled(true);
                 sendPlayerChestBreakErrorMessage(event, chests);
@@ -155,7 +161,7 @@ public class PlayerEventListener implements Listener {
         }
         if (isSignBreaked(event)) {
             Location loc = locationFromEvent(event);
-            List<SignDAO> signs = Registry.getDataProvider().findAllSignsAt(loc);
+            List<SignDAO> signs = dp.findAllSignsAt(loc);
             if (!signs.isEmpty()) {
                 event.setCancelled(true);
                 ChestSortUtils.sendPlayerSignBreakErrorMessage(event);

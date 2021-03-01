@@ -21,14 +21,33 @@ package de.headshotharp.chestsort.hibernate.testutils;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
-import de.headshotharp.chestsort.Registry;
+import de.headshotharp.chestsort.config.ConfigService;
+import de.headshotharp.chestsort.hibernate.DataProvider;
 
-public class H2HibernateConfigurationExtension implements BeforeEachCallback {
+public class H2HibernateConfigurationExtension implements BeforeEachCallback, ParameterResolver {
+    private DataProvider dp;
+
+    public H2HibernateConfigurationExtension() {
+        dp = new DataProvider(new ConfigService().getH2Config().getDatabase());
+    }
+
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        Registry.getHibernateUtils().setDatabaseConfig(Registry.getConfigService().getH2Config().getDatabase());
-        Registry.getDataProvider().clearAllChests();
-        Registry.getDataProvider().clearAllSigns();
+        dp.clearAllChests();
+        dp.clearAllSigns();
+    }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        Class<?> expectedType = parameterContext.getParameter().getType();
+        return expectedType.equals(DataProvider.class);
+    }
+
+    @Override
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        return dp;
     }
 }

@@ -19,19 +19,36 @@
  */
 package de.headshotharp.chestsort.command.generic;
 
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
-public interface ChestsortCommand extends CommandRunnable, CommandApplicable, CommandTabCompletable {
-    public default boolean isForPlayerOnly() {
+import de.headshotharp.chestsort.SpigotPlugin;
+
+public abstract class ChestsortCommand implements CommandRunnable, CommandApplicable, CommandTabCompletable {
+    private SpigotPlugin plugin;
+
+    public ChestsortCommand(SpigotPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public SpigotPlugin getPlugin() {
+        return plugin;
+    }
+
+    public Server getServer() {
+        return plugin.getServer();
+    }
+
+    public boolean isForPlayerOnly() {
         return true;
     }
 
-    public String usage();
+    public abstract String usage();
 
-    public String getName();
+    public abstract String getName();
 
     @Override
-    public default boolean isApplicable(CommandSender sender, String command, String... args) {
+    public boolean isApplicable(CommandSender sender, String command, String... args) {
         return command.equalsIgnoreCase(getName());
     }
 }

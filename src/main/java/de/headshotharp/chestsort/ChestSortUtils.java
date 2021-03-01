@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -43,9 +44,8 @@ public class ChestSortUtils {
     private ChestSortUtils() {
     }
 
-    public static Block getBlockAt(Location location) {
-        return Registry.getSpigotPlugin().getServer().getWorld(location.getWorld()).getBlockAt(location.getX(),
-                location.getY(), location.getZ());
+    public static Block getBlockAt(Server server, Location location) {
+        return server.getWorld(location.getWorld()).getBlockAt(location.getX(), location.getY(), location.getZ());
     }
 
     public static boolean hasMarkPermission(Player player) {

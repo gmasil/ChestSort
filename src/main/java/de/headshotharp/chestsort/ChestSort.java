@@ -23,30 +23,38 @@ import java.io.IOException;
 
 import org.bukkit.event.Listener;
 
+import de.headshotharp.chestsort.command.CommandRegistry;
+import de.headshotharp.chestsort.config.ConfigService;
+import de.headshotharp.chestsort.hibernate.DataProvider;
+
 public class ChestSort extends SpigotPlugin implements Listener {
+    private static ConfigService configService = new ConfigService();
+    private static CommandRegistry commandRegistry;
+    private static DataProvider dp;
+    private static PlayerEventListener playerEventListener;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
         try {
-            Registry.getConfigService().readConfig();
+            configService.readConfig();
         } catch (IOException e) {
             error("Error while loading config, stopping", e);
             return;
         }
-        Registry.setSpigotPlugin(this);
         try {
-            Registry.getHibernateUtils().setDatabaseConfig(Registry.getConfigService().getConfig().getDatabase());
-            Registry.getHibernateUtils().getSessionFactory();
+            dp = new DataProvider(configService.getConfig().getDatabase());
             info("Connected to database");
         } catch (Exception e) {
             error("Error while connecting to database, stopping", e);
             return;
         }
         try {
-            Registry.getCommandRegistry().scanCommands();
-            getCommand("chestsort").setExecutor(Registry.getCommandRegistry());
-            getCommand("chestsort").setTabCompleter(Registry.getCommandRegistry());
-            getServer().getPluginManager().registerEvents(Registry.getPlayerEventListener(), this);
+            playerEventListener = new PlayerEventListener(dp, this);
+            commandRegistry = new CommandRegistry(this, dp, playerEventListener);
+            getCommand("chestsort").setExecutor(commandRegistry);
+            getCommand("chestsort").setTabCompleter(commandRegistry);
+            getServer().getPluginManager().registerEvents(playerEventListener, this);
         } catch (Exception e) {
             error("Error while registering commands", e);
         }
@@ -55,7 +63,7 @@ public class ChestSort extends SpigotPlugin implements Listener {
     @Override
     public void saveDefaultConfig() {
         try {
-            Registry.getConfigService().saveDefaultConfig();
+            configService.saveDefaultConfig();
         } catch (IOException e) {
             error("Error while saving default config", e);
         }

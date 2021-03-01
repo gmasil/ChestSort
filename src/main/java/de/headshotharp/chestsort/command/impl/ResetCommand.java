@@ -31,14 +31,21 @@ import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.headshotharp.chestsort.Registry;
+import de.headshotharp.chestsort.SpigotPlugin;
 import de.headshotharp.chestsort.StaticConfig;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 
-public class ResetCommand implements ChestsortCommand {
+public class ResetCommand extends ChestsortCommand {
+    private DataProvider dp;
+
+    public ResetCommand(SpigotPlugin plugin, DataProvider dp) {
+        super(plugin);
+        this.dp = dp;
+    }
+
     @Override
     public void execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
@@ -68,7 +75,6 @@ public class ResetCommand implements ChestsortCommand {
             player.sendMessage(COLOR_ERROR + usage());
             return;
         }
-        DataProvider dp = Registry.getDataProvider();
         List<ChestDAO> chests = new LinkedList<>();
         if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("chests")) {
             chests = dp.findAllChestsByMaterialAndUser(null, central ? null : player.getName());

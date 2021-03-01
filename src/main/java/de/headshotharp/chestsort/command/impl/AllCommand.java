@@ -30,9 +30,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.headshotharp.chestsort.InventoryUtils;
+import de.headshotharp.chestsort.SpigotPlugin;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
+import de.headshotharp.chestsort.hibernate.DataProvider;
 
-public class AllCommand implements ChestsortCommand {
+public class AllCommand extends ChestsortCommand {
+    private DataProvider dp;
+
+    public AllCommand(SpigotPlugin plugin, DataProvider dp) {
+        super(plugin);
+        this.dp = dp;
+    }
+
     @Override
     public void execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
@@ -49,7 +58,7 @@ public class AllCommand implements ChestsortCommand {
             player.sendMessage(COLOR_ERROR + usage());
             return;
         }
-        InventoryUtils.insertAllInventory(player, central);
+        InventoryUtils.insertAllInventory(dp, getServer(), player, central);
     }
 
     @Override

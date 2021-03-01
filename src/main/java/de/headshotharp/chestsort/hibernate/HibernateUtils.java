@@ -32,21 +32,13 @@ import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 
 public class HibernateUtils {
-    private SessionFactory sessionFactory;
     private DatabaseConfig databaseConfig;
 
-    public void setDatabaseConfig(DatabaseConfig config) {
-        databaseConfig = config;
+    public HibernateUtils(DatabaseConfig databaseConfig) {
+        this.databaseConfig = databaseConfig;
     }
 
-    public SessionFactory getSessionFactory() {
-        if (sessionFactory == null) {
-            createSessionFactory();
-        }
-        return sessionFactory;
-    }
-
-    protected void createSessionFactory() {
+    public SessionFactory createSessionFactory() {
         if (databaseConfig == null) {
             throw new IllegalStateException("HibernateUtils has no database config");
         }
@@ -74,6 +66,6 @@ public class HibernateUtils {
         // setup session factory
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties()).build();
-        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        return configuration.buildSessionFactory(serviceRegistry);
     }
 }

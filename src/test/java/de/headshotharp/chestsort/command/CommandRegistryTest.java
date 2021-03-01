@@ -21,6 +21,9 @@ package de.headshotharp.chestsort.command;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +32,7 @@ import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Reference;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
+import de.headshotharp.chestsort.SpigotPlugin;
 
 @Story("The command registry implementation is tested")
 public class CommandRegistryTest extends GherkinTest {
@@ -36,10 +40,15 @@ public class CommandRegistryTest extends GherkinTest {
     public void testCommandRegistryFindsAllCommands(Reference<CommandRegistry> registry)
             throws InstantiationException, IllegalAccessException {
         given("the command registry is empty", () -> {
-            registry.set(new CommandRegistry());
         });
         when("the command registry scans for commands", () -> {
-            registry.get().scanCommands();
+            SpigotPlugin pluginMock = mock(SpigotPlugin.class);
+            doAnswer(invocation -> {
+                String arg = "" + invocation.getArgument(0);
+                System.out.println(arg);
+                return null;
+            }).when(pluginMock).info(anyString());
+            registry.set(new CommandRegistry(pluginMock, null, null));
         });
         then("all commands are found", () -> {
             List<String> commands = registry.get().getCommands().stream().map(c -> c.getName())

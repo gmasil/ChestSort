@@ -30,15 +30,22 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import de.headshotharp.chestsort.Registry;
+import de.headshotharp.chestsort.config.Config.DatabaseConfig;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.DAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class DataProvider {
+    private SessionFactory sessionFactory;
+
+    public DataProvider(DatabaseConfig databaseConfig) {
+        sessionFactory = new HibernateUtils(databaseConfig).createSessionFactory();
+    }
+
     /* CHEST */
 
     public List<ChestDAO> findAllChests() {
@@ -256,7 +263,7 @@ public class DataProvider {
     /* UTILS */
 
     private <T> T inTransaction(InTransactionExecutor<T> ite) {
-        Session session = Registry.getHibernateUtils().getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         T ret = ite.executeInTransaction(session);
         transaction.commit();

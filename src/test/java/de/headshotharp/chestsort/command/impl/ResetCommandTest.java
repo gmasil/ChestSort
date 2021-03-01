@@ -33,13 +33,13 @@ import static org.mockito.Mockito.mock;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
-import de.headshotharp.chestsort.Registry;
 import de.headshotharp.chestsort.StaticConfig;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
@@ -47,17 +47,21 @@ import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;
 
 @ConfigureH2Hibernate
 @Story("The reset command implementation is tested")
-public class ResetCommandTest extends GherkinTest {
-    private ResetCommand resetCommand = new ResetCommand();
+class ResetCommandTest extends GherkinTest {
+    public static ResetCommand resetCommand;
+
+    @BeforeAll
+    public static void init(DataProvider dp) {
+        resetCommand = new ResetCommand(null, dp);
+    }
 
     @Scenario("Dryrun will not delete anything")
-    void testDryrunWillNotDeleteAnything() {
+    void testDryrunWillNotDeleteAnything(DataProvider dp) {
+        ResetCommand resetCommand = new ResetCommand(null, dp);
         given("a central chest exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 1, 2, "GOLD"));
         });
         and("two user chests for Peter exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 0, 0, "STONE", "Peter"));
             dp.persistChest(new ChestDAO("world", 0, 0, 1, "COBBLESTONE", "Peter"));
         });
@@ -74,25 +78,21 @@ public class ResetCommandTest extends GherkinTest {
             resetCommand.execute(player, "reset", "user", "chests");
         });
         then("there are still two user chests", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllChestsByUser("Peter");
             assertThat(chests, hasSize(2));
         });
         and("there is still a central chest", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllCentralChests();
             assertThat(chests, hasSize(1));
         });
     }
 
     @Scenario("Resetting user chests will not delete central chests")
-    void testUserResetWillKeepCentral() {
+    void testUserResetWillKeepCentral(DataProvider dp) {
         given("a central chest exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 1, 2, "GOLD"));
         });
         and("two user chests for Peter exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 0, 0, "STONE", "Peter"));
             dp.persistChest(new ChestDAO("world", 0, 0, 1, "COBBLESTONE", "Peter"));
         });
@@ -109,25 +109,21 @@ public class ResetCommandTest extends GherkinTest {
             resetCommand.execute(player, "reset", "user", "chests", "confirm");
         });
         then("there are no more user chests", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllChestsByUser("Peter");
             assertThat(chests, hasSize(0));
         });
         and("there is still a central chest", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllCentralChests();
             assertThat(chests, hasSize(1));
         });
     }
 
     @Scenario("Resetting central chests will not delete user chests")
-    void testCentralResetWillKeepUser() {
+    void testCentralResetWillKeepUser(DataProvider dp) {
         given("a central chest exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 1, 2, "GOLD"));
         });
         and("two user chests for Peter exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 0, 0, "STONE", "Peter"));
             dp.persistChest(new ChestDAO("world", 0, 0, 1, "COBBLESTONE", "Peter"));
         });
@@ -144,25 +140,21 @@ public class ResetCommandTest extends GherkinTest {
             resetCommand.execute(player, "reset", "central", "all", "confirm");
         });
         then("there are no more central chests", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllCentralChests();
             assertThat(chests, hasSize(0));
         });
         and("there are still two user chests", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllChestsByUser("Peter");
             assertThat(chests, hasSize(2));
         });
     }
 
     @Scenario("Resetting user chests without permission is canceled")
-    void testResetUserWithoutPermissions() {
+    void testResetUserWithoutPermissions(DataProvider dp) {
         given("a central chest exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 1, 2, "GOLD"));
         });
         and("two user chests for Peter exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 0, 0, "STONE", "Peter"));
             dp.persistChest(new ChestDAO("world", 0, 0, 1, "COBBLESTONE", "Peter"));
         });
@@ -179,25 +171,21 @@ public class ResetCommandTest extends GherkinTest {
             resetCommand.execute(player, "reset", "user", "all", "confirm");
         });
         then("there is still a central chest", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllCentralChests();
             assertThat(chests, hasSize(1));
         });
         then("there are still two user chests", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllChestsByUser("Peter");
             assertThat(chests, hasSize(2));
         });
     }
 
     @Scenario("Resetting central chests will not work without permissions")
-    void testResettingWithoutPermissions() {
+    void testResettingWithoutPermissions(DataProvider dp) {
         given("a central chest exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 1, 2, "GOLD"));
         });
         and("two user chests for Peter exist", () -> {
-            DataProvider dp = Registry.getDataProvider();
             dp.persistChest(new ChestDAO("world", 0, 0, 0, "STONE", "Peter"));
             dp.persistChest(new ChestDAO("world", 0, 0, 1, "COBBLESTONE", "Peter"));
         });
@@ -214,12 +202,10 @@ public class ResetCommandTest extends GherkinTest {
             resetCommand.execute(player, "reset", "central", "chests", "confirm");
         });
         then("there are no more user chests", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllChestsByUser("Peter");
             assertThat(chests, hasSize(2));
         });
         and("there is still a central chest", () -> {
-            DataProvider dp = Registry.getDataProvider();
             List<ChestDAO> chests = dp.findAllCentralChests();
             assertThat(chests, hasSize(1));
         });

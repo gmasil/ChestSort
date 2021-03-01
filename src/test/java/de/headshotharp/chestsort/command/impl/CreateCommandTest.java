@@ -29,24 +29,32 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
-import de.headshotharp.chestsort.command.impl.CreateCommand;
+import de.headshotharp.chestsort.hibernate.DataProvider;
+import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;
 
+@ConfigureH2Hibernate
 @Story("The create command implementation is tested")
 class CreateCommandTest extends GherkinTest {
-    private CreateCommand createCommand = new CreateCommand();
+    private static CreateCommand defaultCreateCommand;
+
+    @BeforeAll
+    public static void init(DataProvider dp) {
+        defaultCreateCommand = new CreateCommand(null, dp, null);
+    }
 
     @Scenario("the command is only applicable to for text 'create' case insensitive")
     void testIsApplicable() {
         Player player = Mockito.mock(Player.class);
-        assertThat(createCommand.isApplicable(player, "item"), is(equalTo(false)));
-        assertThat(createCommand.isApplicable(player, "create"), is(equalTo(true)));
-        assertThat(createCommand.isApplicable(player, "CreAte"), is(equalTo(true)));
+        assertThat(defaultCreateCommand.isApplicable(player, "item"), is(equalTo(false)));
+        assertThat(defaultCreateCommand.isApplicable(player, "create"), is(equalTo(true)));
+        assertThat(defaultCreateCommand.isApplicable(player, "CreAte"), is(equalTo(true)));
     }
 
     @Test
@@ -66,6 +74,6 @@ class CreateCommandTest extends GherkinTest {
     }
 
     private List<String> getTabComplete(String... args) {
-        return createCommand.onTabComplete(null, "create", args);
+        return defaultCreateCommand.onTabComplete(null, "create", args);
     }
 }

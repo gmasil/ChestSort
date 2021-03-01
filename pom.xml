@@ -252,6 +252,7 @@
                     </includes>
                     <excludes>
                         <exclude>**/LICENSE.txt</exclude>
+                        <exclude>**/org.mockito.plugins.MockMaker</exclude>
                     </excludes>
                 </configuration>
                 <executions>

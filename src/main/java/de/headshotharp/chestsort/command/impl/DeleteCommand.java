@@ -36,16 +36,26 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.headshotharp.chestsort.Registry;
+import de.headshotharp.chestsort.PlayerEventListener;
+import de.headshotharp.chestsort.SpigotPlugin;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
-public class DeleteCommand implements ChestsortCommand {
+public class DeleteCommand extends ChestsortCommand {
     public static final String WH_CENTRAL = "central";
     public static final String WH_USER = "user";
+
+    private DataProvider dp;
+    private PlayerEventListener listener;
+
+    public DeleteCommand(SpigotPlugin plugin, DataProvider dp, PlayerEventListener listener) {
+        super(plugin);
+        this.dp = dp;
+        this.listener = listener;
+    }
 
     @Override
     public void execute(CommandSender sender, String command, String... args) {
@@ -72,14 +82,13 @@ public class DeleteCommand implements ChestsortCommand {
             }
         }
         // here the user is allowed to perform the command
-        Location markedBlock = Registry.getPlayerEventListener().getMarkedLocation(player.getName());
+        Location markedBlock = listener.getMarkedLocation(player.getName());
         if (markedBlock == null) {
             player.sendMessage(COLOR_ERROR
                     + "You have to mark a chest or sign first. Right click a chest or sign with a stick in your main hand");
             return;
         }
         // get all chests/signs
-        DataProvider dp = Registry.getDataProvider();
         List<SignDAO> signs = dp.findAllSignsAt(markedBlock);
         List<ChestDAO> chests = dp.findAllChestsAt(markedBlock);
         // filter for user/central depending on command
@@ -105,7 +114,7 @@ public class DeleteCommand implements ChestsortCommand {
                 });
                 if (verifyDeletionSuccess(dp, markedBlock)) {
                     player.sendMessage(COLOR_GOOD + "All chests and signs at this location have been deleted");
-                    Block block = getBlockAt(markedBlock);
+                    Block block = getBlockAt(getServer(), markedBlock);
                     if (isSign(block)) {
                         block.breakNaturally();
                     }
