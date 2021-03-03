@@ -85,6 +85,21 @@ public class CreateCommand extends ChestsortCommand {
             sendusage(player);
             return null;
         }
+        if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
+            if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE_CENTRAL)) {
+                player.sendMessage(COLOR_ERROR + "You dont have permissions to manage the central chests");
+                if (player.hasPermission(PERMISSION_MANAGE)) {
+                    player.sendMessage(COLOR_ERROR
+                            + "If you want to create a chest for your personal warehouse please use the command /chestsort create user");
+                }
+                return null;
+            }
+        } else {
+            if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE)) {
+                player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
+                return null;
+            }
+        }
         String username = null;
         if (args[0].equalsIgnoreCase(WH_USER)) {
             username = player.getName();
@@ -101,21 +116,6 @@ public class CreateCommand extends ChestsortCommand {
             player.sendMessage(
                     COLOR_ERROR + "You have to mark a chest first. Right click a chest with a stick in your main hand");
             return null;
-        }
-        if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
-            if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE_CENTRAL)) {
-                player.sendMessage(COLOR_ERROR + "You dont have permissions to manage the central chests");
-                if (player.hasPermission(PERMISSION_MANAGE)) {
-                    player.sendMessage(COLOR_ERROR
-                            + "If you want to create a chest for your personal warehouse please use the command /chestsort create user");
-                }
-                return null;
-            }
-        } else {
-            if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE)) {
-                player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
-                return null;
-            }
         }
         return new ChestDAO(markedChest, optionalMaterial.get().toString(), username);
     }

@@ -67,6 +67,10 @@ public class PlayerEventListener implements Listener {
         return markedLocations.get(player);
     }
 
+    public void setMarkedLocation(String player, Location location) {
+        markedLocations.put(player, location);
+    }
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (hasMarkPermission(event.getPlayer()) && isMarkEvent(event)) {
@@ -78,7 +82,7 @@ public class PlayerEventListener implements Listener {
             }
             if (mark != null) {
                 Location location = locationFromEvent(event);
-                markedLocations.put(event.getPlayer().getName(), location);
+                setMarkedLocation(event.getPlayer().getName(), location);
                 event.setCancelled(true);
                 event.getPlayer().sendMessage(COLOR_GOOD + "Marked " + mark + " at " + location.toHumanString());
             }

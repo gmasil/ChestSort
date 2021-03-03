@@ -19,9 +19,15 @@
  */
 package de.headshotharp.chestsort.utils;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -64,6 +70,32 @@ public class PlayerMock {
             throw new IllegalStateException("Inventory of mocked player is not a mock");
         }
         Mockito.when(player.getInventory().getItemInMainHand()).thenReturn(itemStack);
+        return this;
+    }
+
+    public PlayerMock redirectMessages() {
+        doAnswer(invocation -> {
+            System.out.println("" + invocation.getArgument(0));
+            return null;
+        }).when(player).sendMessage(anyString());
+        return this;
+    }
+
+    public PlayerMock assertMessageContains(String msg) {
+        doAnswer(invocation -> {
+            String arg = "" + invocation.getArgument(0);
+            assertThat(arg, containsString(msg));
+            return null;
+        }).when(player).sendMessage(anyString());
+        return this;
+    }
+
+    public PlayerMock redirectMessages(List<String> list) {
+        doAnswer(invocation -> {
+            String arg = "" + invocation.getArgument(0);
+            list.add(arg);
+            return null;
+        }).when(player).sendMessage(anyString());
         return this;
     }
 
