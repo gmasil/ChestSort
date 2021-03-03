@@ -19,7 +19,7 @@
 
 ## Features
 
-With ChestSort you can assign a single or multiple materials to chests in Minecraft and the automatically insert items from your inventory. You can create special ChestSort signs with wich you can insert the items(s) in you hand into your warehouse by rightlicking it. Additionally you can use a command to insert all matching items from your inventory into your warehouse, but you have to be near a ChestSort sign.
+With ChestSort you can assign a single or multiple materials to chests in Minecraft and then automatically insert items from your inventory. You can create special ChestSort signs with wich you can insert items from your hand into your warehouse by rightlicking. Additionally you can use a command to insert all matching items from your inventory into your warehouse, but you have to be near a ChestSort sign.
 
 There is a central warehouse for all players and each player can create their own individual warehouse.
 
