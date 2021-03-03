@@ -46,15 +46,14 @@ public class CommandRegistry implements CommandExecutor, TabCompleter {
     private PlayerEventListener playerEventListener;
 
     public CommandRegistry(SpigotPlugin plugin, DataProvider dp, PlayerEventListener playerEventListener)
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            throws InstantiationException, IllegalAccessException, InvocationTargetException {
         this.plugin = plugin;
         this.dp = dp;
         this.playerEventListener = playerEventListener;
         scanCommands();
     }
 
-    public void scanCommands()
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void scanCommands() throws InstantiationException, IllegalAccessException, InvocationTargetException {
         Reflections reflections = new Reflections("de.headshotharp.chestsort.command.impl");
         Set<Class<? extends ChestsortCommand>> commandClasses = reflections.getSubTypesOf(ChestsortCommand.class);
         for (Class<? extends ChestsortCommand> clazz : commandClasses) {
@@ -82,7 +81,8 @@ public class CommandRegistry implements CommandExecutor, TabCompleter {
             ChestsortCommand command = constructor.newInstance(params);
             commands.add(command);
         }
-        String allCommands = String.join(", ", commands.stream().map(c -> c.getName()).collect(Collectors.toList()));
+        String allCommands = String.join(", ",
+                commands.stream().map(ChestsortCommand::getName).collect(Collectors.toList()));
         plugin.info(String.format("Registered %d commands: %s", commands.size(), allCommands));
     }
 

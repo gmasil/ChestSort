@@ -54,6 +54,7 @@ import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class PlayerEventListener implements Listener {
+    private static final String SIGN_TITLE = "[ChestSort]";
     private Map<String, Location> markedLocations = new HashMap<>();
     private DataProvider dp;
     private SpigotPlugin plugin;
@@ -118,7 +119,7 @@ public class PlayerEventListener implements Listener {
     }
 
     public SignDAO createSign(SignChangeEvent event) {
-        if (event.getLine(0).equals("[ChestSort]")) {
+        if (event.getLine(0).equals(SIGN_TITLE)) {
             if (event.getBlock().getType().equals(MATERIAL_SIGN_CENTRAL)) {
                 if (!event.getPlayer().hasPermission(PERMISSION_MANAGE_CENTRAL)) {
                     event.getPlayer()
@@ -132,7 +133,7 @@ public class PlayerEventListener implements Listener {
                     event.getBlock().breakNaturally();
                     return null;
                 }
-                event.setLine(0, ChatColor.BLUE + "[ChestSort]");
+                event.setLine(0, ChatColor.BLUE + SIGN_TITLE);
                 event.setLine(1, ChatColor.RED + "Central");
                 event.setLine(2, "rightclick to");
                 event.setLine(3, "insert a block");
@@ -144,7 +145,7 @@ public class PlayerEventListener implements Listener {
                     event.getBlock().breakNaturally();
                     return null;
                 }
-                event.setLine(0, ChatColor.BLUE + "[ChestSort]");
+                event.setLine(0, ChatColor.BLUE + SIGN_TITLE);
                 event.setLine(1, ChatColor.GREEN + event.getPlayer().getName());
                 event.setLine(2, "rightclick to");
                 event.setLine(3, "insert a block");

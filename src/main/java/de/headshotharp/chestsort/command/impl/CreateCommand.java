@@ -43,9 +43,6 @@ import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class CreateCommand extends ChestsortCommand {
-    public static final String WH_CENTRAL = "central";
-    public static final String WH_USER = "user";
-
     private DataProvider dp;
     private PlayerEventListener listener;
 

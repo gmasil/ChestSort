@@ -53,19 +53,19 @@ public class ResetCommand extends ChestsortCommand {
             player.sendMessage(COLOR_ERROR + usage());
             return;
         }
-        if (!args[1].equalsIgnoreCase("all") && !args[1].equalsIgnoreCase("chests")
-                && !args[1].equalsIgnoreCase("signs")) {
+        if (!args[1].equalsIgnoreCase(WH_ALL) && !args[1].equalsIgnoreCase(WH_CHESTS)
+                && !args[1].equalsIgnoreCase(WH_SIGNS)) {
             player.sendMessage(COLOR_ERROR + usage());
             return;
         }
         boolean central;
-        if (args[0].equalsIgnoreCase("central")) {
+        if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
             central = true;
             if (!player.hasPermission(StaticConfig.PERMISSION_RESET)) {
                 player.sendMessage(COLOR_ERROR + "You don't have permissions to reset ChestSort");
                 return;
             }
-        } else if (args[0].equalsIgnoreCase("user")) {
+        } else if (args[0].equalsIgnoreCase(WH_USER)) {
             central = false;
             if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE)) {
                 player.sendMessage(COLOR_ERROR + "You don't have permissions to manage ChestSort");
@@ -76,11 +76,11 @@ public class ResetCommand extends ChestsortCommand {
             return;
         }
         List<ChestDAO> chests = new LinkedList<>();
-        if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("chests")) {
+        if (args[1].equalsIgnoreCase(WH_ALL) || args[1].equalsIgnoreCase(WH_CHESTS)) {
             chests = dp.findAllChestsByMaterialAndUser(null, central ? null : player.getName());
         }
         List<SignDAO> signs = new LinkedList<>();
-        if (args[1].equalsIgnoreCase("all") || args[1].equalsIgnoreCase("signs")) {
+        if (args[1].equalsIgnoreCase(WH_ALL) || args[1].equalsIgnoreCase(WH_SIGNS)) {
             signs = dp.findAllSignsByUser(central ? null : player.getName());
         }
         if (isDeletionConfirmed(args)) {
@@ -100,13 +100,13 @@ public class ResetCommand extends ChestsortCommand {
     @Override
     public List<String> onTabComplete(CommandSender sender, String command, String... args) {
         if (args.length == 0) {
-            return Arrays.asList("central", "user");
+            return Arrays.asList(WH_CENTRAL, WH_USER);
         } else if (args.length == 1) {
-            return Arrays.asList("central", "user").stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
+            return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         } else if (args.length == 2) {
-            return Arrays.asList("all", "chests", "signs").stream().filter(cmd -> cmd.startsWith(args[1].toLowerCase()))
-                    .collect(Collectors.toList());
+            return Arrays.asList(WH_ALL, WH_CHESTS, WH_SIGNS).stream()
+                    .filter(cmd -> cmd.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
         }
         // no autocomplete for confirm
         return new LinkedList<>();

@@ -28,10 +28,7 @@ import de.headshotharp.chestsort.config.ConfigService;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 
 public class ChestSort extends SpigotPlugin implements Listener {
-    private static ConfigService configService = new ConfigService();
-    private static CommandRegistry commandRegistry;
-    private static DataProvider dp;
-    private static PlayerEventListener playerEventListener;
+    private ConfigService configService = new ConfigService();
 
     @Override
     public void onEnable() {
@@ -42,6 +39,7 @@ public class ChestSort extends SpigotPlugin implements Listener {
             error("Error while loading config, stopping", e);
             return;
         }
+        DataProvider dp;
         try {
             dp = new DataProvider(configService.getConfig().getDatabase());
             info("Connected to database");
@@ -50,8 +48,8 @@ public class ChestSort extends SpigotPlugin implements Listener {
             return;
         }
         try {
-            playerEventListener = new PlayerEventListener(dp, this);
-            commandRegistry = new CommandRegistry(this, dp, playerEventListener);
+            PlayerEventListener playerEventListener = new PlayerEventListener(dp, this);
+            CommandRegistry commandRegistry = new CommandRegistry(this, dp, playerEventListener);
             getCommand("chestsort").setExecutor(commandRegistry);
             getCommand("chestsort").setTabCompleter(commandRegistry);
             getServer().getPluginManager().registerEvents(playerEventListener, this);

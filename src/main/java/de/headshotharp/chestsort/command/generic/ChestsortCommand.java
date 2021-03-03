@@ -25,6 +25,12 @@ import org.bukkit.command.CommandSender;
 import de.headshotharp.chestsort.SpigotPlugin;
 
 public abstract class ChestsortCommand implements CommandRunnable, CommandApplicable, CommandTabCompletable {
+    public static final String WH_USER = "user";
+    public static final String WH_CENTRAL = "central";
+    public static final String WH_CHESTS = "chests";
+    public static final String WH_SIGNS = "signs";
+    public static final String WH_ALL = "all";
+
     private SpigotPlugin plugin;
 
     public ChestsortCommand(SpigotPlugin plugin) {

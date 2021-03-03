@@ -50,9 +50,9 @@ public class AllCommand extends ChestsortCommand {
             return;
         }
         boolean central;
-        if (args[0].equalsIgnoreCase("central")) {
+        if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
             central = true;
-        } else if (args[0].equalsIgnoreCase("user")) {
+        } else if (args[0].equalsIgnoreCase(WH_USER)) {
             central = false;
         } else {
             player.sendMessage(COLOR_ERROR + usage());
@@ -64,9 +64,9 @@ public class AllCommand extends ChestsortCommand {
     @Override
     public List<String> onTabComplete(CommandSender sender, String command, String... args) {
         if (args.length == 0) {
-            return Arrays.asList("central", "user");
+            return Arrays.asList(WH_CENTRAL, WH_USER);
         } else if (args.length == 1) {
-            return Arrays.asList("central", "user").stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
+            return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }
         return new LinkedList<>();

@@ -45,9 +45,6 @@ import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class DeleteCommand extends ChestsortCommand {
-    public static final String WH_CENTRAL = "central";
-    public static final String WH_USER = "user";
-
     private DataProvider dp;
     private PlayerEventListener listener;
 
@@ -105,9 +102,10 @@ public class DeleteCommand extends ChestsortCommand {
             if (signs.isEmpty() && chests.isEmpty()) {
                 player.sendMessage(COLOR_NORMAL + "There are no more chests or signs at your marked location");
             } else {
-                player.sendMessage(COLOR_NORMAL + "Deleting " + signs.size() + " signs");
+
+                player.sendMessage(COLOR_NORMAL + String.format("Deleting %d signs", signs.size()));
                 signs.forEach(dp::deleteSign);
-                player.sendMessage(COLOR_NORMAL + "Deleting " + chests.size() + " chests");
+                player.sendMessage(COLOR_NORMAL + String.format("Deleting %d chests", chests.size()));
                 chests.forEach(chest -> {
                     player.sendMessage(COLOR_NORMAL + "Deleting " + chest.getTextBlockString());
                     dp.deleteChest(chest);
@@ -129,8 +127,8 @@ public class DeleteCommand extends ChestsortCommand {
             if (signs.isEmpty() && chests.isEmpty()) {
                 player.sendMessage(COLOR_NORMAL + "There are no more chests or signs at your marked location");
             } else {
-                player.sendMessage(COLOR_NORMAL + "Would delete " + signs.size() + " signs");
-                player.sendMessage(COLOR_NORMAL + "Would delete " + chests.size() + " chests");
+                player.sendMessage(COLOR_NORMAL + String.format("Would delete %d signs", signs.size()));
+                player.sendMessage(COLOR_NORMAL + String.format("Would delete %d chests", chests.size()));
                 chests.forEach(
                         chest -> player.sendMessage(COLOR_NORMAL + "Would delete " + chest.getTextBlockString()));
                 player.sendMessage(COLOR_NORMAL + "This was a dryrun only. Confirm command with " + COLOR_GOOD

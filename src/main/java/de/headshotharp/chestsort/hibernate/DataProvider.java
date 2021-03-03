@@ -40,6 +40,15 @@ import de.headshotharp.chestsort.hibernate.dao.generic.DAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class DataProvider {
+    private static final String WH_LOCATION = "location";
+    private static final String WH_WORLD = "world";
+    private static final String WH_X = "x";
+    private static final String WH_Y = "y";
+    private static final String WH_Z = "z";
+    private static final String WH_MATERIAL = "material";
+    private static final String WH_CENTRAL = "central";
+    private static final String WH_USERNAME = "username";
+
     private SessionFactory sessionFactory;
 
     public DataProvider(DatabaseConfig databaseConfig) {
@@ -62,20 +71,20 @@ public class DataProvider {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
             Root<ChestDAO> chestRef = criteria.from(ChestDAO.class);
-            Join<Object, Object> locationRef = chestRef.join("location");
+            Join<Object, Object> locationRef = chestRef.join(WH_LOCATION);
             // set predicates
             List<Predicate> predicates = new LinkedList<>();
-            predicates.add(builder.equal(locationRef.get("world"), chest.getLocation().getWorld()));
-            predicates.add(builder.equal(locationRef.get("x"), chest.getLocation().getX()));
-            predicates.add(builder.equal(locationRef.get("y"), chest.getLocation().getY()));
-            predicates.add(builder.equal(locationRef.get("z"), chest.getLocation().getZ()));
-            predicates.add(builder.equal(chestRef.get("material"), chest.getMaterial()));
-            predicates.add(builder.equal(chestRef.get("central"), chest.isCentral()));
+            predicates.add(builder.equal(locationRef.get(WH_WORLD), chest.getLocation().getWorld()));
+            predicates.add(builder.equal(locationRef.get(WH_X), chest.getLocation().getX()));
+            predicates.add(builder.equal(locationRef.get(WH_Y), chest.getLocation().getY()));
+            predicates.add(builder.equal(locationRef.get(WH_Z), chest.getLocation().getZ()));
+            predicates.add(builder.equal(chestRef.get(WH_MATERIAL), chest.getMaterial()));
+            predicates.add(builder.equal(chestRef.get(WH_CENTRAL), chest.isCentral()));
             // predicate depending on null values
             if (chest.getUsername() == null) {
-                predicates.add(builder.isNull(chestRef.get("username")));
+                predicates.add(builder.isNull(chestRef.get(WH_USERNAME)));
             } else {
-                predicates.add(builder.equal(chestRef.get("username"), chest.getUsername()));
+                predicates.add(builder.equal(chestRef.get(WH_USERNAME), chest.getUsername()));
             }
             // add predicates
             criteria.where(builder.and(predicates.toArray(new Predicate[0])));
@@ -88,13 +97,13 @@ public class DataProvider {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
             Root<ChestDAO> chestRef = criteria.from(ChestDAO.class);
-            Join<Object, Object> locationRef = chestRef.join("location");
+            Join<Object, Object> locationRef = chestRef.join(WH_LOCATION);
             // set predicates
             List<Predicate> predicates = new LinkedList<>();
-            predicates.add(builder.equal(locationRef.get("world"), location.getWorld()));
-            predicates.add(builder.equal(locationRef.get("x"), location.getX()));
-            predicates.add(builder.equal(locationRef.get("y"), location.getY()));
-            predicates.add(builder.equal(locationRef.get("z"), location.getZ()));
+            predicates.add(builder.equal(locationRef.get(WH_WORLD), location.getWorld()));
+            predicates.add(builder.equal(locationRef.get(WH_X), location.getX()));
+            predicates.add(builder.equal(locationRef.get(WH_Y), location.getY()));
+            predicates.add(builder.equal(locationRef.get(WH_Z), location.getZ()));
             // add predicates
             criteria.where(builder.and(predicates.toArray(new Predicate[0])));
             return session.createQuery(criteria).getResultList();
@@ -117,11 +126,11 @@ public class DataProvider {
             // set predicates
             List<Predicate> predicates = new LinkedList<>();
             if (material != null) {
-                predicates.add(builder.equal(chestRef.get("material"), material));
+                predicates.add(builder.equal(chestRef.get(WH_MATERIAL), material));
             }
-            predicates.add(builder.equal(chestRef.get("central"), username == null));
+            predicates.add(builder.equal(chestRef.get(WH_CENTRAL), username == null));
             if (username != null) {
-                predicates.add(builder.equal(chestRef.get("username"), username));
+                predicates.add(builder.equal(chestRef.get(WH_USERNAME), username));
             }
             // add predicates
             criteria.where(builder.and(predicates.toArray(new Predicate[0])));
@@ -166,19 +175,19 @@ public class DataProvider {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
             Root<SignDAO> signRef = criteria.from(SignDAO.class);
-            Join<Object, Object> locationRef = signRef.join("location");
+            Join<Object, Object> locationRef = signRef.join(WH_LOCATION);
             // set predicates
             List<Predicate> predicates = new LinkedList<>();
-            predicates.add(builder.equal(locationRef.get("world"), sign.getLocation().getWorld()));
-            predicates.add(builder.equal(locationRef.get("x"), sign.getLocation().getX()));
-            predicates.add(builder.equal(locationRef.get("y"), sign.getLocation().getY()));
-            predicates.add(builder.equal(locationRef.get("z"), sign.getLocation().getZ()));
-            predicates.add(builder.equal(signRef.get("central"), sign.isCentral()));
+            predicates.add(builder.equal(locationRef.get(WH_WORLD), sign.getLocation().getWorld()));
+            predicates.add(builder.equal(locationRef.get(WH_X), sign.getLocation().getX()));
+            predicates.add(builder.equal(locationRef.get(WH_Y), sign.getLocation().getY()));
+            predicates.add(builder.equal(locationRef.get(WH_Z), sign.getLocation().getZ()));
+            predicates.add(builder.equal(signRef.get(WH_CENTRAL), sign.isCentral()));
             // predicate depending on null values
             if (sign.getUsername() == null) {
-                predicates.add(builder.isNull(signRef.get("username")));
+                predicates.add(builder.isNull(signRef.get(WH_USERNAME)));
             } else {
-                predicates.add(builder.equal(signRef.get("username"), sign.getUsername()));
+                predicates.add(builder.equal(signRef.get(WH_USERNAME), sign.getUsername()));
             }
             // add predicates
             criteria.where(builder.and(predicates.toArray(new Predicate[0])));
@@ -191,13 +200,13 @@ public class DataProvider {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
             Root<SignDAO> signRef = criteria.from(SignDAO.class);
-            Join<Object, Object> locationRef = signRef.join("location");
+            Join<Object, Object> locationRef = signRef.join(WH_LOCATION);
             // set predicates
             List<Predicate> predicates = new LinkedList<>();
-            predicates.add(builder.equal(locationRef.get("world"), location.getWorld()));
-            predicates.add(builder.equal(locationRef.get("x"), location.getX()));
-            predicates.add(builder.equal(locationRef.get("y"), location.getY()));
-            predicates.add(builder.equal(locationRef.get("z"), location.getZ()));
+            predicates.add(builder.equal(locationRef.get(WH_WORLD), location.getWorld()));
+            predicates.add(builder.equal(locationRef.get(WH_X), location.getX()));
+            predicates.add(builder.equal(locationRef.get(WH_Y), location.getY()));
+            predicates.add(builder.equal(locationRef.get(WH_Z), location.getZ()));
             // add predicates
             criteria.where(builder.and(predicates.toArray(new Predicate[0])));
             return session.createQuery(criteria).getResultList();
@@ -215,9 +224,9 @@ public class DataProvider {
             Root<SignDAO> signRef = criteria.from(SignDAO.class);
             // set predicates
             List<Predicate> predicates = new LinkedList<>();
-            predicates.add(builder.equal(signRef.get("central"), username == null));
+            predicates.add(builder.equal(signRef.get(WH_CENTRAL), username == null));
             if (username != null) {
-                predicates.add(builder.equal(signRef.get("username"), username));
+                predicates.add(builder.equal(signRef.get(WH_USERNAME), username));
             }
             // add predicates
             criteria.where(builder.and(predicates.toArray(new Predicate[0])));
@@ -230,13 +239,13 @@ public class DataProvider {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
             Root<SignDAO> signRef = criteria.from(SignDAO.class);
-            Join<Object, Object> locationRef = signRef.join("location");
+            Join<Object, Object> locationRef = signRef.join(WH_LOCATION);
             // set predicates
             List<Predicate> predicates = new LinkedList<>();
-            predicates.add(builder.equal(locationRef.get("world"), location.getWorld()));
-            predicates.add(builder.between(locationRef.get("x"), location.getX() - radius, location.getX() + radius));
-            predicates.add(builder.between(locationRef.get("y"), location.getY() - radius, location.getY() + radius));
-            predicates.add(builder.between(locationRef.get("z"), location.getZ() - radius, location.getZ() + radius));
+            predicates.add(builder.equal(locationRef.get(WH_WORLD), location.getWorld()));
+            predicates.add(builder.between(locationRef.get(WH_X), location.getX() - radius, location.getX() + radius));
+            predicates.add(builder.between(locationRef.get(WH_Y), location.getY() - radius, location.getY() + radius));
+            predicates.add(builder.between(locationRef.get(WH_Z), location.getZ() - radius, location.getZ() + radius));
             // add predicates
             criteria.where(builder.and(predicates.toArray(new Predicate[0])));
             return session.createQuery(criteria).getResultList();
