@@ -32,5 +32,4 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Inherited
 @ExtendWith(H2HibernateConfigurationExtension.class)
 public @interface ConfigureH2Hibernate {
-
 }

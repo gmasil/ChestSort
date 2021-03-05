@@ -33,7 +33,7 @@ import de.gmasil.gherkin.extension.Story;
 @Story("Session factory is tested for intended behaviour")
 public class HibernateUtilsTest extends GherkinTest {
     @Scenario("A SessionFactory is created without database config")
-    public void testSessionFactoryCreationWithoutDatabaseConfig(Reference<HibernateUtils> utils,
+    void testSessionFactoryCreationWithoutDatabaseConfig(Reference<HibernateUtils> utils,
             Reference<IllegalStateException> thrownException) {
         given("no database config exists", () -> {
             utils.set(new HibernateUtils(null));

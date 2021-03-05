@@ -37,7 +37,7 @@ import de.headshotharp.chestsort.SpigotPlugin;
 @Story("The command registry implementation is tested")
 public class CommandRegistryTest extends GherkinTest {
     @Scenario("The command registry finds all commands during scan")
-    public void testCommandRegistryFindsAllCommands(Reference<CommandRegistry> registry)
+    void testCommandRegistryFindsAllCommands(Reference<CommandRegistry> registry)
             throws InstantiationException, IllegalAccessException {
         given("the command registry is empty", () -> {
         });

@@ -40,12 +40,12 @@ import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;
 
 @ConfigureH2Hibernate
 @Story("The DataProvider can perform all necessary operations on the database")
-public class DataProviderTest extends GherkinTest {
+class DataProviderTest extends GherkinTest {
 
     /* CHESTS */
 
     @Scenario("A central chest can be found by all attributes")
-    public void testFindCentralChestByAllAttributes(Reference<List<ChestDAO>> chests, DataProvider dp) {
+    void testFindCentralChestByAllAttributes(Reference<List<ChestDAO>> chests, DataProvider dp) {
         given("a central chest exist at (world, 6, 9, 4) with material cobblestone", () -> {
             assertThat(dp.findAllChests(), hasSize(0));
             dp.persistChest(new ChestDAO("world", 6, 9, 4, Material.COBBLESTONE.toString()));
@@ -76,7 +76,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A user chest can be found by all attributes")
-    public void testFinduserChestByAllAttributes(Reference<List<ChestDAO>> chests, DataProvider dp) {
+    void testFinduserChestByAllAttributes(Reference<List<ChestDAO>> chests, DataProvider dp) {
         given("a central chest exist at (world, 6, 9, 4) with material cobblestone", () -> {
             assertThat(dp.findAllChests(), hasSize(0));
             dp.persistChest(new ChestDAO("world", 6, 9, 4, Material.COBBLESTONE.toString()));
@@ -107,7 +107,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A chest can be found by its location")
-    public void testFindChestByLocation(Reference<List<ChestDAO>> chests, DataProvider dp) {
+    void testFindChestByLocation(Reference<List<ChestDAO>> chests, DataProvider dp) {
         given("a single chest exists at (world, 6, 9, 4)", () -> {
             assertThat(dp.findAllChests(), hasSize(0));
             ChestDAO chest = new ChestDAO("world", 6, 9, 4, Material.COBBLESTONE.toString());
@@ -124,7 +124,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A central chest can be found by its material")
-    public void testFindAllCentralChestsByMaterial(Reference<List<ChestDAO>> chests, DataProvider dp) {
+    void testFindAllCentralChestsByMaterial(Reference<List<ChestDAO>> chests, DataProvider dp) {
         given("a central chest exists with material STONE", () -> {
             assertThat(dp.findAllChests(), hasSize(0));
             ChestDAO chest = new ChestDAO("world", 0, 0, 0, Material.STONE.toString());
@@ -147,7 +147,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A chest is not found in the wrong location")
-    public void testDontFindChestAtWrongLocation(Reference<List<ChestDAO>> chests, DataProvider dp) {
+    void testDontFindChestAtWrongLocation(Reference<List<ChestDAO>> chests, DataProvider dp) {
         given("a single chest exists at (world, 6, 9, 4)", () -> {
             assertThat(dp.findAllChests(), hasSize(0));
             ChestDAO chest = new ChestDAO("world", 6, 9, 4, Material.COBBLESTONE.toString());
@@ -163,7 +163,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A chest can be persisted")
-    public void testPersistChests(DataProvider dp) {
+    void testPersistChests(DataProvider dp) {
         given("no chest exists in the database", () -> {
             assertThat(dp.findAllChests(), hasSize(0));
         });
@@ -177,7 +177,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A chest can be deleted")
-    public void testDeleteChest(DataProvider dp) {
+    void testDeleteChest(DataProvider dp) {
         given("a single chest exists in the database", () -> {
             assertThat(dp.findAllChests(), hasSize(0));
             ChestDAO chest = new ChestDAO("world", 6, 9, 4, Material.COBBLESTONE.toString());
@@ -196,7 +196,7 @@ public class DataProviderTest extends GherkinTest {
     /* SIGNS */
 
     @Scenario("A central sign can be found by all attributes")
-    public void testFindCentralSignByAllAttributes(Reference<List<SignDAO>> signs, DataProvider dp) {
+    void testFindCentralSignByAllAttributes(Reference<List<SignDAO>> signs, DataProvider dp) {
         given("a central sign exist at (world, 6, 9, 4)", () -> {
             assertThat(dp.findAllSigns(), hasSize(0));
             dp.persistSign(new SignDAO("world", 6, 9, 4));
@@ -226,7 +226,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A user sign can be found by all attributes")
-    public void testFindUserSignByAllAttributes(Reference<List<SignDAO>> signs, DataProvider dp) {
+    void testFindUserSignByAllAttributes(Reference<List<SignDAO>> signs, DataProvider dp) {
         given("a central sign exist at (world, 6, 9, 4)", () -> {
             assertThat(dp.findAllSigns(), hasSize(0));
             dp.persistSign(new SignDAO("world", 6, 9, 4));
@@ -256,7 +256,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A sign can be found by its location")
-    public void testFindSignByLocation(Reference<List<SignDAO>> signs, DataProvider dp) {
+    void testFindSignByLocation(Reference<List<SignDAO>> signs, DataProvider dp) {
         given("a single sign exists at (world, 6, 9, 4)", () -> {
             assertThat(dp.findAllSigns(), hasSize(0));
             SignDAO sign = new SignDAO("world", 6, 9, 4);
@@ -273,7 +273,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A sign is not found in the wrong location")
-    public void testDontFindSignAtWrongLocation(Reference<List<SignDAO>> signs, DataProvider dp) {
+    void testDontFindSignAtWrongLocation(Reference<List<SignDAO>> signs, DataProvider dp) {
         given("a single sign exists at (world, 6, 9, 4)", () -> {
             assertThat(dp.findAllSigns(), hasSize(0));
             SignDAO sign = new SignDAO("world", 6, 9, 4, Material.COBBLESTONE.toString());
@@ -289,7 +289,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("Only signs for the correct user are found")
-    public void testFindAllSignsByUser(Reference<List<SignDAO>> signs, DataProvider dp) {
+    void testFindAllSignsByUser(Reference<List<SignDAO>> signs, DataProvider dp) {
         given("a central sign exist at (world, 1, 2, 3)", () -> {
             assertThat(dp.findAllSigns(), hasSize(0));
             dp.persistSign(new SignDAO("world", 1, 2, 3));
@@ -322,7 +322,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("Only central signs are found if requested")
-    public void testFindAllCentralSigns(Reference<List<SignDAO>> signs, DataProvider dp) {
+    void testFindAllCentralSigns(Reference<List<SignDAO>> signs, DataProvider dp) {
         given("a central sign exist at (world, 1, 2, 3)", () -> {
             assertThat(dp.findAllSigns(), hasSize(0));
             dp.persistSign(new SignDAO("world", 1, 2, 3));
@@ -351,7 +351,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("Only signs in a given area are found")
-    public void testFindAllSignsAround(Reference<List<SignDAO>> signs, DataProvider dp) {
+    void testFindAllSignsAround(Reference<List<SignDAO>> signs, DataProvider dp) {
         given("there is a sign at (world, 0, 0, 0)", () -> {
             dp.persistSign(new SignDAO("world", 0, 0, 0));
         });
@@ -370,7 +370,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A sign can be persisted")
-    public void testPersistSign(DataProvider dp) {
+    void testPersistSign(DataProvider dp) {
         given("no sign exists in the database", () -> {
             assertThat(dp.findAllSigns(), hasSize(0));
         });
@@ -384,7 +384,7 @@ public class DataProviderTest extends GherkinTest {
     }
 
     @Scenario("A sign can be deleted")
-    public void testDeleteSign(DataProvider dp) {
+    void testDeleteSign(DataProvider dp) {
         given("a single sign exists in the database", () -> {
             assertThat(dp.findAllSigns(), hasSize(0));
             SignDAO sign = new SignDAO("world", 6, 4, 9);

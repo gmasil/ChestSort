@@ -31,9 +31,9 @@ import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
 
 @Story("The ConfigService is able to save and load config files correctly")
-public class ConfigServiceTest extends GherkinTest {
+class ConfigServiceTest extends GherkinTest {
     @Scenario("The default configuration can be saved and successfully reloaded")
-    public void testDefaultConfigCreation(Reference<ConfigService> configService, Reference<Config> config) {
+    void testDefaultConfigCreation(Reference<ConfigService> configService, Reference<Config> config) {
         given("no config file exists", () -> {
             configService.set(new ConfigService());
             configService.get().setConfigFile(new File("target/plugins/ChestSort", "config.yaml"));
