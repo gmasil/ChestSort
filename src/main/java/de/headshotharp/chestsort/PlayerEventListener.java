@@ -23,7 +23,7 @@ import static de.headshotharp.chestsort.ChestSortUtils.convertLocation;
 import static de.headshotharp.chestsort.ChestSortUtils.hasMarkPermission;
 import static de.headshotharp.chestsort.ChestSortUtils.isChestBreaked;
 import static de.headshotharp.chestsort.ChestSortUtils.isChestClicked;
-import static de.headshotharp.chestsort.ChestSortUtils.isMarkEvent;
+import static de.headshotharp.chestsort.ChestSortUtils.isMarkerInHand;
 import static de.headshotharp.chestsort.ChestSortUtils.isRightClickBlock;
 import static de.headshotharp.chestsort.ChestSortUtils.isSignBreaked;
 import static de.headshotharp.chestsort.ChestSortUtils.isSignClicked;
@@ -74,7 +74,15 @@ public class PlayerEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (hasMarkPermission(event.getPlayer()) && isMarkEvent(event)) {
+        if (isMarkerInHand(event)) {
+            processMarkEvent(event);
+        } else if (isRightClickBlock(event) && isSignClicked(event)) {
+            processInsert(event);
+        }
+    }
+
+    private void processMarkEvent(PlayerInteractEvent event) {
+        if (hasMarkPermission(event.getPlayer()) && isRightClickBlock(event)) {
             String mark = null;
             if (isChestClicked(event)) {
                 mark = "chest";
@@ -88,14 +96,15 @@ public class PlayerEventListener implements Listener {
                 event.getPlayer().sendMessage(COLOR_GOOD + "Marked " + mark + " at " + location.toHumanString());
             }
         }
-        if (isRightClickBlock(event) && isSignClicked(event)) {
-            List<SignDAO> signs = dp.findAllSignsAt(locationFromEvent(event));
-            if (signs.size() == 1) {
-                InventoryUtils.insertItemInHand(dp, plugin.getServer(), event.getPlayer(), signs.get(0).isCentral());
-            } else if (signs.size() > 1) {
-                event.getPlayer().sendMessage(COLOR_ERROR
-                        + "Multiple registered signs found at this location. Please delete and recreate the sign");
-            }
+    }
+
+    private void processInsert(PlayerInteractEvent event) {
+        List<SignDAO> signs = dp.findAllSignsAt(locationFromEvent(event));
+        if (signs.size() == 1) {
+            InventoryUtils.insertItemInHand(dp, plugin.getServer(), event.getPlayer(), signs.get(0).isCentral());
+        } else if (signs.size() > 1) {
+            event.getPlayer().sendMessage(COLOR_ERROR
+                    + "Multiple registered signs found at this location. Please delete and recreate the sign");
         }
     }
 
@@ -133,10 +142,7 @@ public class PlayerEventListener implements Listener {
                     event.getBlock().breakNaturally();
                     return null;
                 }
-                event.setLine(0, ChatColor.BLUE + SIGN_TITLE);
-                event.setLine(1, ChatColor.RED + "Central");
-                event.setLine(2, "rightclick to");
-                event.setLine(3, "insert a block");
+                updateSignText(event);
                 return new SignDAO(convertLocation(event.getBlock().getLocation()));
             } else if (event.getBlock().getType().equals(MATERIAL_SIGN_USER)) {
                 if (!event.getPlayer().hasPermission(PERMISSION_MANAGE)) {
@@ -145,14 +151,37 @@ public class PlayerEventListener implements Listener {
                     event.getBlock().breakNaturally();
                     return null;
                 }
-                event.setLine(0, ChatColor.BLUE + SIGN_TITLE);
-                event.setLine(1, ChatColor.GREEN + event.getPlayer().getName());
-                event.setLine(2, "rightclick to");
-                event.setLine(3, "insert a block");
+                updateSignText(event, event.getPlayer().getName());
                 return new SignDAO(convertLocation(event.getBlock().getLocation()), event.getPlayer().getName());
             }
         }
         return null;
+    }
+
+    /**
+     * Update sign text for central sign
+     *
+     * @param event
+     */
+    private void updateSignText(SignChangeEvent event) {
+        updateSignText(event, null);
+    }
+
+    /**
+     * Update sign text for user if username is present, for central otherwise
+     *
+     * @param event
+     * @param username
+     */
+    private void updateSignText(SignChangeEvent event, String username) {
+        event.setLine(0, ChatColor.BLUE + SIGN_TITLE);
+        if (username != null) {
+            event.setLine(1, ChatColor.GREEN + username);
+        } else {
+            event.setLine(1, ChatColor.RED + "Central");
+        }
+        event.setLine(2, "rightclick to");
+        event.setLine(3, "insert a block");
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
