@@ -31,9 +31,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.headshotharp.chestsort.ChestSortUtils;
 import de.headshotharp.chestsort.PlayerEventListener;
 import de.headshotharp.chestsort.SpigotPlugin;
 import de.headshotharp.chestsort.StaticConfig;
@@ -43,8 +45,8 @@ import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class CreateCommand extends ChestsortCommand {
-    private DataProvider dp;
-    private PlayerEventListener listener;
+    protected DataProvider dp;
+    protected PlayerEventListener listener;
 
     public CreateCommand(SpigotPlugin plugin, DataProvider dp, PlayerEventListener listener) {
         super(plugin);
@@ -55,25 +57,39 @@ public class CreateCommand extends ChestsortCommand {
     @Override
     public void execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
-        ChestDAO chest = chestByParameter(player, args);
+        Material material = verifyParameters(player, args);
+        if (material == null) {
+            return;
+        }
+        boolean isCentral = args[0].equalsIgnoreCase(WH_CENTRAL);
+        ChestDAO chest = chestByParameter(player, material, isCentral);
         if (chest != null) {
-            if (dp.findChest(chest).isEmpty()) {
-                dp.persistChest(chest);
+            if (isChestAt(chest.getLocation())) {
                 if (dp.findChest(chest).isEmpty()) {
-                    player.sendMessage(
-                            COLOR_ERROR + "The chest could not be persisted in the database, this should never occur");
+                    dp.persistChest(chest);
+                    if (dp.findChest(chest).isEmpty()) {
+                        player.sendMessage(COLOR_ERROR
+                                + "The chest could not be persisted in the database, this should never occur");
+                    } else {
+                        player.sendMessage(
+                                COLOR_GOOD + "Chest of type " + chest.getMaterial() + " was created successfully");
+                    }
                 } else {
-                    player.sendMessage(
-                            COLOR_GOOD + "Chest of type " + chest.getMaterial() + " was created successfully");
+                    player.sendMessage(COLOR_ERROR + "Chest is already registered with type " + COLOR_ERROR_HIGHLIGHT
+                            + chest.getMaterial());
                 }
             } else {
-                player.sendMessage(COLOR_ERROR + "Chest is already registered with type " + COLOR_ERROR_HIGHLIGHT
-                        + chest.getMaterial());
+                player.sendMessage(COLOR_ERROR + "There is no chest at the marked location.");
             }
         }
     }
 
-    public ChestDAO chestByParameter(Player player, String... args) {
+    protected boolean isChestAt(Location loc) {
+        Block block = getPlugin().getServer().getWorld(loc.getWorld()).getBlockAt(loc.getX(), loc.getY(), loc.getZ());
+        return ChestSortUtils.isChest(block);
+    }
+
+    public Material verifyParameters(Player player, String... args) {
         if (args.length != 2) {
             sendusage(player);
             return null;
@@ -97,10 +113,6 @@ public class CreateCommand extends ChestsortCommand {
                 return null;
             }
         }
-        String username = null;
-        if (args[0].equalsIgnoreCase(WH_USER)) {
-            username = player.getName();
-        }
         Optional<Material> optionalMaterial = Arrays.asList(Material.values()).stream()
                 .filter(mat -> mat.toString().equalsIgnoreCase(args[1])).findFirst();
         if (!optionalMaterial.isPresent()) {
@@ -108,13 +120,17 @@ public class CreateCommand extends ChestsortCommand {
             sendusage(player);
             return null;
         }
+        return optionalMaterial.get();
+    }
+
+    public ChestDAO chestByParameter(Player player, Material material, boolean isCentral) {
         Location markedChest = listener.getMarkedLocation(player.getName());
         if (markedChest == null) {
             player.sendMessage(
                     COLOR_ERROR + "You have to mark a chest first. Right click a chest with a stick in your main hand");
             return null;
         }
-        return new ChestDAO(markedChest, optionalMaterial.get().toString(), username);
+        return new ChestDAO(markedChest, material.toString(), isCentral ? null : player.getName());
     }
 
     private void sendusage(Player player) {

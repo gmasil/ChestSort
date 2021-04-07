@@ -91,11 +91,57 @@ class PlayerEventListenerTest extends GherkinTest {
         });
         and("the correct location is marked", () -> {
             de.headshotharp.chestsort.hibernate.dao.generic.Location marked = listener.get().getMarkedLocation("Peter");
-            assertThat(marked, is(not(nullValue())));
-            assertThat(marked.getWorld(), is(equalTo("world")));
-            assertThat(marked.getX(), is(equalTo(10)));
-            assertThat(marked.getY(), is(equalTo(10)));
-            assertThat(marked.getZ(), is(equalTo(10)));
+            assertMarkedLocation(marked, "world", 10, 10, 10);
+        });
+    }
+
+    @Scenario("Two chests are successfully marked")
+    void testMarkTwoChestsSuccessfully(Reference<PlayerEventListener> listener, Reference<PlayerInteractEvent> event,
+            Reference<List<String>> messages) {
+        given("the user has marked a chest at (world, 10, 10, 10)", () -> {
+            PluginMock pluginMock = new PluginMock() //
+                    .withChestAt(10, 10, 10) //
+                    .withChestAt(20, 20, 20);
+            messages.set(new LinkedList<>());
+            Player player = new PlayerMock() //
+                    .withName("Peter") //
+                    .withPermission(PERMISSION_MANAGE) //
+                    .withItemInMainHand(MATERIAL_MARKER) //
+                    .redirectMessages(messages.get()) //
+                    .build();
+            // mark first location
+            PlayerInteractEvent preparationEvent = new PlayerInteractEventMock() //
+                    .withPlayer(player) //
+                    .withClickedBlock(pluginMock, 10, 10, 10) //
+                    .withAction(Action.RIGHT_CLICK_BLOCK) //
+                    .build();
+            listener.set(new PlayerEventListener(null, pluginMock.getPlugin()));
+            listener.get().onPlayerInteract(preparationEvent);
+            messages.get().clear();
+            assertMarkedLocation(listener.get().getMarkedLocation("Peter"), "world", 10, 10, 10);
+            assertThat(listener.get().getPreviouslyMarkedLocation("Peter"), is(nullValue()));
+            // prepare real event
+            event.set(new PlayerInteractEventMock() //
+                    .withPlayer(player) //
+                    .withClickedBlock(pluginMock, 20, 20, 20) //
+                    .withAction(Action.RIGHT_CLICK_BLOCK) //
+                    .build());
+        });
+        when("the user right clicks a chest with a STICK in his hand at (world, 20, 20, 20)", () -> {
+            listener.get().onPlayerInteract(event.get());
+        });
+        then("the user is receives a message that he marked a chest", () -> {
+            assertThat(messages.get().get(0), containsString("Marked chest at (world, 20, 20, 20)"));
+            assertThat(messages.get(), hasSize(1));
+        });
+        and("the correct location is marked", () -> {
+            de.headshotharp.chestsort.hibernate.dao.generic.Location marked = listener.get().getMarkedLocation("Peter");
+            assertMarkedLocation(marked, "world", 20, 20, 20);
+        });
+        and("the previously marked location is (world, 10, 10, 10)", () -> {
+            de.headshotharp.chestsort.hibernate.dao.generic.Location marked = listener.get()
+                    .getPreviouslyMarkedLocation("Peter");
+            assertMarkedLocation(marked, "world", 10, 10, 10);
         });
     }
 
@@ -244,5 +290,16 @@ class PlayerEventListenerTest extends GherkinTest {
             ItemStack itemInMainHand = event.get().getPlayer().getInventory().getItemInMainHand();
             assertThat(itemInMainHand.getType(), is(equalTo(Material.AIR)));
         });
+    }
+
+    // Utils
+
+    private void assertMarkedLocation(de.headshotharp.chestsort.hibernate.dao.generic.Location marked, String world,
+            int x, int y, int z) {
+        assertThat(marked, is(not(nullValue())));
+        assertThat(marked.getWorld(), is(equalTo("world")));
+        assertThat(marked.getX(), is(equalTo(x)));
+        assertThat(marked.getY(), is(equalTo(y)));
+        assertThat(marked.getZ(), is(equalTo(z)));
     }
 }

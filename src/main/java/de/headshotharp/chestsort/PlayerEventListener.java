@@ -56,6 +56,7 @@ import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 public class PlayerEventListener implements Listener {
     private static final String SIGN_TITLE = "[ChestSort]";
     private Map<String, Location> markedLocations = new HashMap<>();
+    private Map<String, Location> previouslyMarkedLocations = new HashMap<>();
     private DataProvider dp;
     private SpigotPlugin plugin;
 
@@ -68,7 +69,15 @@ public class PlayerEventListener implements Listener {
         return markedLocations.get(player);
     }
 
+    public Location getPreviouslyMarkedLocation(String player) {
+        return previouslyMarkedLocations.get(player);
+    }
+
     public void setMarkedLocation(String player, Location location) {
+        Location previousLocation = markedLocations.get(player);
+        if (previousLocation != null) {
+            previouslyMarkedLocations.put(player, previousLocation);
+        }
         markedLocations.put(player, location);
     }
 

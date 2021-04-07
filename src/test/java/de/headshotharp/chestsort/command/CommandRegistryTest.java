@@ -53,7 +53,7 @@ public class CommandRegistryTest extends GherkinTest {
         then("all commands are found", () -> {
             List<String> commands = registry.get().getCommands().stream().map(c -> c.getName())
                     .collect(Collectors.toList());
-            assertThat(commands, containsInAnyOrder("all", "create", "delete", "info", "reset"));
+            assertThat(commands, containsInAnyOrder("all", "area", "create", "delete", "info", "reset"));
         });
     }
 }
