@@ -5,8 +5,9 @@
   - [Creating Signs](#creating-signs)
   - [Deleting Signs](#deleting-signs)
   - [Marking Chest](#marking-chest)
-  - [Create/Register Chests](#create-register-chests)
-  - [Unregister/Delete Chests](#unregister-delete-chests)
+  - [Create Chests](#create-chests)
+  - [Delete Chests](#delete-chests)
+  - [Create Multiple Chests](#create-multiple-chests)
   - [Insert Materials](#insert-materials)
   - [Reset Warehouse](#reset-warehouse)
 - [Configuration](#configuration)
@@ -51,7 +52,7 @@ Deleting a central sign:
 
 You have to hold a **stick** in your main hand and right click chests with it. If the chest just opens you dont have permissions to manage warehouses. Otherwise you will see a green text confirming that you marked a chest.
 
-### Create/Register Chests
+### Create Chests
 
 After marking a chest you can register it to your warehouse. If you want to register it to your personal (user) warehouse you can use the following command:
 
@@ -65,7 +66,7 @@ If you want to register that chest to the central warehouse for all users use th
 /chestsort create central COBBLESTONE
 ```
 
-### Unregister/Delete Chests
+### Delete Chests
 
 After marking the chest you want to delete use the following command to delete your personal (user) chest:
 
@@ -84,6 +85,18 @@ This will only do a dry-run of the deletion and tell you what would be deleted. 
 ```bash
 /chestsort delete central confirm
 ```
+
+### Create Multiple Chests
+
+You can create multiple chests with a single command. First you mark an area and then use a command to create all chests in that area with the same material you specify.
+
+To mark an area just right click a chest with a **stick** in your main hand to mark one end of the area. Then just mark another chest at the other end of the area. Then execute the area command which works similar to the create command:
+
+```bash
+/chestsort area central COBBLESTONE
+```
+
+The area command will take the last two marked chests and span a virtual cube around those marked locations. All chests inside this cube will be assigned with the specified material. You can use this command to create central or user chests.
 
 ### Insert Materials
 
