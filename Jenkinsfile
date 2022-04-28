@@ -28,6 +28,7 @@ pipeline {
     always {
       junit '**/surefire-reports/**/*.xml'
       archiveArtifacts artifacts: 'target/ChestSort.jar', fingerprint: true
+      cleanWs()
     }
   }
 }
