@@ -29,6 +29,9 @@ pipeline {
       junit '**/surefire-reports/**/*.xml'
       archiveArtifacts artifacts: 'target/ChestSort.jar', fingerprint: true
       cleanWs()
+      dir("${env.WORKSPACE}@tmp") {
+        deleteDir()
+      }
     }
   }
 }
