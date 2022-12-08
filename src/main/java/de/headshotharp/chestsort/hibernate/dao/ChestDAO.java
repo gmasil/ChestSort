@@ -19,16 +19,16 @@
  */
 package de.headshotharp.chestsort.hibernate.dao;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import de.headshotharp.chestsort.hibernate.dao.generic.DAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table
 public class ChestDAO extends DAO {
+
     @Embedded
     private Location location;
     private String material;
@@ -47,7 +47,7 @@ public class ChestDAO extends DAO {
         this(location, material);
         if (username != null) {
             this.username = username;
-            this.central = false;
+            central = false;
         }
     }
 

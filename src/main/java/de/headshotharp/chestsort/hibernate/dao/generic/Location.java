@@ -21,10 +21,11 @@ package de.headshotharp.chestsort.hibernate.dao.generic;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Location implements Serializable {
+
     private String world;
     private int x;
     private int y;

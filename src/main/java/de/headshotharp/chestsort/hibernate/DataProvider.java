@@ -22,13 +22,6 @@ package de.headshotharp.chestsort.hibernate;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -38,8 +31,15 @@ import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.DAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 public class DataProvider {
+
     private static final String WH_LOCATION = "location";
     private static final String WH_WORLD = "world";
     private static final String WH_X = "x";
@@ -155,7 +155,7 @@ public class DataProvider {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaDelete<ChestDAO> criteria = builder.createCriteriaDelete(ChestDAO.class);
             criteria.from(ChestDAO.class);
-            return session.createQuery(criteria).executeUpdate();
+            return session.createMutationQuery(criteria).executeUpdate();
         });
     }
 
@@ -265,7 +265,7 @@ public class DataProvider {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaDelete<SignDAO> criteria = builder.createCriteriaDelete(SignDAO.class);
             criteria.from(SignDAO.class);
-            return session.createQuery(criteria).executeUpdate();
+            return session.createMutationQuery(criteria).executeUpdate();
         });
     }
 
@@ -289,7 +289,7 @@ public class DataProvider {
 
     public void delete(DAO o) {
         inTransaction(session -> {
-            session.delete(o);
+            session.remove(o);
             return null;
         });
     }

@@ -22,6 +22,7 @@ package de.headshotharp.chestsort.hibernate.dao.generic;
 import java.util.function.ToIntFunction;
 
 public class Area {
+
     private Location lower;
     private Location higher;
 
