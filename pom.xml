@@ -24,7 +24,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.headshotharp.spigot</groupId>
     <artifactId>chestsort</artifactId>
-    <version>1.16.5-SNAPSHOT</version>
+    <version>1.19.2-SNAPSHOT</version>
     <name>ChestSort</name>
 
     <inceptionYear>2021</inceptionYear>
@@ -43,12 +43,12 @@
     </licenses>
 
     <properties>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- versions -->
-        <spigot.version>1.16.5-R0.1-SNAPSHOT</spigot.version>
+        <papermc.version>1.19.2-R0.1-SNAPSHOT</papermc.version>
         <hibenate.version>5.4.4.Final</hibenate.version>
         <mysql.version>8.0.23</mysql.version>
         <postgres.version>42.2.19</postgres.version>
@@ -72,9 +72,9 @@
     <dependencies>
         <!-- spigot -->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>${spigot.version}</version>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>${papermc.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- database -->
@@ -138,30 +138,6 @@
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-runner</artifactId>
-            <version>${junit-platform.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
-            <version>${junit-platform.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <!-- gherkin -->
         <dependency>
             <groupId>de.gmasil</groupId>
@@ -191,9 +167,6 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <argLine>${argLine} -Xmx1024m -XX:MaxPermSize=256m</argLine>
-                </configuration>
             </plugin>
             <!-- jacoco -->
             <plugin>
@@ -271,6 +244,10 @@
         <repository>
             <id>GMasil Nexus</id>
             <url>https://nexus.gmasil.de/repository/maven-releases/</url>
+        </repository>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
     </repositories>
 

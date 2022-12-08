@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -52,8 +51,12 @@ import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class PlayerEventListener implements Listener {
+
     private static final String SIGN_TITLE = "[ChestSort]";
     private Map<String, Location> markedLocations = new HashMap<>();
     private Map<String, Location> previouslyMarkedLocations = new HashMap<>();
@@ -137,7 +140,7 @@ public class PlayerEventListener implements Listener {
     }
 
     public SignDAO createSign(SignChangeEvent event) {
-        if (event.getLine(0).equals(SIGN_TITLE)) {
+        if (event.line(0) instanceof TextComponent textComponent && textComponent.content().equals(SIGN_TITLE)) {
             if (event.getBlock().getType().equals(MATERIAL_SIGN_CENTRAL)) {
                 if (!event.getPlayer().hasPermission(PERMISSION_MANAGE_CENTRAL)) {
                     event.getPlayer()
@@ -183,14 +186,14 @@ public class PlayerEventListener implements Listener {
      * @param username
      */
     private void updateSignText(SignChangeEvent event, String username) {
-        event.setLine(0, ChatColor.BLUE + SIGN_TITLE);
+        event.line(0, Component.empty().color(NamedTextColor.BLUE).content(SIGN_TITLE));
         if (username != null) {
-            event.setLine(1, ChatColor.GREEN + username);
+            event.line(1, Component.empty().color(NamedTextColor.GREEN).content(username));
         } else {
-            event.setLine(1, ChatColor.RED + "Central");
+            event.line(1, Component.empty().color(NamedTextColor.RED).content("Central"));
         }
-        event.setLine(2, "rightclick to");
-        event.setLine(3, "insert a block");
+        event.line(2, Component.empty().content("rightclick to"));
+        event.line(3, Component.empty().content("insert a block"));
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
