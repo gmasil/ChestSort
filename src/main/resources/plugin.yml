@@ -20,10 +20,10 @@
 
 name: ChestSort
 main: de.headshotharp.chestsort.ChestSort
-version: 1.16.5-1.0
-api-version: 1.16
+version: 1.19.2
+api-version: 1.19
 author: HeadShotHarp
-description: ChestSort Plugin for Spigot 1.16.5
+description: ChestSort Plugin for Spigot 1.19.2
 commands:
   chestsort:
     description: Controls ChestSort
