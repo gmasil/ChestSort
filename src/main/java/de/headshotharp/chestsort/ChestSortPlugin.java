@@ -66,7 +66,9 @@ public class ChestSortPlugin extends LoggablePlugin {
     @Override
     public void saveDefaultConfig() {
         try {
-            configService.saveConfig(Config.getDefaultConfig());
+            if (!configService.getConfigFile().exists()) {
+                configService.saveConfig(Config.getDefaultConfig());
+            }
         } catch (IOException e) {
             error("Error while saving default config", e);
         }

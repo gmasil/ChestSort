@@ -19,7 +19,7 @@
 #
 
 name: ChestSort
-main: de.headshotharp.chestsort.ChestSort
+main: de.headshotharp.chestsort.ChestSortPlugin
 version: 1.19.2
 api-version: 1.19
 author: HeadShotHarp

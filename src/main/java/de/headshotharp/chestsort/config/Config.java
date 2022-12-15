@@ -38,7 +38,7 @@ public class Config {
     public static Config getDefaultConfig() {
         Config defaultConfig = new Config();
         defaultConfig.getDatabase().setDriver("com.mysql.cj.jdbc.Driver");
-        defaultConfig.getDatabase().setDialect("org.hibernate.dialect.MySQL57Dialect");
+        defaultConfig.getDatabase().setDialect("org.hibernate.dialect.MySQLDialect");
         defaultConfig.getDatabase().setUrl("jdbc:mysql://localhost:3306/dbname?useSSL=false");
         defaultConfig.getDatabase().setUsername("user");
         defaultConfig.getDatabase().setPassword("pass");
