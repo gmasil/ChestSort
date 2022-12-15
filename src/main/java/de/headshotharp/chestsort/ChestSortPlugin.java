@@ -45,7 +45,7 @@ public class ChestSortPlugin extends LoggablePlugin {
         }
         DataProvider dp;
         try {
-            dp = new DataProvider(config.getDatabase());
+            dp = new DataProvider(config.getDatabase(), ChestSortPlugin.class);
             info("Connected to database");
         } catch (Exception e) {
             error("Error while connecting to database, stopping", e);

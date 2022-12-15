@@ -29,6 +29,7 @@ import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Reference;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
+import de.headshotharp.plugin.hibernate.HibernateUtils;
 
 @Story("Session factory is tested for intended behaviour")
 public class HibernateUtilsTest extends GherkinTest {
@@ -37,7 +38,7 @@ public class HibernateUtilsTest extends GherkinTest {
     void testSessionFactoryCreationWithoutDatabaseConfig(Reference<HibernateUtils> utils,
             Reference<IllegalStateException> thrownException) {
         given("no database config exists", () -> {
-            utils.set(new HibernateUtils(null));
+            utils.set(new HibernateUtils(null, HibernateUtilsTest.class));
         });
         when("the session factory is created", () -> {
             try {
@@ -46,9 +47,9 @@ public class HibernateUtilsTest extends GherkinTest {
                 thrownException.set(e);
             }
         });
-        then("an IllegalStateException with message 'HibernateUtils has no database config' is thrown", () -> {
+        then("an IllegalStateException with message 'HibernateUtils has no config' is thrown", () -> {
             assertThat(thrownException.get(), is(not(nullValue())));
-            assertThat(thrownException.get().getMessage(), is(equalTo("HibernateUtils has no database config")));
+            assertThat(thrownException.get().getMessage(), is(equalTo("HibernateUtils has no config")));
         });
     }
 }

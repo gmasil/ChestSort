@@ -19,15 +19,30 @@
  */
 package de.headshotharp.chestsort.hibernate.dao;
 
-import de.headshotharp.chestsort.hibernate.dao.generic.DAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
+import de.headshotharp.plugin.hibernate.dao.DataAccessObject;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @Entity
 @Table
-public class SignDAO extends DAO {
+public class SignDAO implements DataAccessObject {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Embedded
     private Location location;
@@ -57,81 +72,10 @@ public class SignDAO extends DAO {
         this.location = location;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public boolean isCentral() {
-        return central;
-    }
-
-    public void setCentral(boolean central) {
-        this.central = central;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getTextBlockString() {
         if (isCentral()) {
             return "central sign";
         }
         return "user sign (" + username + ")";
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + (central ? 1231 : 1237);
-        result = prime * result + ((location == null) ? 0 : location.hashCode());
-        result = prime * result + ((username == null) ? 0 : username.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        SignDAO other = (SignDAO) obj;
-        if (central != other.central) {
-            return false;
-        }
-        if (location == null) {
-            if (other.location != null) {
-                return false;
-            }
-        } else if (!location.equals(other.location)) {
-            return false;
-        }
-        if (username == null) {
-            if (other.username != null) {
-                return false;
-            }
-        } else if (!username.equals(other.username)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "SignDAO [location=" + location + ", central=" + central + ", username=" + username + "]";
     }
 }

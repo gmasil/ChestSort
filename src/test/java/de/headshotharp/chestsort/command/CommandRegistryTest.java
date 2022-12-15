@@ -54,7 +54,7 @@ public class CommandRegistryTest extends GherkinTest {
                 return null;
             }).when(pluginMock).info(anyString());
             // injectables
-            DataProvider dp = new DataProvider(Config.getH2Config().getDatabase());
+            DataProvider dp = new DataProvider(Config.getH2Config().getDatabase(), ChestSortPlugin.class);
             PlayerEventListener listener = new PlayerEventListener(dp, pluginMock);
             // create registry
             registry.set(new CommandRegistry<>(pluginMock, ChestSortPlugin.class, dp, listener));

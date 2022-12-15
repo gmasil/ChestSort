@@ -50,10 +50,7 @@
         <!-- versions -->
         <papermc.version>1.19.2-R0.1-SNAPSHOT</papermc.version>
         <plugin-base.version>1.19.2-1.0</plugin-base.version>
-        <hibenate.version>6.1.6.Final</hibenate.version>
-        <mysql.version>8.0.31</mysql.version>
-        <postgres.version>42.5.1</postgres.version>
-        <h2.version>2.1.214</h2.version>
+        <plugin-hibernate.version>1.19.2-1.0</plugin-hibernate.version>
         <jackson.version>2.14.1</jackson.version>
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
         <junit-platform.version>1.7.1</junit-platform.version>
@@ -94,31 +91,10 @@
             <artifactId>plugin-base</artifactId>
             <version>${plugin-base.version}</version>
         </dependency>
-        <!-- database -->
         <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibenate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
-            <version>${hibenate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>${mysql.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgres.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
+            <groupId>de.headshotharp.minecraft</groupId>
+            <artifactId>plugin-hibernate</artifactId>
+            <version>${plugin-hibernate.version}</version>
         </dependency>
         <!-- jackson -->
         <dependency>

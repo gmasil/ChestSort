@@ -22,15 +22,12 @@ package de.headshotharp.chestsort.hibernate;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-
-import de.headshotharp.chestsort.config.Config.DatabaseConfig;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
-import de.headshotharp.chestsort.hibernate.dao.generic.DAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
+import de.headshotharp.plugin.hibernate.DataProviderBase;
+import de.headshotharp.plugin.hibernate.config.HibernateConfig;
+import de.headshotharp.plugin.hibernate.dao.DataAccessObject;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -38,7 +35,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
-public class DataProvider {
+public class DataProvider extends DataProviderBase {
 
     private static final String WH_LOCATION = "location";
     private static final String WH_WORLD = "world";
@@ -49,16 +46,18 @@ public class DataProvider {
     private static final String WH_CENTRAL = "central";
     private static final String WH_USERNAME = "username";
 
-    private SessionFactory sessionFactory;
+    public DataProvider(HibernateConfig hibernateConfig, Class<?> baseClass) {
+        super(hibernateConfig, baseClass);
+    }
 
-    public DataProvider(DatabaseConfig databaseConfig) {
-        sessionFactory = new HibernateUtils(databaseConfig).createSessionFactory();
+    public DataProvider(HibernateConfig hibernateConfig, List<Class<? extends DataAccessObject>> daoClasses) {
+        super(hibernateConfig, daoClasses);
     }
 
     /* CHEST */
 
     public List<ChestDAO> findAllChests() {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
             criteria.from(ChestDAO.class);
@@ -67,7 +66,7 @@ public class DataProvider {
     }
 
     public List<ChestDAO> findChest(ChestDAO chest) {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
             Root<ChestDAO> chestRef = criteria.from(ChestDAO.class);
@@ -93,7 +92,7 @@ public class DataProvider {
     }
 
     public List<ChestDAO> findAllChestsAt(Location location) {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
             Root<ChestDAO> chestRef = criteria.from(ChestDAO.class);
@@ -119,7 +118,7 @@ public class DataProvider {
     }
 
     public List<ChestDAO> findAllChestsByMaterialAndUser(String material, String username) {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<ChestDAO> criteria = builder.createQuery(ChestDAO.class);
             Root<ChestDAO> chestRef = criteria.from(ChestDAO.class);
@@ -151,7 +150,7 @@ public class DataProvider {
     }
 
     public int clearAllChests() {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaDelete<ChestDAO> criteria = builder.createCriteriaDelete(ChestDAO.class);
             criteria.from(ChestDAO.class);
@@ -162,7 +161,7 @@ public class DataProvider {
     /* SIGN */
 
     public List<SignDAO> findAllSigns() {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
             criteria.from(SignDAO.class);
@@ -171,7 +170,7 @@ public class DataProvider {
     }
 
     public List<SignDAO> findSign(SignDAO sign) {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
             Root<SignDAO> signRef = criteria.from(SignDAO.class);
@@ -196,7 +195,7 @@ public class DataProvider {
     }
 
     public List<SignDAO> findAllSignsAt(Location location) {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
             Root<SignDAO> signRef = criteria.from(SignDAO.class);
@@ -218,7 +217,7 @@ public class DataProvider {
     }
 
     public List<SignDAO> findAllSignsByUser(String username) {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
             Root<SignDAO> signRef = criteria.from(SignDAO.class);
@@ -235,7 +234,7 @@ public class DataProvider {
     }
 
     public List<SignDAO> findAllSignsAround(Location location, int radius) {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<SignDAO> criteria = builder.createQuery(SignDAO.class);
             Root<SignDAO> signRef = criteria.from(SignDAO.class);
@@ -261,36 +260,11 @@ public class DataProvider {
     }
 
     public int clearAllSigns() {
-        return inTransaction(session -> {
+        return getInTransaction(session -> {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaDelete<SignDAO> criteria = builder.createCriteriaDelete(SignDAO.class);
             criteria.from(SignDAO.class);
             return session.createMutationQuery(criteria).executeUpdate();
-        });
-    }
-
-    /* UTILS */
-
-    private <T> T inTransaction(InTransactionExecutor<T> ite) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        T ret = ite.executeInTransaction(session);
-        transaction.commit();
-        session.close();
-        return ret;
-    }
-
-    public void persist(DAO o) {
-        inTransaction(session -> {
-            session.persist(o);
-            return null;
-        });
-    }
-
-    public void delete(DAO o) {
-        inTransaction(session -> {
-            session.remove(o);
-            return null;
         });
     }
 }

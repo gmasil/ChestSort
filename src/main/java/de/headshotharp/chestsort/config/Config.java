@@ -19,6 +19,7 @@
  */
 package de.headshotharp.chestsort.config;
 
+import de.headshotharp.plugin.hibernate.config.HibernateConfig;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,21 +33,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class Config {
 
-    private DatabaseConfig database = new DatabaseConfig();
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    public static class DatabaseConfig {
-
-        private String driver;
-        private String dialect;
-        private String url;
-        private String username;
-        private String password;
-    }
+    private HibernateConfig database = new HibernateConfig();
 
     public static Config getDefaultConfig() {
         Config defaultConfig = new Config();
