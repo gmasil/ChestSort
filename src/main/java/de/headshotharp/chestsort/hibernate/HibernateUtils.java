@@ -32,6 +32,7 @@ import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 
 public class HibernateUtils {
+
     private DatabaseConfig databaseConfig;
 
     public HibernateUtils(DatabaseConfig databaseConfig) {

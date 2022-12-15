@@ -36,6 +36,7 @@ import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 
 public class InventoryUtils {
+
     private InventoryUtils() {
     }
 

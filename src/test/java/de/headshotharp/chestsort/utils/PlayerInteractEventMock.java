@@ -29,6 +29,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.mockito.Mockito;
 
 public class PlayerInteractEventMock {
+
     private PlayerInteractEvent event = mock(PlayerInteractEvent.class);
 
     public PlayerInteractEventMock withPlayer(Player player) {

@@ -48,6 +48,7 @@ import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;
 @ConfigureH2Hibernate
 @Story("The reset command implementation is tested")
 class ResetCommandTest extends GherkinTest {
+
     public static ResetCommand resetCommand;
 
     @BeforeAll

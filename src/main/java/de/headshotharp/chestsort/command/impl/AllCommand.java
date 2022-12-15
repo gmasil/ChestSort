@@ -29,15 +29,16 @@ import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.headshotharp.chestsort.ChestSortPlugin;
 import de.headshotharp.chestsort.InventoryUtils;
-import de.headshotharp.chestsort.SpigotPlugin;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 
 public class AllCommand extends ChestsortCommand {
+
     private DataProvider dp;
 
-    public AllCommand(SpigotPlugin plugin, DataProvider dp) {
+    public AllCommand(ChestSortPlugin plugin, DataProvider dp) {
         super(plugin);
         this.dp = dp;
     }

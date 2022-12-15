@@ -29,24 +29,25 @@ import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Reference;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
+import de.headshotharp.plugin.base.config.ConfigService;
 
 @Story("The ConfigService is able to save and load config files correctly")
 class ConfigServiceTest extends GherkinTest {
+
     @Scenario("The default configuration can be saved and successfully reloaded")
-    void testDefaultConfigCreation(Reference<ConfigService> configService, Reference<Config> config) {
+    void testDefaultConfigCreation(Reference<ConfigService<Config>> configService, Reference<Config> config) {
         given("no config file exists", () -> {
-            configService.set(new ConfigService());
-            configService.get().setConfigFile(new File("target/plugins/ChestSort", "config.yaml"));
+            configService.set(new ConfigService<>(Config.class, new File("target/plugins/ChestSort", "config.yaml")));
             configService.get().getConfigFile().delete();
         });
         when("the default config is saved", () -> {
-            configService.get().saveDefaultConfig();
+            configService.get().saveConfig(Config.getDefaultConfig());
         });
         and("the saved config is loaded again", () -> {
             config.set(configService.get().readConfig());
         });
         then("the loaded config is identical to the default config", () -> {
-            assertThat(config.get(), is(equalTo(configService.get().getDefaultConfig())));
+            assertThat(config.get(), is(equalTo(Config.getDefaultConfig())));
         });
     }
 }

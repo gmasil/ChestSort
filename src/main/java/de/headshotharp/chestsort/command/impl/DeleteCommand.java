@@ -36,8 +36,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.headshotharp.chestsort.ChestSortPlugin;
 import de.headshotharp.chestsort.PlayerEventListener;
-import de.headshotharp.chestsort.SpigotPlugin;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
@@ -45,10 +45,11 @@ import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class DeleteCommand extends ChestsortCommand {
+
     private DataProvider dp;
     private PlayerEventListener listener;
 
-    public DeleteCommand(SpigotPlugin plugin, DataProvider dp, PlayerEventListener listener) {
+    public DeleteCommand(ChestSortPlugin plugin, DataProvider dp, PlayerEventListener listener) {
         super(plugin);
         this.dp = dp;
         this.listener = listener;

@@ -41,6 +41,7 @@ import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class ChestSortUtils {
+
     private ChestSortUtils() {
     }
 

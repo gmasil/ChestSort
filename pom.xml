@@ -49,6 +49,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- versions -->
         <papermc.version>1.19.2-R0.1-SNAPSHOT</papermc.version>
+        <plugin-base.version>1.19.2-1.0</plugin-base.version>
         <hibenate.version>6.1.6.Final</hibenate.version>
         <mysql.version>8.0.31</mysql.version>
         <postgres.version>42.5.1</postgres.version>
@@ -64,6 +65,9 @@
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
         <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
         <license-plugin.version>4.1</license-plugin.version>
+        <lombok.version>1.18.24</lombok.version>
+        <logback.version>1.4.5</logback.version>
+        <slf4j.version>2.0.6</slf4j.version>
         <!-- sonar -->
         <sonar.coverage.exclusions>**/dao/**/*.java</sonar.coverage.exclusions>
         <sonar.cpd.exclusions>**/*DAO.java,**/*Command.java</sonar.cpd.exclusions>
@@ -76,6 +80,19 @@
             <artifactId>paper-api</artifactId>
             <version>${papermc.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- preprocessor -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- base -->
+        <dependency>
+            <groupId>de.headshotharp.minecraft</groupId>
+            <artifactId>plugin-base</artifactId>
+            <version>${plugin-base.version}</version>
         </dependency>
         <!-- database -->
         <dependency>

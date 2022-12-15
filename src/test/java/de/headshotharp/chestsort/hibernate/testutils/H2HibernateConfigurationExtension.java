@@ -24,14 +24,15 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-import de.headshotharp.chestsort.config.ConfigService;
+import de.headshotharp.chestsort.config.Config;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 
 public class H2HibernateConfigurationExtension implements BeforeEachCallback, ParameterResolver {
+
     private DataProvider dp;
 
     public H2HibernateConfigurationExtension() {
-        dp = new DataProvider(new ConfigService().getH2Config().getDatabase());
+        dp = new DataProvider(Config.getH2Config().getDatabase());
     }
 
     @Override

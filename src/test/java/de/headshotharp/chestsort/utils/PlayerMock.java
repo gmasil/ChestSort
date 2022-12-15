@@ -38,6 +38,7 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.MockUtil;
 
 public class PlayerMock {
+
     private Player player = mock(Player.class);
 
     public PlayerMock withName(String name) {

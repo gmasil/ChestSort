@@ -32,15 +32,16 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.headshotharp.chestsort.ChestSortPlugin;
 import de.headshotharp.chestsort.PlayerEventListener;
-import de.headshotharp.chestsort.SpigotPlugin;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Area;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 
 public class AreaCommand extends CreateCommand {
-    public AreaCommand(SpigotPlugin plugin, DataProvider dp, PlayerEventListener listener) {
+
+    public AreaCommand(ChestSortPlugin plugin, DataProvider dp, PlayerEventListener listener) {
         super(plugin, dp, listener);
     }
 

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.headshotharp.chestsort.SpigotPlugin;
+import de.headshotharp.chestsort.ChestSortPlugin;
 import de.headshotharp.chestsort.StaticConfig;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
 import de.headshotharp.chestsort.hibernate.DataProvider;
@@ -39,9 +39,10 @@ import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 
 public class ResetCommand extends ChestsortCommand {
+
     private DataProvider dp;
 
-    public ResetCommand(SpigotPlugin plugin, DataProvider dp) {
+    public ResetCommand(ChestSortPlugin plugin, DataProvider dp) {
         super(plugin);
         this.dp = dp;
     }

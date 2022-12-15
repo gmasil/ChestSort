@@ -33,6 +33,7 @@ import de.gmasil.gherkin.extension.Story;
 
 @Story("The config can be serialized to YAML and deserialized to Java object")
 class ConfigTest extends GherkinTest {
+
     @Scenario("A config is serialized and deserialized without any changes to the data")
     void testConfigSerialization(Reference<Config> config, Reference<String> serializedConfig,
             Reference<Config> deserializedConfig) {

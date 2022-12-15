@@ -22,35 +22,35 @@ package de.headshotharp.chestsort.command.generic;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
-import de.headshotharp.chestsort.SpigotPlugin;
+import de.headshotharp.chestsort.ChestSortPlugin;
+import de.headshotharp.plugin.base.command.generic.ExecutableCommand;
 
-public abstract class ChestsortCommand implements CommandRunnable, CommandApplicable, CommandTabCompletable {
+public abstract class ChestsortCommand extends ExecutableCommand<ChestSortPlugin> {
+
     public static final String WH_USER = "user";
     public static final String WH_CENTRAL = "central";
     public static final String WH_CHESTS = "chests";
     public static final String WH_SIGNS = "signs";
     public static final String WH_ALL = "all";
 
-    private SpigotPlugin plugin;
-
-    public ChestsortCommand(SpigotPlugin plugin) {
-        this.plugin = plugin;
+    protected ChestsortCommand(ChestSortPlugin plugin) {
+        super(plugin);
     }
 
-    public SpigotPlugin getPlugin() {
-        return plugin;
-    }
-
+    @Override
     public Server getServer() {
-        return plugin.getServer();
+        return getPlugin().getServer();
     }
 
+    @Override
     public boolean isForPlayerOnly() {
         return true;
     }
 
+    @Override
     public abstract String usage();
 
+    @Override
     public abstract String getName();
 
     @Override

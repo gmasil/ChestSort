@@ -23,6 +23,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.logging.Logger;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -32,11 +34,12 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.mockito.Mockito;
 
-import de.headshotharp.chestsort.SpigotPlugin;
+import de.headshotharp.chestsort.ChestSortPlugin;
 
 public class PluginMock {
+
     private World world = mock(World.class);
-    private SpigotPlugin plugin = mock(SpigotPlugin.class);
+    private ChestSortPlugin plugin = mock(ChestSortPlugin.class);
     private Server server = mock(Server.class);
 
     public PluginMock() {
@@ -45,8 +48,9 @@ public class PluginMock {
 
     public PluginMock(String worldName) {
         Mockito.when(world.getName()).thenReturn(worldName);
-        Mockito.when(server.getWorld(eq(worldName))).thenReturn(world);
+        Mockito.when(server.getWorld(worldName)).thenReturn(world);
         Mockito.when(plugin.getServer()).thenReturn(server);
+        Mockito.when(plugin.getLogger()).thenReturn(Logger.getLogger(ChestSortPlugin.class.getName()));
     }
 
     public PluginMock withBlockAt(Material material, Location location) {
@@ -97,7 +101,7 @@ public class PluginMock {
         return world;
     }
 
-    public SpigotPlugin getPlugin() {
+    public ChestSortPlugin getPlugin() {
         return plugin;
     }
 
@@ -105,7 +109,7 @@ public class PluginMock {
         return server;
     }
 
-    public SpigotPlugin build() {
+    public ChestSortPlugin build() {
         return getPlugin();
     }
 }

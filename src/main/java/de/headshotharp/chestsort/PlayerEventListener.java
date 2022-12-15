@@ -61,9 +61,9 @@ public class PlayerEventListener implements Listener {
     private Map<String, Location> markedLocations = new HashMap<>();
     private Map<String, Location> previouslyMarkedLocations = new HashMap<>();
     private DataProvider dp;
-    private SpigotPlugin plugin;
+    private ChestSortPlugin plugin;
 
-    public PlayerEventListener(DataProvider dp, SpigotPlugin plugin) {
+    public PlayerEventListener(DataProvider dp, ChestSortPlugin plugin) {
         this.dp = dp;
         this.plugin = plugin;
     }

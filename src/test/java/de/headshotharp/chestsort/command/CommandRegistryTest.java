@@ -23,7 +23,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,23 +31,33 @@ import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Reference;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
-import de.headshotharp.chestsort.SpigotPlugin;
+import de.headshotharp.chestsort.ChestSortPlugin;
+import de.headshotharp.chestsort.PlayerEventListener;
+import de.headshotharp.chestsort.config.Config;
+import de.headshotharp.chestsort.hibernate.DataProvider;
+import de.headshotharp.chestsort.utils.PluginMock;
+import de.headshotharp.plugin.base.command.CommandRegistry;
 
 @Story("The command registry implementation is tested")
 public class CommandRegistryTest extends GherkinTest {
+
     @Scenario("The command registry finds all commands during scan")
-    void testCommandRegistryFindsAllCommands(Reference<CommandRegistry> registry)
+    void testCommandRegistryFindsAllCommands(Reference<CommandRegistry<ChestSortPlugin>> registry)
             throws InstantiationException, IllegalAccessException {
         given("the command registry is empty", () -> {
         });
         when("the command registry scans for commands", () -> {
-            SpigotPlugin pluginMock = mock(SpigotPlugin.class);
+            ChestSortPlugin pluginMock = new PluginMock().getPlugin();
             doAnswer(invocation -> {
                 String arg = "" + invocation.getArgument(0);
                 System.out.println(arg);
                 return null;
             }).when(pluginMock).info(anyString());
-            registry.set(new CommandRegistry(pluginMock, null, null));
+            // injectables
+            DataProvider dp = new DataProvider(Config.getH2Config().getDatabase());
+            PlayerEventListener listener = new PlayerEventListener(dp, pluginMock);
+            // create registry
+            registry.set(new CommandRegistry<>(pluginMock, ChestSortPlugin.class, dp, listener));
         });
         then("all commands are found", () -> {
             List<String> commands = registry.get().getCommands().stream().map(c -> c.getName())

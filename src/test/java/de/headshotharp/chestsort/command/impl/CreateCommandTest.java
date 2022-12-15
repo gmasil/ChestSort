@@ -43,8 +43,8 @@ import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Reference;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
+import de.headshotharp.chestsort.ChestSortPlugin;
 import de.headshotharp.chestsort.PlayerEventListener;
-import de.headshotharp.chestsort.SpigotPlugin;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
@@ -55,6 +55,7 @@ import de.headshotharp.chestsort.utils.PluginMock;
 @ConfigureH2Hibernate
 @Story("The create command implementation is tested")
 class CreateCommandTest extends GherkinTest {
+
     private static CreateCommand defaultCreateCommand;
 
     @BeforeAll
@@ -132,7 +133,7 @@ class CreateCommandTest extends GherkinTest {
         given("the user Peter has marked a chest at (world, 13, 14, 15)", () -> {
             PlayerEventListener listener = new PlayerEventListener(dp, null);
             listener.setMarkedLocation("Peter", new Location("world", 13, 14, 15));
-            SpigotPlugin pluginMock = new PluginMock().withChestAt(13, 14, 15).getPlugin();
+            ChestSortPlugin pluginMock = new PluginMock().withChestAt(13, 14, 15).getPlugin();
             createCommand.set(new CreateCommand(pluginMock, dp, listener));
             messages.set(new LinkedList<>());
             player.set(new PlayerMock() //
@@ -167,7 +168,7 @@ class CreateCommandTest extends GherkinTest {
         and("the user Peter has marked a chest at (world, 13, 14, 15)", () -> {
             PlayerEventListener listener = new PlayerEventListener(dp.get(), null);
             listener.setMarkedLocation("Peter", new Location("world", 13, 14, 15));
-            SpigotPlugin pluginMock = new PluginMock().withChestAt(13, 14, 15).getPlugin();
+            ChestSortPlugin pluginMock = new PluginMock().withChestAt(13, 14, 15).getPlugin();
             createCommand.set(new CreateCommand(pluginMock, dp.get(), listener));
             messages.set(new LinkedList<>());
             player.set(new PlayerMock() //
@@ -222,7 +223,7 @@ class CreateCommandTest extends GherkinTest {
         given("the user Peter has marked a chest at (world, 13, 14, 15)", () -> {
             PlayerEventListener listener = new PlayerEventListener(dp, null);
             listener.setMarkedLocation("Peter", new Location("world", 13, 14, 15));
-            SpigotPlugin pluginMock = new PluginMock().withChestAt(13, 14, 15).getPlugin();
+            ChestSortPlugin pluginMock = new PluginMock().withChestAt(13, 14, 15).getPlugin();
             createCommand.set(new CreateCommand(pluginMock, dp, listener));
             messages.set(new LinkedList<>());
             player.set(new PlayerMock() //
@@ -250,7 +251,7 @@ class CreateCommandTest extends GherkinTest {
         given("the user Peter has marked a chest at (world, 13, 14, 15)", () -> {
             PlayerEventListener listener = new PlayerEventListener(dp, null);
             listener.setMarkedLocation("Peter", new Location("world", 13, 14, 15));
-            SpigotPlugin pluginMock = new PluginMock().withChestAt(13, 14, 15).getPlugin();
+            ChestSortPlugin pluginMock = new PluginMock().withChestAt(13, 14, 15).getPlugin();
             createCommand.set(new CreateCommand(pluginMock, dp, listener));
             messages.set(new LinkedList<>());
             player.set(new PlayerMock() //

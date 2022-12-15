@@ -23,6 +23,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 public class StaticConfig {
+
     private StaticConfig() {
     }
 
