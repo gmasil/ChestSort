@@ -87,8 +87,8 @@ public class DeleteCommand extends ChestsortCommand {
             return;
         }
         // get all chests/signs
-        List<SignDAO> signs = dp.findAllSignsAt(markedBlock);
-        List<ChestDAO> chests = dp.findAllChestsAt(markedBlock);
+        List<SignDAO> signs = dp.signs().findAllSignsAt(markedBlock);
+        List<ChestDAO> chests = dp.chests().findAllChestsAt(markedBlock);
         // filter for user/central depending on command
         if (args[0].equalsIgnoreCase(WH_USER)) {
             signs = signs.stream().filter(sign -> !sign.isCentral())
@@ -105,11 +105,11 @@ public class DeleteCommand extends ChestsortCommand {
             } else {
 
                 player.sendMessage(COLOR_NORMAL + String.format("Deleting %d signs", signs.size()));
-                signs.forEach(dp::deleteSign);
+                signs.forEach(dp.signs()::delete);
                 player.sendMessage(COLOR_NORMAL + String.format("Deleting %d chests", chests.size()));
                 chests.forEach(chest -> {
                     player.sendMessage(COLOR_NORMAL + "Deleting " + chest.getTextBlockString());
-                    dp.deleteChest(chest);
+                    dp.chests().delete(chest);
                 });
                 if (verifyDeletionSuccess(dp, markedBlock)) {
                     player.sendMessage(COLOR_GOOD + "All chests and signs at this location have been deleted");
@@ -165,8 +165,8 @@ public class DeleteCommand extends ChestsortCommand {
     }
 
     private boolean verifyDeletionSuccess(DataProvider dp, Location markedChest) {
-        List<SignDAO> signs = dp.findAllSignsAt(markedChest);
-        List<ChestDAO> chests = dp.findAllChestsAt(markedChest);
+        List<SignDAO> signs = dp.signs().findAllSignsAt(markedChest);
+        List<ChestDAO> chests = dp.chests().findAllChestsAt(markedChest);
         return signs.isEmpty() && chests.isEmpty();
     }
 

@@ -38,8 +38,8 @@ public class H2HibernateConfigurationExtension implements BeforeEachCallback, Pa
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        dp.clearAllChests();
-        dp.clearAllSigns();
+        dp.chests().clearAllChests();
+        dp.signs().clearAllSigns();
     }
 
     @Override

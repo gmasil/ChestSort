@@ -19,8 +19,8 @@
  */
 package de.headshotharp.chestsort.hibernate.dao;
 
+import de.headshotharp.chestsort.hibernate.dao.generic.DataAccessObject;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
-import de.headshotharp.plugin.hibernate.dao.DataAccessObject;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

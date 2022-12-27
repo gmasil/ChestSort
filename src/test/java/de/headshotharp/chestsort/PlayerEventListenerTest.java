@@ -259,11 +259,11 @@ class PlayerEventListenerTest extends GherkinTest {
         given("a central chest exists at (world, 10, 10, 10)", () -> {
             pluginMock.set(new PluginMock() //
                     .withChestAt(10, 10, 10));
-            dp.persistChest(new ChestDAO("world", 10, 10, 10, Material.STONE.toString()));
+            dp.chests().persist(new ChestDAO("world", 10, 10, 10, Material.STONE.toString()));
         });
         and("a central sign exists at (world, 5, 5, 5)", () -> {
             pluginMock.get().withBlockAt(Material.OAK_SIGN, 5, 5, 5);
-            dp.persistSign(new SignDAO("world", 5, 5, 5));
+            dp.signs().persist(new SignDAO("world", 5, 5, 5));
         });
         when("the user right clicks the sign with a STONE in his hand", () -> {
             messages.set(new LinkedList<>());

@@ -45,9 +45,9 @@ public class InventoryUtils {
         String material = itemStack.getType().toString();
         List<ChestDAO> chests;
         if (central) {
-            chests = dp.findAllCentralChestsByMaterial(material);
+            chests = dp.chests().findAllCentralChestsByMaterial(material);
         } else {
-            chests = dp.findAllChestsByMaterialAndUser(material, username);
+            chests = dp.chests().findAllChestsByMaterialAndUser(material, username);
         }
         for (ChestDAO chest : chests) {
             Block chestBlock = getBlockAt(server, chest.getLocation());
@@ -83,9 +83,9 @@ public class InventoryUtils {
         String material = player.getInventory().getItemInMainHand().getType().toString();
         List<ChestDAO> chests;
         if (central) {
-            chests = dp.findAllCentralChestsByMaterial(material);
+            chests = dp.chests().findAllCentralChestsByMaterial(material);
         } else {
-            chests = dp.findAllChestsByMaterialAndUser(material, player.getName());
+            chests = dp.chests().findAllChestsByMaterialAndUser(material, player.getName());
         }
         if (chests.isEmpty()) {
             player.sendMessage(COLOR_NORMAL + "There are no chests of type " + material);

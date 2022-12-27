@@ -67,7 +67,7 @@ public class InfoCommand extends ChestsortCommand {
         } else {
             Block block = getBlockAt(getServer(), markedBlock);
             if (isChest(block)) {
-                List<ChestDAO> chests = dp.findAllChestsAt(markedBlock);
+                List<ChestDAO> chests = dp.chests().findAllChestsAt(markedBlock);
                 if (chests.isEmpty()) {
                     player.sendMessage(COLOR_NORMAL + "The marked chest is not registered in ChestSort");
                 } else if (chests.size() == 1) {
@@ -77,7 +77,7 @@ public class InfoCommand extends ChestsortCommand {
                     chests.forEach(chest -> player.sendMessage(COLOR_NORMAL + "- " + chest.getTextBlockString()));
                 }
             } else if (isSign(block)) {
-                List<SignDAO> signs = dp.findAllSignsAt(markedBlock);
+                List<SignDAO> signs = dp.signs().findAllSignsAt(markedBlock);
                 if (signs.isEmpty()) {
                     player.sendMessage(COLOR_NORMAL + "The marked sign is not registered in ChestSort");
                 } else if (signs.size() == 1) {

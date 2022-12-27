@@ -78,18 +78,18 @@ public class ResetCommand extends ChestsortCommand {
         }
         List<ChestDAO> chests = new LinkedList<>();
         if (args[1].equalsIgnoreCase(WH_ALL) || args[1].equalsIgnoreCase(WH_CHESTS)) {
-            chests = dp.findAllChestsByMaterialAndUser(null, central ? null : player.getName());
+            chests = dp.chests().findAllChestsByMaterialAndUser(null, central ? null : player.getName());
         }
         List<SignDAO> signs = new LinkedList<>();
         if (args[1].equalsIgnoreCase(WH_ALL) || args[1].equalsIgnoreCase(WH_SIGNS)) {
-            signs = dp.findAllSignsByUser(central ? null : player.getName());
+            signs = dp.signs().findAllSignsByUser(central ? null : player.getName());
         }
         if (isDeletionConfirmed(args)) {
             for (ChestDAO chest : chests) {
-                dp.deleteChest(chest);
+                dp.chests().delete(chest);
             }
             for (SignDAO sign : signs) {
-                dp.deleteSign(sign);
+                dp.signs().delete(sign);
             }
             player.sendMessage(COLOR_GOOD + "Deleted " + signs.size() + " signs and " + chests.size() + " chests.");
         } else {

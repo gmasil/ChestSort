@@ -66,9 +66,9 @@ public class CreateCommand extends ChestsortCommand {
         ChestDAO chest = chestByParameter(player, material, isCentral);
         if (chest != null) {
             if (isChestAt(chest.getLocation())) {
-                if (dp.findChest(chest).isEmpty()) {
-                    dp.persistChest(chest);
-                    if (dp.findChest(chest).isEmpty()) {
+                if (dp.chests().findChest(chest).isEmpty()) {
+                    dp.chests().persist(chest);
+                    if (dp.chests().findChest(chest).isEmpty()) {
                         player.sendMessage(COLOR_ERROR
                                 + "The chest could not be persisted in the database, this should never occur");
                     } else {

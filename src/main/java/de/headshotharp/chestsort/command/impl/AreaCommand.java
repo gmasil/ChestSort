@@ -65,9 +65,9 @@ public class AreaCommand extends CreateCommand {
         int chestsCreated = 0;
         int chestsNotCreated = 0;
         for (ChestDAO chest : chests) {
-            if (dp.findChest(chest).isEmpty()) {
-                dp.persistChest(chest);
-                if (dp.findChest(chest).isEmpty()) {
+            if (dp.chests().findChest(chest).isEmpty()) {
+                dp.chests().persist(chest);
+                if (dp.chests().findChest(chest).isEmpty()) {
                     chestsNotCreated++;
                 } else {
                     chestsCreated++;

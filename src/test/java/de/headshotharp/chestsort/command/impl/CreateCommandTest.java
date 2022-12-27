@@ -45,7 +45,9 @@ import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
 import de.headshotharp.chestsort.ChestSortPlugin;
 import de.headshotharp.chestsort.PlayerEventListener;
+import de.headshotharp.chestsort.hibernate.ChestDataProvider;
 import de.headshotharp.chestsort.hibernate.DataProvider;
+import de.headshotharp.chestsort.hibernate.SignDataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;
@@ -152,7 +154,7 @@ class CreateCommandTest extends GherkinTest {
             assertThat(messages.get(), hasSize(1));
         });
         and("a chest is registered for type STONE at (world, 13, 14, 15)", () -> {
-            List<ChestDAO> chests = dp.findAllChestsAt(new Location("world", 13, 14, 15));
+            List<ChestDAO> chests = dp.chests().findAllChestsAt(new Location("world", 13, 14, 15));
             assertThat(chests, hasSize(1));
             assertThat(chests.get(0).getMaterial(), is(equalTo("STONE")));
             assertThat(chests.get(0).isCentral(), is(equalTo(true)));
@@ -160,10 +162,12 @@ class CreateCommandTest extends GherkinTest {
     }
 
     @Scenario("Create a central chest when a database error occurs")
-    void testCreateCentralChestWiehDatabaseError(Reference<DataProvider> dp, Reference<List<String>> messages,
+    void testCreateCentralChestWithDatabaseError(Reference<DataProvider> dp, Reference<List<String>> messages,
             Reference<Player> player, Reference<CreateCommand> createCommand) {
         given("the database connection has an error", () -> {
             dp.set(mock(DataProvider.class));
+            Mockito.when(dp.get().chests()).thenReturn(mock(ChestDataProvider.class));
+            Mockito.when(dp.get().signs()).thenReturn(mock(SignDataProvider.class));
         });
         and("the user Peter has marked a chest at (world, 13, 14, 15)", () -> {
             PlayerEventListener listener = new PlayerEventListener(dp.get(), null);
@@ -235,7 +239,7 @@ class CreateCommandTest extends GherkinTest {
                     .build());
         });
         and("a central chest of type STONE exists at (world, 13, 14, 15)", () -> {
-            dp.persistChest(new ChestDAO("world", 13, 14, 15, "STONE"));
+            dp.chests().persist(new ChestDAO("world", 13, 14, 15, "STONE"));
         });
         when("the user executes the command /chestsort create central STONE", () -> {
             createCommand.get().execute(player.get(), "create", "central", "STONE");
@@ -270,7 +274,7 @@ class CreateCommandTest extends GherkinTest {
             assertThat(messages.get(), hasSize(1));
         });
         and("a chest is registered for type STONE at (world, 13, 14, 15)", () -> {
-            List<ChestDAO> chests = dp.findAllChestsAt(new Location("world", 13, 14, 15));
+            List<ChestDAO> chests = dp.chests().findAllChestsAt(new Location("world", 13, 14, 15));
             assertThat(chests, hasSize(1));
             assertThat(chests.get(0).getMaterial(), is(equalTo("SAND")));
             assertThat(chests.get(0).isCentral(), is(equalTo(false)));
