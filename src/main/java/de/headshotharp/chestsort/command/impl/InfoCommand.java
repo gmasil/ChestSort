@@ -19,13 +19,13 @@
  */
 package de.headshotharp.chestsort.command.impl;
 
-import static de.headshotharp.chestsort.ChestSortUtils.getBlockAt;
-import static de.headshotharp.chestsort.ChestSortUtils.isChest;
-import static de.headshotharp.chestsort.ChestSortUtils.isSign;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_ERROR;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_NORMAL;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE_CENTRAL;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_ERROR;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_NORMAL;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE_CENTRAL;
+import static de.headshotharp.chestsort.util.ChestSortUtils.getBlockAt;
+import static de.headshotharp.chestsort.util.ChestSortUtils.isChest;
+import static de.headshotharp.chestsort.util.ChestSortUtils.isSign;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,12 +35,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.headshotharp.chestsort.ChestSortPlugin;
-import de.headshotharp.chestsort.PlayerEventListener;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
+import de.headshotharp.chestsort.listener.PlayerEventListener;
 
 public class InfoCommand extends ChestsortCommand {
 

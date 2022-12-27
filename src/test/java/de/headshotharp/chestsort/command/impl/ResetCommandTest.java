@@ -39,7 +39,7 @@ import org.mockito.Mockito;
 import de.gmasil.gherkin.extension.GherkinTest;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
-import de.headshotharp.chestsort.StaticConfig;
+import de.headshotharp.chestsort.config.StaticConfig;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;

@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with ChestSort. If not, see <https://www.gnu.org/licenses/>.
  */
-package de.headshotharp.chestsort;
+package de.headshotharp.chestsort.listener;
 
-import static de.headshotharp.chestsort.StaticConfig.MATERIAL_MARKER;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE_CENTRAL;
+import static de.headshotharp.chestsort.config.StaticConfig.MATERIAL_MARKER;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE_CENTRAL;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

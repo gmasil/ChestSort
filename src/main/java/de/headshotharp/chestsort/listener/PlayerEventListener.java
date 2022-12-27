@@ -17,24 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with ChestSort. If not, see <https://www.gnu.org/licenses/>.
  */
-package de.headshotharp.chestsort;
+package de.headshotharp.chestsort.listener;
 
-import static de.headshotharp.chestsort.ChestSortUtils.convertLocation;
-import static de.headshotharp.chestsort.ChestSortUtils.hasMarkPermission;
-import static de.headshotharp.chestsort.ChestSortUtils.isChestBreaked;
-import static de.headshotharp.chestsort.ChestSortUtils.isChestClicked;
-import static de.headshotharp.chestsort.ChestSortUtils.isMarkerInHand;
-import static de.headshotharp.chestsort.ChestSortUtils.isRightClickBlock;
-import static de.headshotharp.chestsort.ChestSortUtils.isSignBreaked;
-import static de.headshotharp.chestsort.ChestSortUtils.isSignClicked;
-import static de.headshotharp.chestsort.ChestSortUtils.locationFromEvent;
-import static de.headshotharp.chestsort.ChestSortUtils.sendPlayerChestBreakErrorMessage;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_ERROR;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_GOOD;
-import static de.headshotharp.chestsort.StaticConfig.MATERIAL_SIGN_CENTRAL;
-import static de.headshotharp.chestsort.StaticConfig.MATERIAL_SIGN_USER;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE_CENTRAL;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_ERROR;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_GOOD;
+import static de.headshotharp.chestsort.config.StaticConfig.MATERIAL_SIGN_CENTRAL;
+import static de.headshotharp.chestsort.config.StaticConfig.MATERIAL_SIGN_USER;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE_CENTRAL;
+import static de.headshotharp.chestsort.util.ChestSortUtils.convertLocation;
+import static de.headshotharp.chestsort.util.ChestSortUtils.hasMarkPermission;
+import static de.headshotharp.chestsort.util.ChestSortUtils.isChestBreaked;
+import static de.headshotharp.chestsort.util.ChestSortUtils.isChestClicked;
+import static de.headshotharp.chestsort.util.ChestSortUtils.isMarkerInHand;
+import static de.headshotharp.chestsort.util.ChestSortUtils.isRightClickBlock;
+import static de.headshotharp.chestsort.util.ChestSortUtils.isSignBreaked;
+import static de.headshotharp.chestsort.util.ChestSortUtils.isSignClicked;
+import static de.headshotharp.chestsort.util.ChestSortUtils.locationFromEvent;
+import static de.headshotharp.chestsort.util.ChestSortUtils.sendPlayerChestBreakErrorMessage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,10 +47,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import de.headshotharp.chestsort.ChestSortPlugin;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
+import de.headshotharp.chestsort.util.ChestSortUtils;
+import de.headshotharp.chestsort.util.InventoryUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;

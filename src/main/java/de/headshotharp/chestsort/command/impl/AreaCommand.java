@@ -19,9 +19,9 @@
  */
 package de.headshotharp.chestsort.command.impl;
 
-import static de.headshotharp.chestsort.StaticConfig.COLOR_ERROR;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_GOOD;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_NORMAL;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_ERROR;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_GOOD;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_NORMAL;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -33,11 +33,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.headshotharp.chestsort.ChestSortPlugin;
-import de.headshotharp.chestsort.PlayerEventListener;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Area;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
+import de.headshotharp.chestsort.listener.PlayerEventListener;
 
 public class AreaCommand extends CreateCommand {
 

@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import de.headshotharp.chestsort.config.Config;
 import de.headshotharp.chestsort.hibernate.DataProvider;
+import de.headshotharp.chestsort.listener.PlayerEventListener;
 import de.headshotharp.plugin.base.LoggablePlugin;
 import de.headshotharp.plugin.base.command.CommandRegistry;
 import de.headshotharp.plugin.base.config.ConfigService;

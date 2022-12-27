@@ -32,9 +32,9 @@ import de.gmasil.gherkin.extension.Reference;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
 import de.headshotharp.chestsort.ChestSortPlugin;
-import de.headshotharp.chestsort.PlayerEventListener;
 import de.headshotharp.chestsort.config.Config;
 import de.headshotharp.chestsort.hibernate.DataProvider;
+import de.headshotharp.chestsort.listener.PlayerEventListener;
 import de.headshotharp.chestsort.utils.PluginMock;
 import de.headshotharp.plugin.base.command.CommandRegistry;
 

@@ -17,13 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with ChestSort. If not, see <https://www.gnu.org/licenses/>.
  */
-package de.headshotharp.chestsort;
+package de.headshotharp.chestsort.util;
 
-import static de.headshotharp.chestsort.StaticConfig.MATERIAL_MARKER;
-import static de.headshotharp.chestsort.StaticConfig.MATERIAL_SIGN_CENTRAL;
-import static de.headshotharp.chestsort.StaticConfig.MATERIAL_SIGN_USER;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE_CENTRAL;
+import static de.headshotharp.chestsort.config.StaticConfig.MATERIAL_MARKER;
+import static de.headshotharp.chestsort.config.StaticConfig.MATERIAL_SIGN_CENTRAL;
+import static de.headshotharp.chestsort.config.StaticConfig.MATERIAL_SIGN_USER;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE_CENTRAL;
 
 import java.util.List;
 import java.util.stream.Collectors;

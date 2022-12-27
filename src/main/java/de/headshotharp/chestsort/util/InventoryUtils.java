@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with ChestSort. If not, see <https://www.gnu.org/licenses/>.
  */
-package de.headshotharp.chestsort;
+package de.headshotharp.chestsort.util;
 
-import static de.headshotharp.chestsort.ChestSortUtils.getBlockAt;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_ERROR;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_NORMAL;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_ERROR;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_NORMAL;
+import static de.headshotharp.chestsort.util.ChestSortUtils.getBlockAt;
 
 import java.util.List;
 

@@ -19,9 +19,9 @@
  */
 package de.headshotharp.chestsort.command.impl;
 
-import static de.headshotharp.chestsort.StaticConfig.MATERIAL_MARKER;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE_CENTRAL;
+import static de.headshotharp.chestsort.config.StaticConfig.MATERIAL_MARKER;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE_CENTRAL;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -44,13 +44,13 @@ import de.gmasil.gherkin.extension.Reference;
 import de.gmasil.gherkin.extension.Scenario;
 import de.gmasil.gherkin.extension.Story;
 import de.headshotharp.chestsort.ChestSortPlugin;
-import de.headshotharp.chestsort.PlayerEventListener;
 import de.headshotharp.chestsort.hibernate.ChestDataProvider;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.SignDataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
 import de.headshotharp.chestsort.hibernate.testutils.ConfigureH2Hibernate;
+import de.headshotharp.chestsort.listener.PlayerEventListener;
 import de.headshotharp.chestsort.utils.PlayerMock;
 import de.headshotharp.chestsort.utils.PluginMock;
 

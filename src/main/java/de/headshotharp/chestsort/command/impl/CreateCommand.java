@@ -19,10 +19,10 @@
  */
 package de.headshotharp.chestsort.command.impl;
 
-import static de.headshotharp.chestsort.StaticConfig.COLOR_ERROR;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_ERROR_HIGHLIGHT;
-import static de.headshotharp.chestsort.StaticConfig.COLOR_GOOD;
-import static de.headshotharp.chestsort.StaticConfig.PERMISSION_MANAGE;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_ERROR;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_ERROR_HIGHLIGHT;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_GOOD;
+import static de.headshotharp.chestsort.config.StaticConfig.PERMISSION_MANAGE;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -36,13 +36,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.headshotharp.chestsort.ChestSortPlugin;
-import de.headshotharp.chestsort.ChestSortUtils;
-import de.headshotharp.chestsort.PlayerEventListener;
-import de.headshotharp.chestsort.StaticConfig;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
+import de.headshotharp.chestsort.config.StaticConfig;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.generic.Location;
+import de.headshotharp.chestsort.listener.PlayerEventListener;
+import de.headshotharp.chestsort.util.ChestSortUtils;
 
 public class CreateCommand extends ChestsortCommand {
 

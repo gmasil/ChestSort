@@ -19,7 +19,7 @@
  */
 package de.headshotharp.chestsort.command.impl;
 
-import static de.headshotharp.chestsort.StaticConfig.COLOR_ERROR;
+import static de.headshotharp.chestsort.config.StaticConfig.COLOR_ERROR;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -30,9 +30,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.headshotharp.chestsort.ChestSortPlugin;
-import de.headshotharp.chestsort.InventoryUtils;
 import de.headshotharp.chestsort.command.generic.ChestsortCommand;
 import de.headshotharp.chestsort.hibernate.DataProvider;
+import de.headshotharp.chestsort.util.InventoryUtils;
 
 public class AllCommand extends ChestsortCommand {
 

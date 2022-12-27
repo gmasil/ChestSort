@@ -59,6 +59,7 @@
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
         <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
         <license-plugin.version>4.1</license-plugin.version>
+        <assembly-plugin.version>3.4.2</assembly-plugin.version>
         <!-- test versions -->
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
         <junit-platform.version>1.7.1</junit-platform.version>
@@ -182,6 +183,7 @@
             <!-- assembly -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>${assembly-plugin.version}</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
