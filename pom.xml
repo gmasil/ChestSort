@@ -49,7 +49,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- versions -->
         <papermc.version>1.19.2-R0.1-SNAPSHOT</papermc.version>
-        <plugin-base.version>1.19.2-1.0</plugin-base.version>
+        <plugin-base.version>1.19.2-1.1</plugin-base.version>
         <plugin-hibernate.version>1.19.2-1.4</plugin-hibernate.version>
         <jackson.version>2.14.1</jackson.version>
         <commons-io.version>2.8.0</commons-io.version>

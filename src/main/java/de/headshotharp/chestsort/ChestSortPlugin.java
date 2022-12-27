@@ -41,16 +41,14 @@ public class ChestSortPlugin extends LoggablePlugin {
         try {
             config = configService.readConfig();
         } catch (IOException e) {
-            error("Error while loading config, stopping", e);
-            return;
+            throw new IllegalStateException("Error while loading config", e);
         }
         DataProvider dp;
         try {
             dp = new DataProvider(config.getDatabase(), ChestSortPlugin.class);
             info("Connected to database");
         } catch (Exception e) {
-            error("Error while connecting to database, stopping", e);
-            return;
+            throw new IllegalStateException("Error while connecting to database", e);
         }
         try {
             PlayerEventListener playerEventListener = new PlayerEventListener(dp, this);
@@ -60,7 +58,7 @@ public class ChestSortPlugin extends LoggablePlugin {
             getCommand("chestsort").setTabCompleter(commandRegistry);
             getServer().getPluginManager().registerEvents(playerEventListener, this);
         } catch (Exception e) {
-            error("Error while registering commands", e);
+            throw new IllegalStateException("Error while registering commands", e);
         }
     }
 
@@ -71,7 +69,7 @@ public class ChestSortPlugin extends LoggablePlugin {
                 configService.saveConfig(Config.getDefaultConfig());
             }
         } catch (IOException e) {
-            error("Error while saving default config", e);
+            warn("Could not save default config", e);
         }
     }
 }
