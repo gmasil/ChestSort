@@ -48,12 +48,6 @@ public abstract class ChestsortCommand extends ExecutableCommand<ChestSortPlugin
     }
 
     @Override
-    public abstract String usage();
-
-    @Override
-    public abstract String getName();
-
-    @Override
     public boolean isApplicable(CommandSender sender, String command, String... args) {
         return command.equalsIgnoreCase(getName());
     }

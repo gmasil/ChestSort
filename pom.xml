@@ -24,7 +24,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.headshotharp.spigot</groupId>
     <artifactId>chestsort</artifactId>
-    <version>1.19.2-SNAPSHOT</version>
+    <version>1.19.3-SNAPSHOT</version>
     <name>ChestSort</name>
 
     <inceptionYear>2021</inceptionYear>
@@ -48,8 +48,8 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- versions -->
-        <papermc.version>1.19.2-R0.1-SNAPSHOT</papermc.version>
-        <plugin-base.version>1.19.2-1.1</plugin-base.version>
+        <papermc.version>1.19.3-R0.1-SNAPSHOT</papermc.version>
+        <plugin-base.version>1.19.3-1.2</plugin-base.version>
         <plugin-hibernate.version>1.19.2-1.4</plugin-hibernate.version>
         <jackson.version>2.14.1</jackson.version>
         <commons-io.version>2.8.0</commons-io.version>
@@ -61,11 +61,11 @@
         <license-plugin.version>4.1</license-plugin.version>
         <assembly-plugin.version>3.4.2</assembly-plugin.version>
         <!-- test versions -->
-        <junit-jupiter.version>5.9.1</junit-jupiter.version>
+        <junit-jupiter.version>5.9.2</junit-jupiter.version>
         <junit-platform.version>1.7.1</junit-platform.version>
         <gherkin-extension.version>1.4</gherkin-extension.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <mockito.version>4.9.0</mockito.version>
+        <mockito.version>5.0.0</mockito.version>
         <!-- sonar -->
         <sonar.coverage.exclusions>**/dao/**/*.java</sonar.coverage.exclusions>
         <sonar.cpd.exclusions>**/*DAO.java,**/*Command.java</sonar.cpd.exclusions>

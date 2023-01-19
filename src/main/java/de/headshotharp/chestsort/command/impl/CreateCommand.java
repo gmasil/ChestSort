@@ -56,11 +56,11 @@ public class CreateCommand extends ChestsortCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String command, String... args) {
+    public boolean execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
         Material material = verifyParameters(player, args);
         if (material == null) {
-            return;
+            return true;
         }
         boolean isCentral = args[0].equalsIgnoreCase(WH_CENTRAL);
         ChestDAO chest = chestByParameter(player, material, isCentral);
@@ -83,10 +83,11 @@ public class CreateCommand extends ChestsortCommand {
                 player.sendMessage(COLOR_ERROR + "There is no chest at the marked location.");
             }
         }
+        return true;
     }
 
     protected boolean isChestAt(Location loc) {
-        Block block = getPlugin().getServer().getWorld(loc.getWorld()).getBlockAt(loc.getX(), loc.getY(), loc.getZ());
+        Block block = ChestSortUtils.getBlockAt(getServer(), loc);
         return ChestSortUtils.isChest(block);
     }
 

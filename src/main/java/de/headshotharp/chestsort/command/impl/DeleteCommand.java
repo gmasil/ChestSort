@@ -56,27 +56,25 @@ public class DeleteCommand extends ChestsortCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String command, String... args) {
+    public boolean execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
         if (args.length < 1 || args.length > 2) {
-            sendusage(player);
-            return;
+            return false;
         }
         if (!Arrays.asList(WH_CENTRAL, WH_USER).contains(args[0].toLowerCase())) {
-            sendusage(player);
-            return;
+            return false;
         }
         if (args[0].equalsIgnoreCase(WH_USER)) {
             // check if user has normal manage permissions
             if (!player.hasPermission(PERMISSION_MANAGE)) {
                 player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
-                return;
+                return true;
             }
         } else {
             // check if user has central manage permissions
             if (!player.hasPermission(PERMISSION_MANAGE_CENTRAL)) {
                 player.sendMessage(COLOR_ERROR + "You dont have permissions to manage central chests");
-                return;
+                return true;
             }
         }
         // here the user is allowed to perform the command
@@ -84,7 +82,7 @@ public class DeleteCommand extends ChestsortCommand {
         if (markedBlock == null) {
             player.sendMessage(COLOR_ERROR
                     + "You have to mark a chest or sign first. Right click a chest or sign with a stick in your main hand");
-            return;
+            return true;
         }
         // get all chests/signs
         List<SignDAO> signs = dp.signs().findAllSignsAt(markedBlock);
@@ -136,6 +134,7 @@ public class DeleteCommand extends ChestsortCommand {
                         + "/chestsort delete " + args[0].toLowerCase() + " confirm");
             }
         }
+        return true;
     }
 
     @Override
@@ -158,10 +157,6 @@ public class DeleteCommand extends ChestsortCommand {
     @Override
     public String getName() {
         return "delete";
-    }
-
-    private void sendusage(Player player) {
-        player.sendMessage(COLOR_ERROR + usage());
     }
 
     private boolean verifyDeletionSuccess(DataProvider dp, Location markedChest) {

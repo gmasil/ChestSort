@@ -46,21 +46,21 @@ public class AreaCommand extends CreateCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String command, String... args) {
+    public boolean execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
         Material material = verifyParameters(player, args);
         if (material == null) {
-            return;
+            return true;
         }
         Area markedArea = getMarkedArea(player);
         if (markedArea == null) {
-            return;
+            return true;
         }
         boolean isCentral = args[0].equalsIgnoreCase(WH_CENTRAL);
         List<ChestDAO> chests = chestsByParameter(player, material, markedArea, isCentral);
         if (chests.isEmpty()) {
             player.sendMessage(COLOR_NORMAL + "There are no chests in the marked area.");
-            return;
+            return true;
         }
         int chestsCreated = 0;
         int chestsNotCreated = 0;
@@ -84,6 +84,7 @@ public class AreaCommand extends CreateCommand {
             player.sendMessage(COLOR_GOOD + "In total " + chestsCreated + " chests of type " + material
                     + " have been successfully created");
         }
+        return true;
     }
 
     public Area getMarkedArea(Player player) {

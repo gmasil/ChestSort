@@ -26,8 +26,8 @@ import static de.headshotharp.chestsort.config.StaticConfig.COLOR_NORMAL;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,6 +37,7 @@ import de.headshotharp.chestsort.config.StaticConfig;
 import de.headshotharp.chestsort.hibernate.DataProvider;
 import de.headshotharp.chestsort.hibernate.dao.ChestDAO;
 import de.headshotharp.chestsort.hibernate.dao.SignDAO;
+import de.headshotharp.chestsort.util.ChestSortUtils;
 
 public class ResetCommand extends ChestsortCommand {
 
@@ -48,33 +49,30 @@ public class ResetCommand extends ChestsortCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String command, String... args) {
+    public boolean execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
         if (args.length < 2) {
-            player.sendMessage(COLOR_ERROR + usage());
-            return;
+            return false;
         }
         if (!args[1].equalsIgnoreCase(WH_ALL) && !args[1].equalsIgnoreCase(WH_CHESTS)
                 && !args[1].equalsIgnoreCase(WH_SIGNS)) {
-            player.sendMessage(COLOR_ERROR + usage());
-            return;
+            return false;
         }
         boolean central;
         if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
             central = true;
             if (!player.hasPermission(StaticConfig.PERMISSION_RESET)) {
                 player.sendMessage(COLOR_ERROR + "You don't have permissions to reset ChestSort");
-                return;
+                return true;
             }
         } else if (args[0].equalsIgnoreCase(WH_USER)) {
             central = false;
             if (!player.hasPermission(StaticConfig.PERMISSION_MANAGE)) {
                 player.sendMessage(COLOR_ERROR + "You don't have permissions to manage ChestSort");
-                return;
+                return true;
             }
         } else {
-            player.sendMessage(COLOR_ERROR + usage());
-            return;
+            return false;
         }
         List<ChestDAO> chests = new LinkedList<>();
         if (args[1].equalsIgnoreCase(WH_ALL) || args[1].equalsIgnoreCase(WH_CHESTS)) {
@@ -90,12 +88,17 @@ public class ResetCommand extends ChestsortCommand {
             }
             for (SignDAO sign : signs) {
                 dp.signs().delete(sign);
+                Block block = ChestSortUtils.getBlockAt(getServer(), sign.getLocation());
+                if (ChestSortUtils.isSign(block)) {
+                    block.breakNaturally();
+                }
             }
             player.sendMessage(COLOR_GOOD + "Deleted " + signs.size() + " signs and " + chests.size() + " chests.");
         } else {
             player.sendMessage(
                     COLOR_NORMAL + "Would delete " + signs.size() + " signs and " + chests.size() + " chests.");
         }
+        return true;
     }
 
     @Override
@@ -104,10 +107,10 @@ public class ResetCommand extends ChestsortCommand {
             return Arrays.asList(WH_CENTRAL, WH_USER);
         } else if (args.length == 1) {
             return Arrays.asList(WH_CENTRAL, WH_USER).stream().filter(cmd -> cmd.startsWith(args[0].toLowerCase()))
-                    .collect(Collectors.toList());
+                    .toList();
         } else if (args.length == 2) {
             return Arrays.asList(WH_ALL, WH_CHESTS, WH_SIGNS).stream()
-                    .filter(cmd -> cmd.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+                    .filter(cmd -> cmd.startsWith(args[1].toLowerCase())).toList();
         }
         // no autocomplete for confirm
         return new LinkedList<>();

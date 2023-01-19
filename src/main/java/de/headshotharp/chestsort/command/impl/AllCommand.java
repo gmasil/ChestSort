@@ -19,8 +19,6 @@
  */
 package de.headshotharp.chestsort.command.impl;
 
-import static de.headshotharp.chestsort.config.StaticConfig.COLOR_ERROR;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,11 +42,10 @@ public class AllCommand extends ChestsortCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String command, String... args) {
+    public boolean execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
         if (args.length != 1) {
-            player.sendMessage(COLOR_ERROR + usage());
-            return;
+            return false;
         }
         boolean central;
         if (args[0].equalsIgnoreCase(WH_CENTRAL)) {
@@ -56,10 +53,10 @@ public class AllCommand extends ChestsortCommand {
         } else if (args[0].equalsIgnoreCase(WH_USER)) {
             central = false;
         } else {
-            player.sendMessage(COLOR_ERROR + usage());
-            return;
+            return false;
         }
         InventoryUtils.insertAllInventory(dp, getServer(), player, central);
+        return true;
     }
 
     @Override

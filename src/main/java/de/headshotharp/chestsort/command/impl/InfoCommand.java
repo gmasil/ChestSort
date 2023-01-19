@@ -54,11 +54,11 @@ public class InfoCommand extends ChestsortCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String command, String... args) {
+    public boolean execute(CommandSender sender, String command, String... args) {
         Player player = (Player) sender;
         if (!player.hasPermission(PERMISSION_MANAGE) && !player.hasPermission(PERMISSION_MANAGE_CENTRAL)) {
             player.sendMessage(COLOR_ERROR + "You dont have permissions to manage chests");
-            return;
+            return true;
         }
         Location markedBlock = listener.getMarkedLocation(player.getName());
         if (markedBlock == null) {
@@ -90,6 +90,7 @@ public class InfoCommand extends ChestsortCommand {
                 player.sendMessage(COLOR_ERROR + "There is no sign or chest at the marked location anymore");
             }
         }
+        return true;
     }
 
     @Override
