@@ -57,7 +57,7 @@ public class CommandRegistryTest extends GherkinTest {
             DataProvider dp = new DataProvider(Config.getH2Config().getDatabase(), ChestSortPlugin.class);
             PlayerEventListener listener = new PlayerEventListener(dp, pluginMock);
             // create registry
-            registry.set(new CommandRegistry<>(pluginMock, ChestSortPlugin.class, dp, listener));
+            registry.set(new CommandRegistry<>("chestsort", pluginMock, ChestSortPlugin.class, true, dp, listener));
         });
         then("all commands are found", () -> {
             List<String> commands = registry.get().getCommands().stream().map(c -> c.getName())

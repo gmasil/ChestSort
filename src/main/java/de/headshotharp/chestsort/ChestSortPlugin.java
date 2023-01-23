@@ -52,10 +52,9 @@ public class ChestSortPlugin extends LoggablePlugin {
         }
         try {
             PlayerEventListener playerEventListener = new PlayerEventListener(dp, this);
-            CommandRegistry<ChestSortPlugin> commandRegistry = new CommandRegistry<>(this, ChestSortPlugin.class, dp,
-                    playerEventListener);
-            getCommand("chestsort").setExecutor(commandRegistry);
-            getCommand("chestsort").setTabCompleter(commandRegistry);
+            CommandRegistry<ChestSortPlugin> commandRegistry = new CommandRegistry<>("chestsort", this,
+                    ChestSortPlugin.class, true, dp, playerEventListener);
+            commandRegistry.registerCommands();
             getServer().getPluginManager().registerEvents(playerEventListener, this);
         } catch (Exception e) {
             throw new IllegalStateException("Error while registering commands", e);
